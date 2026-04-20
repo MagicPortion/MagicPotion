@@ -22,12 +22,15 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
         run: bun install
+
+      - name: Generate PandaCSS
+        run: bunx panda codegen
 
       - name: Build
         run: bun run build
