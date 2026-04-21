@@ -21,7 +21,8 @@ const SCENE_ORDER: Scene[] = ["conversation", "recipe_learning", "shop", "brew",
 let instanceCounter = 0;
 
 function pickDailyOptions(): string[] {
-  return shuffleArray(RECIPES.map((r) => r.id)).slice(0, 5);
+  const nonMystery = RECIPES.filter((r) => r.potionId !== "mystery");
+  return shuffleArray(nonMystery.map((r) => r.id)).slice(0, 5);
 }
 
 export interface GameState {
