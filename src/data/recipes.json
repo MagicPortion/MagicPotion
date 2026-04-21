@@ -1,0 +1,18 @@
+[
+  { "id": "water_fire",       "baseId": "water",    "accentId": "fire_essence", "potionId": "heal"     },
+  { "id": "water_moon",       "baseId": "water",    "accentId": "moon_dust",    "potionId": "mana"     },
+  { "id": "water_fairy",      "baseId": "water",    "accentId": "fairy_wing",   "potionId": "mystery"  },
+  { "id": "water_crystal",    "baseId": "water",    "accentId": "crystal",      "potionId": "mystery"  },
+  { "id": "herb_fire",        "baseId": "herb",     "accentId": "fire_essence", "potionId": "strength" },
+  { "id": "herb_fairy",       "baseId": "herb",     "accentId": "fairy_wing",   "potionId": "speed"    },
+  { "id": "herb_moon",        "baseId": "herb",     "accentId": "moon_dust",    "potionId": "mystery"  },
+  { "id": "herb_crystal",     "baseId": "herb",     "accentId": "crystal",      "potionId": "mystery"  },
+  { "id": "mushroom_crystal", "baseId": "mushroom", "accentId": "crystal",      "potionId": "shield"   },
+  { "id": "mushroom_fairy",   "baseId": "mushroom", "accentId": "fairy_wing",   "potionId": "luck"     },
+  { "id": "mushroom_fire",    "baseId": "mushroom", "accentId": "fire_essence", "potionId": "mystery"  },
+  { "id": "mushroom_moon",    "baseId": "mushroom", "accentId": "moon_dust",    "potionId": "mystery"  },
+  { "id": "slime_moon",       "baseId": "slime",    "accentId": "moon_dust",    "potionId": "sleep"    },
+  { "id": "slime_crystal",    "baseId": "slime",    "accentId": "crystal",      "potionId": "antidote" },
+  { "id": "slime_fire",       "baseId": "slime",    "accentId": "fire_essence", "potionId": "mystery"  },
+  { "id": "slime_fairy",      "baseId": "slime",    "accentId": "fairy_wing",   "potionId": "mystery"  }
+]

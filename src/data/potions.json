@@ -1,0 +1,11 @@
+[
+  { "id": "heal",     "name": "回復薬",   "colorHex": "ff69b4", "basePrice": 200 },
+  { "id": "mana",     "name": "マナ薬",   "colorHex": "7b68ee", "basePrice": 220 },
+  { "id": "strength", "name": "力の薬",   "colorHex": "ff4500", "basePrice": 250 },
+  { "id": "speed",    "name": "速さの薬", "colorHex": "00ced1", "basePrice": 230 },
+  { "id": "shield",   "name": "守りの薬", "colorHex": "4682b4", "basePrice": 240 },
+  { "id": "luck",     "name": "幸運の薬", "colorHex": "ffd700", "basePrice": 260 },
+  { "id": "sleep",    "name": "睡眠薬",   "colorHex": "9370db", "basePrice": 180 },
+  { "id": "antidote", "name": "解毒薬",   "colorHex": "3cb371", "basePrice": 190 },
+  { "id": "mystery",  "name": "謎の薬",   "colorHex": "808080", "basePrice": 150 }
+]

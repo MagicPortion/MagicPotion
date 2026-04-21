@@ -3,14 +3,12 @@ import { css } from "../../styled-system/css";
 import { useGameStore } from "../store/useGameStore";
 import { useWindowSize } from "../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "./PixiCanvas";
-import { MATERIALS, type MaterialDef } from "../data/gameData";
+import { MATERIALS, shuffleArray, type MaterialDef } from "../data/gameData";
 
 export default function ShopScene() {
-  const { materials, buyMaterial, advancePhase, setScene } = useGameStore();
+  const { materials, buyMaterial, advanceScene, openRecipeBook } = useGameStore();
   const [message, setMessage] = useState("いらっしゃいませ！材料をお選びください。");
-  const [shopItems] = useState<MaterialDef[]>(() =>
-    [...MATERIALS].sort(() => Math.random() - 0.5).slice(0, 6)
-  );
+  const [shopItems] = useState<MaterialDef[]>(() => shuffleArray(MATERIALS).slice(0, 6));
   const { width, height } = useWindowSize();
 
   const handleBuy = (item: MaterialDef) => {
@@ -46,7 +44,7 @@ export default function ShopScene() {
         {message}
       </div>
 
-      {/* 購入ボタン群（中央下） */}
+      {/* 購入ボタン群 */}
       <div
         style={{ position: "absolute", bottom: 100, left: "50%", transform: "translateX(-50%)", zIndex: 10 }}
         className={css({ display: "flex", flexWrap: "wrap", gap: "8px", justifyContent: "center", maxWidth: "700px" })}
@@ -56,28 +54,17 @@ export default function ShopScene() {
             key={item.id}
             onClick={() => handleBuy(item)}
             className={css({
-              bg: "pastel.mint",
-              border: "2px solid",
-              borderColor: "pastel.sage",
-              borderRadius: "12px",
-              p: "10px 16px",
-              cursor: "pointer",
-              fontSize: "13px",
-              color: "#4a3f55",
-              boxShadow: "0 3px 10px rgba(0,0,0,0.12)",
+              bg: "pastel.mint", border: "2px solid", borderColor: "pastel.sage",
+              borderRadius: "12px", p: "10px 16px", cursor: "pointer",
+              fontSize: "13px", color: "#4a3f55", boxShadow: "0 3px 10px rgba(0,0,0,0.12)",
               transition: "all 0.15s",
               _hover: { bg: "pastel.lemon", transform: "scale(1.06)" },
             })}
           >
             <span
               style={{
-                display: "inline-block",
-                width: 12,
-                height: 12,
-                borderRadius: "50%",
-                backgroundColor: `#${item.color.toString(16).padStart(6, "0")}`,
-                marginRight: 6,
-                verticalAlign: "middle",
+                display: "inline-block", width: 12, height: 12, borderRadius: "50%",
+                backgroundColor: `#${item.colorHex}`, marginRight: 6, verticalAlign: "middle",
               }}
             />
             {item.name} ({item.price}G)
@@ -85,7 +72,7 @@ export default function ShopScene() {
         ))}
       </div>
 
-      {/* 持ち物パネル（左下） */}
+      {/* 持ち物パネル */}
       <div
         style={{ position: "absolute", bottom: 16, left: 16, zIndex: 10, maxWidth: 340 }}
         className={css({ bg: "pastel.sky", borderRadius: "12px", p: "10px 14px", boxShadow: "0 4px 16px rgba(0,0,0,0.12)" })}
@@ -105,18 +92,16 @@ export default function ShopScene() {
         </div>
       </div>
 
-      {/* アクションボタン（右下） */}
-      <div
-        style={{ position: "absolute", bottom: 16, right: 16, zIndex: 10, display: "flex", gap: 8 }}
-      >
+      {/* アクションボタン */}
+      <div style={{ position: "absolute", bottom: 16, right: 16, zIndex: 10, display: "flex", gap: 8 }}>
         <button
-          onClick={() => setScene("recipe")}
+          onClick={() => openRecipeBook("shop")}
           className={css({ bg: "pastel.lilac", border: "none", borderRadius: "10px", p: "10px 18px", cursor: "pointer", fontSize: "13px", color: "#4a3f55", boxShadow: "0 3px 10px rgba(0,0,0,0.12)", _hover: { bg: "pastel.lavender" } })}
         >
           レシピ帳
         </button>
         <button
-          onClick={advancePhase}
+          onClick={advanceScene}
           className={css({ bg: "pastel.peach", border: "none", borderRadius: "10px", p: "10px 18px", cursor: "pointer", fontSize: "14px", fontWeight: "bold", color: "#4a3f55", boxShadow: "0 3px 10px rgba(0,0,0,0.12)", _hover: { bg: "pastel.pink" } })}
         >
           買い物を終える →

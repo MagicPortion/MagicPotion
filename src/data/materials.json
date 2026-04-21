@@ -1,0 +1,10 @@
+[
+  { "id": "water",        "name": "聖水",           "category": "base",   "colorHex": "87ceeb", "price": 50  },
+  { "id": "herb",         "name": "薬草",           "category": "base",   "colorHex": "90ee90", "price": 60  },
+  { "id": "mushroom",     "name": "キノコ",          "category": "base",   "colorHex": "deb887", "price": 70  },
+  { "id": "slime",        "name": "スライム液",      "category": "base",   "colorHex": "98fb98", "price": 80  },
+  { "id": "fire_essence", "name": "火のエッセンス",  "category": "accent", "colorHex": "ff6347", "price": 100 },
+  { "id": "moon_dust",    "name": "月の粉",          "category": "accent", "colorHex": "e6e6fa", "price": 120 },
+  { "id": "fairy_wing",   "name": "妖精の羽",        "category": "accent", "colorHex": "ffb6c1", "price": 90  },
+  { "id": "crystal",      "name": "クリスタル",      "category": "accent", "colorHex": "b0e0e6", "price": 110 }
+]
