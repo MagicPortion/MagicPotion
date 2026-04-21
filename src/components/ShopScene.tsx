@@ -4,11 +4,13 @@ import { useGameStore } from "../store/useGameStore";
 import { useWindowSize } from "../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "./PixiCanvas";
 import { MATERIALS, shuffleArray, type MaterialDef } from "../data/gameData";
+import RecipeBookPopup from "./RecipeBookPopup";
 
 export default function ShopScene() {
-  const { materials, buyMaterial, advanceScene, openRecipeBook } = useGameStore();
+  const { materials, buyMaterial, advanceScene } = useGameStore();
   const [message, setMessage] = useState("いらっしゃいませ！材料をお選びください。");
   const [shopItems] = useState<MaterialDef[]>(() => shuffleArray(MATERIALS).slice(0, 6));
+  const [isRecipeOpen, setIsRecipeOpen] = useState(false);
   const { width, height } = useWindowSize();
 
   const handleBuy = (item: MaterialDef) => {
@@ -95,7 +97,7 @@ export default function ShopScene() {
       {/* アクションボタン */}
       <div style={{ position: "absolute", bottom: 16, right: 16, zIndex: 10, display: "flex", gap: 8 }}>
         <button
-          onClick={() => openRecipeBook("shop")}
+          onClick={() => setIsRecipeOpen(true)}
           className={css({ bg: "pastel.lilac", border: "none", borderRadius: "10px", p: "10px 18px", cursor: "pointer", fontSize: "13px", color: "#4a3f55", boxShadow: "0 3px 10px rgba(0,0,0,0.12)", _hover: { bg: "pastel.lavender" } })}
         >
           レシピ帳
@@ -107,6 +109,12 @@ export default function ShopScene() {
           買い物を終える →
         </button>
       </div>
+
+      {/* 共通レシピ帳ポップアップ */}
+      <RecipeBookPopup
+        isOpen={isRecipeOpen}
+        onClose={() => setIsRecipeOpen(false)}
+      />
     </div>
   );
 }

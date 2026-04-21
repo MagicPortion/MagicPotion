@@ -4,13 +4,15 @@ import { useGameStore } from "../store/useGameStore";
 import { useWindowSize } from "../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "./PixiCanvas";
 import { MATERIALS, getPotion, colorNum } from "../data/gameData";
+import RecipeBookPopup from "./RecipeBookPopup";
 
 export default function BrewScene() {
-  const { materials, brew, openRecipeBook, advanceScene } = useGameStore();
+  const { materials, brew, advanceScene } = useGameStore();
   const [selectedBase, setSelectedBase] = useState<string | null>(null);
   const [selectedAccent, setSelectedAccent] = useState<string | null>(null);
   const [message, setMessage] = useState("材料を選んで調合しよう！");
   const [cauldronColorHex, setCauldronColorHex] = useState("5f9ea0");
+  const [isRecipeOpen, setIsRecipeOpen] = useState(false);
   const { width, height } = useWindowSize();
 
   const ownedBases   = MATERIALS.filter((m) => m.category === "base"   && (materials[m.id] ?? 0) > 0);
@@ -28,6 +30,14 @@ export default function BrewScene() {
     } else {
       setMessage("調合できません…材料が足りないか、組み合わせが違うみたい。");
     }
+  };
+
+  /** レシピ帳からクイックセット（所持材料があるレシピのみ呼ばれる） */
+  const handleSelectRecipe = (baseId: string, accentId: string) => {
+    setSelectedBase(baseId);
+    setSelectedAccent(accentId);
+    setIsRecipeOpen(false);
+    setMessage("材料をセットしました！「調合する！」を押してください。");
   };
 
   const commands: DrawCommand[] = [
@@ -129,7 +139,7 @@ export default function BrewScene() {
           調合する！
         </button>
         <button
-          onClick={() => openRecipeBook("brew")}
+          onClick={() => setIsRecipeOpen(true)}
           className={css({ bg: "pastel.lilac", border: "none", borderRadius: "10px", p: "10px 18px", cursor: "pointer", fontSize: "13px", color: "#4a3f55", boxShadow: "0 3px 10px rgba(0,0,0,0.15)", _hover: { bg: "pastel.lavender" } })}
         >
           レシピ帳
@@ -141,6 +151,13 @@ export default function BrewScene() {
           陳列へ →
         </button>
       </div>
+
+      {/* 共通レシピ帳ポップアップ（クイックセット付き） */}
+      <RecipeBookPopup
+        isOpen={isRecipeOpen}
+        onClose={() => setIsRecipeOpen(false)}
+        onSelectRecipe={handleSelectRecipe}
+      />
     </div>
   );
 }
