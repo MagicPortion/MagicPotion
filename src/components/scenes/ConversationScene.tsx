@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { css } from "../../styled-system/css";
-import { useGameStore } from "../store/useGameStore";
-import { useWindowSize } from "../hooks/useWindowSize";
-import PixiCanvas, { type DrawCommand } from "./PixiCanvas";
+import { css } from "../../../styled-system/css";
+import { useGameStore } from "../../store/useGameStore";
+import { useWindowSize } from "../../hooks/useWindowSize";
+import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 
 export default function ConversationScene() {
   const { day, lastSaleResult, advanceScene } = useGameStore();

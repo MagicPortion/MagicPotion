@@ -13,8 +13,7 @@ export type Scene =
   | "recipe_learning"
   | "shop"
   | "brew"
-  | "display"
-  | "recipe_book";
+  | "display";
 
 const SCENE_ORDER: Scene[] = ["conversation", "recipe_learning", "shop", "brew", "display"];
 
@@ -36,10 +35,8 @@ export interface GameState {
   recipeLevel: Record<string, number>;
   dailyRecipeOptions: string[];
   lastSaleResult: SaleRecord[];
-  bookReturnScene: Scene;
 
   setScene: (scene: Scene) => void;
-  openRecipeBook: (returnTo: Scene) => void;
   buyMaterial: (id: string, price: number) => boolean;
   brew: (baseId: string, accentId: string) => BrewedPotion | null;
   learnRecipe: (recipeId: string) => void;
@@ -59,10 +56,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   recipeLevel: {},
   dailyRecipeOptions: pickDailyOptions(),
   lastSaleResult: [],
-  bookReturnScene: "brew" as Scene,
 
   setScene: (scene) => set({ scene }),
-  openRecipeBook: (returnTo) => set({ scene: "recipe_book", bookReturnScene: returnTo }),
 
   buyMaterial: (id, price) => {
     const s = get();

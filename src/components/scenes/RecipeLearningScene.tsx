@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { css } from "../../styled-system/css";
-import { useGameStore } from "../store/useGameStore";
-import { useWindowSize } from "../hooks/useWindowSize";
-import PixiCanvas, { type DrawCommand } from "./PixiCanvas";
-import { RECIPES, getPotion, calcSellPrice } from "../data/gameData";
+import { css } from "../../../styled-system/css";
+import { useGameStore } from "../../store/useGameStore";
+import { useWindowSize } from "../../hooks/useWindowSize";
+import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
+import { RECIPES, getPotion, calcSellPrice } from "../../data/gameData";
 
 export default function RecipeLearningScene() {
   const { dailyRecipeOptions, recipeLevel, learnRecipe, reloadDailyOptions, money, advanceScene } =

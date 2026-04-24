@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { css } from "../../styled-system/css";
-import { useGameStore } from "../store/useGameStore";
-import { useWindowSize } from "../hooks/useWindowSize";
-import PixiCanvas, { type DrawCommand } from "./PixiCanvas";
-import { MATERIALS, shuffleArray, type MaterialDef } from "../data/gameData";
-import RecipeBookPopup from "./RecipeBookPopup";
+import { css } from "../../../styled-system/css";
+import { useGameStore } from "../../store/useGameStore";
+import { useWindowSize } from "../../hooks/useWindowSize";
+import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
+import { MATERIALS, shuffleArray, type MaterialDef } from "../../data/gameData";
+import RecipeBookPopup from "../ui/RecipeBookPopup";
 
 export default function ShopScene() {
   const { materials, buyMaterial, advanceScene } = useGameStore();

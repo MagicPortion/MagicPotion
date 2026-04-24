@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { css } from "../../styled-system/css";
-import { useGameStore } from "../store/useGameStore";
-import { useWindowSize } from "../hooks/useWindowSize";
-import PixiCanvas, { type DrawCommand } from "./PixiCanvas";
-import { getPotion, SHOP_SLOTS_BY_LEVEL } from "../data/gameData";
-import type { BrewedPotion } from "../data/types";
+import { css } from "../../../styled-system/css";
+import { useGameStore } from "../../store/useGameStore";
+import { useWindowSize } from "../../hooks/useWindowSize";
+import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
+import { getPotion, SHOP_SLOTS_BY_LEVEL } from "../../data/gameData";
+import type { BrewedPotion } from "../../data/types";
 
 export default function DisplayScene() {
   const { brewedPotions, shopLevel, confirmDisplay, advanceScene, setScene } = useGameStore();

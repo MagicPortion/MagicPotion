@@ -1,29 +1,26 @@
 import { css } from "../../styled-system/css";
 import { useGameStore } from "../store/useGameStore";
 import type { Scene } from "../store/useGameStore";
-import ConversationScene from "./ConversationScene";
-import RecipeLearningScene from "./RecipeLearningScene";
-import ShopScene from "./ShopScene";
-import BrewScene from "./BrewScene";
-import DisplayScene from "./DisplayScene";
-import RecipeBookScene from "./RecipeBookScene";
+import ConversationScene from "./scenes/ConversationScene";
+import RecipeLearningScene from "./scenes/RecipeLearningScene";
+import ShopScene from "./scenes/ShopScene";
+import BrewScene from "./scenes/BrewScene";
+import DisplayScene from "./scenes/DisplayScene";
 
 const SCENE_LABEL: Record<Scene, string> = {
-  conversation: "朝",
+  conversation:    "朝",
   recipe_learning: "朝",
-  shop: "昼",
-  brew: "夜",
-  display: "夜",
-  recipe_book: "📖",
+  shop:            "昼",
+  brew:            "夜",
+  display:         "夜",
 };
 
 const SCENE_COLOR: Record<Scene, { bg: string; text: string }> = {
-  conversation:   { bg: "pastel.rose",    text: "#6b5b73" },
-  recipe_learning:{ bg: "pastel.rose",    text: "#6b5b73" },
-  shop:           { bg: "pastel.lemon",   text: "#7a6000" },
-  brew:           { bg: "pastel.lavender",text: "#4a3f55" },
-  display:        { bg: "pastel.lavender",text: "#4a3f55" },
-  recipe_book:    { bg: "pastel.cream",   text: "#4a3f55" },
+  conversation:    { bg: "pastel.rose",     text: "#6b5b73" },
+  recipe_learning: { bg: "pastel.rose",     text: "#6b5b73" },
+  shop:            { bg: "pastel.lemon",    text: "#7a6000" },
+  brew:            { bg: "pastel.lavender", text: "#4a3f55" },
+  display:         { bg: "pastel.lavender", text: "#4a3f55" },
 };
 
 export default function GameManager() {
@@ -37,7 +34,6 @@ export default function GameManager() {
       case "shop":            return <ShopScene />;
       case "brew":            return <BrewScene />;
       case "display":         return <DisplayScene />;
-      case "recipe_book":     return <RecipeBookScene />;
     }
   };
 
