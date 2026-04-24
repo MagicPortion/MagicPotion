@@ -8,6 +8,11 @@ import {
 } from "../data/gameData";
 import type { BrewedPotion, SaleRecord } from "../data/types";
 
+export type DialogueFontSize = "normal" | "large" | "xl";
+export type DialogueTheme = "dark" | "parchment" | "semi";
+export interface DialogueAppearance { fontSize: DialogueFontSize; theme: DialogueTheme; }
+export const DEFAULT_APPEARANCE: DialogueAppearance = { fontSize: "large", theme: "dark" };
+
 export type Scene =
   | "conversation"
   | "recipe_learning"
@@ -36,6 +41,9 @@ export interface GameState {
   dailyRecipeOptions: string[];
   lastSaleResult: SaleRecord[];
 
+  dialogueAppearance: DialogueAppearance;
+  setDialogueAppearance: (a: DialogueAppearance) => void;
+
   setScene: (scene: Scene) => void;
   buyMaterial: (id: string, price: number) => boolean;
   brew: (baseId: string, accentId: string) => BrewedPotion | null;
@@ -56,6 +64,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   recipeLevel: {},
   dailyRecipeOptions: pickDailyOptions(),
   lastSaleResult: [],
+  dialogueAppearance: DEFAULT_APPEARANCE,
+  setDialogueAppearance: (a) => set({ dialogueAppearance: a }),
 
   setScene: (scene) => set({ scene }),
 

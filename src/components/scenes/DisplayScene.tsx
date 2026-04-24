@@ -5,6 +5,7 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import { getPotion, SHOP_SLOTS_BY_LEVEL } from "../../data/gameData";
 import type { BrewedPotion } from "../../data/types";
+import DialogueBox, { ActionButton } from "../ui/DialogueBox";
 
 export default function DisplayScene() {
   const { brewedPotions, shopLevel, confirmDisplay, advanceScene, setScene } = useGameStore();
@@ -26,7 +27,6 @@ export default function DisplayScene() {
   };
 
   const commands = useMemo<DrawCommand[]>(() => [
-    // 背景モック（後でお店の夜画像に差し替え）
     { type: "rect", x: 0, y: 0, width, height, color: 0x16213e },
   ], [width, height]);
 
@@ -42,7 +42,7 @@ export default function DisplayScene() {
           transform: "translate(-50%, -50%)",
           zIndex: 10,
           width: "min(520px, 90vw)",
-          maxHeight: "70vh",
+          maxHeight: "calc(100vh - 120px)",
           overflowY: "auto",
         }}
         className={css({
@@ -66,7 +66,7 @@ export default function DisplayScene() {
             在庫がありません。調合画面に戻って薬を作りましょう！
           </p>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 16 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {brewedPotions.map((potion) => {
               const def = getPotion(potion.potionId);
               const isSelected = selected.some((p) => p.instanceId === potion.instanceId);
@@ -77,63 +77,41 @@ export default function DisplayScene() {
                   onClick={() => toggleSelect(potion)}
                   disabled={isFull}
                   className={css({
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
+                    display: "flex", alignItems: "center", gap: "10px",
                     bg: isSelected ? "pastel.mint" : "white",
                     border: "2px solid",
                     borderColor: isSelected ? "pastel.sage" : "pastel.lavender",
-                    borderRadius: "12px",
-                    p: "11px 14px",
+                    borderRadius: "12px", p: "11px 14px",
                     cursor: isFull ? "not-allowed" : "pointer",
-                    textAlign: "left",
-                    transition: "all 0.15s",
+                    textAlign: "left", transition: "all 0.15s",
                     _hover: { bg: isFull ? "white" : (isSelected ? "pastel.sage" : "pastel.sky") },
                     _disabled: { opacity: "0.5" },
                   })}
                 >
-                  <span
-                    style={{
-                      display: "inline-block",
-                      width: 22,
-                      height: 22,
-                      borderRadius: "50%",
-                      backgroundColor: def ? `#${def.colorHex}` : "#aaa",
-                      flexShrink: 0,
-                    }}
-                  />
+                  <span style={{ display: "inline-block", width: 22, height: 22, borderRadius: "50%", backgroundColor: def ? `#${def.colorHex}` : "#aaa", flexShrink: 0 }} />
                   <span style={{ fontSize: 14, color: "#4a3f55", flex: 1 }}>{def?.name ?? "謎の薬"}</span>
                   <span style={{ fontSize: 12, color: "#8b7f99" }}>Lv.{potion.level}</span>
                   <span style={{ fontSize: 14, fontWeight: "bold", color: "#6b5b73" }}>{potion.sellPrice}G</span>
-                  {isSelected && (
-                    <span style={{ fontSize: 18 }}>✓</span>
-                  )}
+                  {isSelected && <span style={{ fontSize: 18 }}>✓</span>}
                 </button>
               );
             })}
           </div>
         )}
-
-        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-          <button
-            onClick={() => setScene("brew")}
-            className={css({ bg: "pastel.lavender", border: "none", borderRadius: "10px", p: "10px 18px", cursor: "pointer", fontSize: "13px", color: "#4a3f55", _hover: { bg: "pastel.lilac" } })}
-          >
-            ← 調合に戻る
-          </button>
-          <button
-            onClick={handleConfirm}
-            className={css({
-              bg: "pastel.peach", border: "none", borderRadius: "12px", p: "10px 24px",
-              cursor: "pointer", fontSize: "14px", fontWeight: "bold", color: "#4a3f55",
-              boxShadow: "0 3px 12px rgba(0,0,0,0.15)",
-              _hover: { bg: "pastel.rose" },
-            })}
-          >
-            {selected.length === 0 ? "何も置かずに翌朝へ →" : `${selected.length}本を陳列して翌朝へ →`}
-          </button>
-        </div>
       </div>
+
+      <DialogueBox
+        actions={
+          <>
+            <ActionButton variant="secondary" onClick={() => setScene("brew")}>
+              ← 調合に戻る
+            </ActionButton>
+            <ActionButton onClick={handleConfirm}>
+              {selected.length === 0 ? "何も置かずに翌朝へ →" : `${selected.length}本を陳列して翌朝へ →`}
+            </ActionButton>
+          </>
+        }
+      />
     </div>
   );
 }

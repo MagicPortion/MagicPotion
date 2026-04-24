@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
-import { css } from "../../../styled-system/css";
+import { useMemo, useRef, useState } from "react";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
+import DialogueBox, { type DialogueBoxHandle } from "../ui/DialogueBox";
 
 export default function ConversationScene() {
   const { day, lastSaleResult, advanceScene } = useGameStore();
@@ -31,58 +31,32 @@ export default function ConversationScene() {
   }, [day, lastSaleResult]);
 
   const [index, setIndex] = useState(0);
+  const dialogueRef = useRef<DialogueBoxHandle>(null);
 
-  const handleClick = () => {
-    if (index < dialogues.length - 1) {
-      setIndex(index + 1);
-    } else {
-      advanceScene();
-    }
+  const handleAdvance = () => {
+    if (index < dialogues.length - 1) setIndex(index + 1);
+    else advanceScene();
   };
 
   const commands = useMemo<DrawCommand[]>(() => [
-    // 背景モック（後で朝の部屋画像に差し替え）
     { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
-    // 魔女モック（後でキャラクター画像に差し替え）
     { type: "rect", x: width * 0.5 - 50, y: height * 0.2, width: 100, height: 160, color: 0xffb6c1 },
     { type: "text", x: width * 0.5 - 26, y: height * 0.2 + 68, text: "魔女", fontSize: 14, textColor: "#888" },
   ], [width, height]);
 
   return (
-    <div style={{ position: "relative", width, height, overflow: "hidden" }}>
+    <div
+      style={{ position: "relative", width, height, overflow: "hidden", cursor: "pointer" }}
+      onClick={() => dialogueRef.current?.click()}
+    >
       <PixiCanvas commands={commands} backgroundColor={0xfff0f5} />
-
-      <div
-        onClick={handleClick}
-        className={css({
-          position: "absolute",
-          bottom: "32px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "min(720px, 90vw)",
-          bg: "pastel.lavender",
-          p: "24px 32px",
-          borderRadius: "16px",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "16px",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
-          border: "2px solid",
-          borderColor: "pastel.lilac",
-          transition: "background 0.2s",
-          _hover: { bg: "pastel.rose" },
-        })}
-        style={{ zIndex: 10 }}
-      >
-        <p style={{ fontSize: 18, color: "#4a3f55", margin: 0 }}>
-          {dialogues[index]}
-        </p>
-        <span style={{ fontSize: 13, color: "#8b7f99", whiteSpace: "nowrap" }}>
-          {index < dialogues.length - 1 ? "▶ 次へ" : "▶ レシピ習得へ"}
-        </span>
-      </div>
+      <DialogueBox
+        ref={dialogueRef}
+        speakerName="魔女"
+        text={dialogues[index]}
+        onAdvance={handleAdvance}
+        advanceLabel={index < dialogues.length - 1 ? "▶ 次へ" : "▶ レシピ習得へ"}
+      />
     </div>
   );
 }

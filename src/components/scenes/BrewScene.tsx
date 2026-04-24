@@ -4,7 +4,7 @@ import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import { MATERIALS, getPotion, colorNum } from "../../data/gameData";
-import RecipeBookPopup from "../ui/RecipeBookPopup";
+import DialogueBox, { ActionButton } from "../ui/DialogueBox";
 
 export default function BrewScene() {
   const { materials, brew, advanceScene } = useGameStore();
@@ -12,7 +12,6 @@ export default function BrewScene() {
   const [selectedAccent, setSelectedAccent] = useState<string | null>(null);
   const [message, setMessage] = useState("材料を選んで調合しよう！");
   const [cauldronColorHex, setCauldronColorHex] = useState("5f9ea0");
-  const [isRecipeOpen, setIsRecipeOpen] = useState(false);
   const { width, height } = useWindowSize();
 
   const ownedBases   = MATERIALS.filter((m) => m.category === "base"   && (materials[m.id] ?? 0) > 0);
@@ -32,21 +31,16 @@ export default function BrewScene() {
     }
   };
 
-  /** レシピ帳からクイックセット（所持材料があるレシピのみ呼ばれる） */
   const handleSelectRecipe = (baseId: string, accentId: string) => {
     setSelectedBase(baseId);
     setSelectedAccent(accentId);
-    setIsRecipeOpen(false);
     setMessage("材料をセットしました！「調合する！」を押してください。");
   };
 
   const commands = useMemo<DrawCommand[]>(() => [
-    // 背景モック（後で夜の調合部屋画像に差し替え）
     { type: "rect", x: 0, y: 0, width, height, color: 0x1a1a2e },
-    // 大釜モック（後で大釜画像に差し替え）
     { type: "rect", x: width / 2 - 60, y: height * 0.4, width: 120, height: 100, color: colorNum(cauldronColorHex) },
     { type: "text", x: width / 2 - 22, y: height * 0.4 + 42, text: "大釜", fontSize: 14, textColor: "#fff" },
-    // 魔女モック（後でキャラクター画像に差し替え）
     { type: "rect", x: width / 2 - 220, y: height * 0.35, width: 80, height: 130, color: 0xffb6c1 },
     { type: "text", x: width / 2 - 210, y: height * 0.35 + 60, text: "魔女", fontSize: 14, textColor: "#888" },
   ], [width, height, cauldronColorHex]);
@@ -117,40 +111,21 @@ export default function BrewScene() {
           ))}
       </div>
 
-      {/* アクションボタン */}
-      <div style={{ position: "absolute", bottom: 24, left: "50%", transform: "translateX(-50%)", zIndex: 10, display: "flex", gap: 10 }}>
-        <button
-          onClick={handleBrew}
-          disabled={!selectedBase || !selectedAccent}
-          className={css({
-            bg: "pastel.pink", border: "none", borderRadius: "14px", p: "12px 32px",
-            cursor: "pointer", fontSize: "16px", fontWeight: "bold", color: "#4a3f55",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
-            _hover: { bg: "pastel.rose" },
-            _disabled: { opacity: "0.45", cursor: "not-allowed" },
-          })}
-        >
-          調合する！
-        </button>
-        <button
-          onClick={() => setIsRecipeOpen(true)}
-          className={css({ bg: "pastel.lilac", border: "none", borderRadius: "10px", p: "10px 18px", cursor: "pointer", fontSize: "13px", color: "#4a3f55", boxShadow: "0 3px 10px rgba(0,0,0,0.15)", _hover: { bg: "pastel.lavender" } })}
-        >
-          レシピ帳
-        </button>
-        <button
-          onClick={advanceScene}
-          className={css({ bg: "pastel.lemon", border: "none", borderRadius: "10px", p: "10px 18px", cursor: "pointer", fontSize: "13px", fontWeight: "bold", color: "#4a3f55", boxShadow: "0 3px 10px rgba(0,0,0,0.15)", _hover: { bg: "pastel.peach" } })}
-        >
-          陳列へ →
-        </button>
-      </div>
-
-      {/* 共通レシピ帳ポップアップ（クイックセット付き） */}
-      <RecipeBookPopup
-        isOpen={isRecipeOpen}
-        onClose={() => setIsRecipeOpen(false)}
-        onSelectRecipe={handleSelectRecipe}
+      <DialogueBox
+        onRecipeSelect={handleSelectRecipe}
+        actions={
+          <>
+            <ActionButton
+              onClick={handleBrew}
+              disabled={!selectedBase || !selectedAccent}
+            >
+              調合する！
+            </ActionButton>
+            <ActionButton variant="secondary" onClick={advanceScene}>
+              陳列へ →
+            </ActionButton>
+          </>
+        }
       />
     </div>
   );

@@ -11,6 +11,7 @@
     "panda": "bun run panda"
   },
   "dependencies": {
+    "animejs": "^4.3.6",
     "pixi.js": "^8.18.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
