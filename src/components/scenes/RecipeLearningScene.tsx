@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
@@ -11,13 +11,13 @@ export default function RecipeLearningScene() {
   const { width, height } = useWindowSize();
   const [reloadMsg, setReloadMsg] = useState<string | null>(null);
 
-  const commands: DrawCommand[] = [
+  const commands = useMemo<DrawCommand[]>(() => [
     // 背景モック（後で朝の魔法部屋画像に差し替え）
     { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
     // 魔女モック（後でキャラクター画像に差し替え）
     { type: "rect", x: width * 0.5 - 50, y: height * 0.12, width: 100, height: 150, color: 0xffb6c1 },
     { type: "text", x: width * 0.5 - 26, y: height * 0.12 + 65, text: "魔女", fontSize: 14, textColor: "#888" },
-  ];
+  ], [width, height]);
 
   const options = dailyRecipeOptions.flatMap((id) => {
     const recipe = RECIPES.find((r) => r.id === id);
@@ -41,13 +41,7 @@ export default function RecipeLearningScene() {
 
   return (
     <div style={{ position: "relative", width, height, overflow: "hidden" }}>
-      <PixiCanvas
-        width={width}
-        height={height}
-        commands={commands}
-        backgroundColor={0xfde8f0}
-        style={{ position: "absolute", top: 0, left: 0 }}
-      />
+      <PixiCanvas commands={commands} backgroundColor={0xfde8f0} />
 
       <div
         style={{

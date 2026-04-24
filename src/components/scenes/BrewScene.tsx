@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
@@ -40,7 +40,7 @@ export default function BrewScene() {
     setMessage("材料をセットしました！「調合する！」を押してください。");
   };
 
-  const commands: DrawCommand[] = [
+  const commands = useMemo<DrawCommand[]>(() => [
     // 背景モック（後で夜の調合部屋画像に差し替え）
     { type: "rect", x: 0, y: 0, width, height, color: 0x1a1a2e },
     // 大釜モック（後で大釜画像に差し替え）
@@ -49,17 +49,11 @@ export default function BrewScene() {
     // 魔女モック（後でキャラクター画像に差し替え）
     { type: "rect", x: width / 2 - 220, y: height * 0.35, width: 80, height: 130, color: 0xffb6c1 },
     { type: "text", x: width / 2 - 210, y: height * 0.35 + 60, text: "魔女", fontSize: 14, textColor: "#888" },
-  ];
+  ], [width, height, cauldronColorHex]);
 
   return (
     <div style={{ position: "relative", width, height, overflow: "hidden" }}>
-      <PixiCanvas
-        width={width}
-        height={height}
-        commands={commands}
-        backgroundColor={0x0d0d1a}
-        style={{ position: "absolute", top: 0, left: 0 }}
-      />
+      <PixiCanvas commands={commands} backgroundColor={0x0d0d1a} />
 
       {/* メッセージ */}
       <div

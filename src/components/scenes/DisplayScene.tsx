@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
@@ -25,20 +25,14 @@ export default function DisplayScene() {
     advanceScene();
   };
 
-  const commands: DrawCommand[] = [
+  const commands = useMemo<DrawCommand[]>(() => [
     // 背景モック（後でお店の夜画像に差し替え）
     { type: "rect", x: 0, y: 0, width, height, color: 0x16213e },
-  ];
+  ], [width, height]);
 
   return (
     <div style={{ position: "relative", width, height, overflow: "hidden" }}>
-      <PixiCanvas
-        width={width}
-        height={height}
-        commands={commands}
-        backgroundColor={0x0d0d20}
-        style={{ position: "absolute", top: 0, left: 0 }}
-      />
+      <PixiCanvas commands={commands} backgroundColor={0x0d0d20} />
 
       <div
         style={{

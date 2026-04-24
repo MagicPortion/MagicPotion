@@ -23,24 +23,28 @@ const SCENE_COLOR: Record<Scene, { bg: string; text: string }> = {
   display:         { bg: "pastel.lavender", text: "#4a3f55" },
 };
 
+const renderScene = (scene: Scene) => {
+  switch (scene) {
+    case "conversation":    return <ConversationScene />;
+    case "recipe_learning": return <RecipeLearningScene />;
+    case "shop":            return <ShopScene />;
+    case "brew":            return <BrewScene />;
+    case "display":         return <DisplayScene />;
+  }
+};
+
 export default function GameManager() {
   const { scene, day, money } = useGameStore();
   const { bg, text } = SCENE_COLOR[scene];
 
-  const renderScene = () => {
-    switch (scene) {
-      case "conversation":    return <ConversationScene />;
-      case "recipe_learning": return <RecipeLearningScene />;
-      case "shop":            return <ShopScene />;
-      case "brew":            return <BrewScene />;
-      case "display":         return <DisplayScene />;
-    }
-  };
-
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh", overflow: "hidden" }}>
-      {renderScene()}
+      {/* シーン切り替え：key でリマウントして CSS フェード */}
+      <div key={scene} className="scene-enter" style={{ width: "100%", height: "100%" }}>
+        {renderScene(scene)}
+      </div>
 
+      {/* HUD：フェードの影響を受けないよう外側に配置 */}
       <header
         style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 100 }}
         className={css({
@@ -51,6 +55,7 @@ export default function GameManager() {
           py: "10px",
           bg: bg,
           boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
+          transition: "background 0.3s ease",
         })}
       >
         <h1 style={{ fontSize: 20, fontWeight: "bold", color: text, margin: 0 }}>

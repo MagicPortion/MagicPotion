@@ -1,7 +1,10 @@
+import { PixiAppProvider } from "./contexts/PixiAppContext";
 import GameManager from "./components/GameManager";
 
-function App() {
-  return <GameManager />;
+export default function App() {
+  return (
+    <PixiAppProvider>
+      <GameManager />
+    </PixiAppProvider>
+  );
 }
-
-export default App;

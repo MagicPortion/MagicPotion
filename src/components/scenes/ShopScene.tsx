@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
@@ -20,23 +20,17 @@ export default function ShopScene() {
 
   const ownedMaterials = Object.entries(materials).filter(([, c]) => c > 0);
 
-  const commands: DrawCommand[] = [
+  const commands = useMemo<DrawCommand[]>(() => [
     // 背景モック（後でお店の画像に差し替え）
     { type: "rect", x: 0, y: 0, width, height, color: 0xfff9c4 },
     // 店主モック（後でキャラクター画像に差し替え）
     { type: "rect", x: width - 130, y: height * 0.3, width: 100, height: 160, color: 0xd8b4fe },
     { type: "text", x: width - 114, y: height * 0.3 + 72, text: "店主", fontSize: 14, textColor: "#888" },
-  ];
+  ], [width, height]);
 
   return (
     <div style={{ position: "relative", width, height, overflow: "hidden" }}>
-      <PixiCanvas
-        width={width}
-        height={height}
-        commands={commands}
-        backgroundColor={0xfff9c4}
-        style={{ position: "absolute", top: 0, left: 0 }}
-      />
+      <PixiCanvas commands={commands} backgroundColor={0xfff9c4} />
 
       {/* メッセージ */}
       <div

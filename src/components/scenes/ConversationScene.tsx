@@ -40,23 +40,17 @@ export default function ConversationScene() {
     }
   };
 
-  const commands: DrawCommand[] = [
+  const commands = useMemo<DrawCommand[]>(() => [
     // 背景モック（後で朝の部屋画像に差し替え）
     { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
     // 魔女モック（後でキャラクター画像に差し替え）
     { type: "rect", x: width * 0.5 - 50, y: height * 0.2, width: 100, height: 160, color: 0xffb6c1 },
     { type: "text", x: width * 0.5 - 26, y: height * 0.2 + 68, text: "魔女", fontSize: 14, textColor: "#888" },
-  ];
+  ], [width, height]);
 
   return (
     <div style={{ position: "relative", width, height, overflow: "hidden" }}>
-      <PixiCanvas
-        width={width}
-        height={height}
-        commands={commands}
-        backgroundColor={0xfff0f5}
-        style={{ position: "absolute", top: 0, left: 0 }}
-      />
+      <PixiCanvas commands={commands} backgroundColor={0xfff0f5} />
 
       <div
         onClick={handleClick}
