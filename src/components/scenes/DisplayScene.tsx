@@ -5,7 +5,7 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import { getPotion, SHOP_SLOTS_BY_LEVEL } from "../../data/gameData";
 import type { BrewedPotion } from "../../data/types";
-import DialogueBox, { ActionButton } from "../ui/DialogueBox";
+import DialogueBox, { ActionButton } from "../ui/dialogue/DialogueBox";
 
 export default function DisplayScene() {
   const { brewedPotions, shopLevel, confirmDisplay, advanceScene, setScene } = useGameStore();

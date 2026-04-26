@@ -4,7 +4,7 @@ import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import { MATERIALS, getPotion, colorNum } from "../../data/gameData";
-import DialogueBox, { ActionButton } from "../ui/DialogueBox";
+import DialogueBox, { ActionButton } from "../ui/dialogue/DialogueBox";
 
 export default function BrewScene() {
   const { materials, brew, advanceScene } = useGameStore();

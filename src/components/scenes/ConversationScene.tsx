@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
-import DialogueBox, { type DialogueBoxHandle } from "../ui/DialogueBox";
+import DialogueBox, { type DialogueBoxHandle } from "../ui/dialogue/DialogueBox";
 
 export default function ConversationScene() {
   const { day, lastSaleResult, advanceScene } = useGameStore();
@@ -55,7 +55,6 @@ export default function ConversationScene() {
         speakerName="魔女"
         text={dialogues[index]}
         onAdvance={handleAdvance}
-        advanceLabel={index < dialogues.length - 1 ? "▶ 次へ" : "▶ レシピ習得へ"}
       />
     </div>
   );

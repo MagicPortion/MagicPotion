@@ -28,7 +28,7 @@ body, html {
   animation: sceneFadeIn 0.22s ease forwards;
 }
 
-@keyframes advancePulse {
-  0%, 100% { opacity: 1; transform: translateY(0); }
-  50%       { opacity: 0.4; transform: translateY(3px); }
+@keyframes advanceBounce {
+  0%, 100% { transform: translateY(0);   opacity: 1;   }
+  55%       { transform: translateY(8px); opacity: 0.45; }
 }
