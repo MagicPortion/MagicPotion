@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 import { useGameStore } from "../../../store/useGameStore";
 import { THEMES, TOOLBAR_H } from "./dialogueThemes";
+import { IconSettings, IconHint, IconRecipe } from "../icons";
 
 interface SceneToolbarProps {
   onSettings: () => void;
   onHint: () => void;
   onRecipe: () => void;
-  /** ツールバーモード: 右側にシーン固有ボタンを表示 */
   actions?: ReactNode;
 }
 
@@ -32,9 +32,9 @@ export default function SceneToolbar({ onSettings, onHint, onRecipe, actions }: 
       }}
     >
       <div style={{ display: "flex", gap: 8 }}>
-        <ToolBtn label="⚙ 設定"   onClick={onSettings} t={t} />
-        <ToolBtn label="❓ ヒント"  onClick={onHint}     t={t} />
-        <ToolBtn label="📜 レシピ"  onClick={onRecipe}   t={t} />
+        <ToolBtn icon={<IconSettings size={14} />} label="設定"  onClick={onSettings} t={t} />
+        <ToolBtn icon={<IconHint    size={14} />} label="ヒント" onClick={onHint}     t={t} />
+        <ToolBtn icon={<IconRecipe  size={14} />} label="レシピ" onClick={onRecipe}   t={t} />
       </div>
 
       {actions && (
@@ -47,8 +47,9 @@ export default function SceneToolbar({ onSettings, onHint, onRecipe, actions }: 
 }
 
 function ToolBtn({
-  label, onClick, t,
+  icon, label, onClick, t,
 }: {
+  icon: ReactNode;
   label: string;
   onClick: () => void;
   t: { btnBg: string; btnBorder: string; btnText: string };
@@ -57,6 +58,9 @@ function ToolBtn({
     <button
       onClick={(e) => { e.stopPropagation(); onClick(); }}
       style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 5,
         background: t.btnBg,
         border: `1px solid ${t.btnBorder}`,
         borderRadius: 6,
@@ -68,6 +72,7 @@ function ToolBtn({
         whiteSpace: "nowrap",
       }}
     >
+      {icon}
       {label}
     </button>
   );

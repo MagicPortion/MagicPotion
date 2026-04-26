@@ -1,4 +1,5 @@
 import type { DialogueAppearance, DialogueFontSize, DialogueTheme } from "../../store/useGameStore";
+import { IconSettings, IconClose } from "../ui/icons";
 
 interface SettingsPopupProps {
   isOpen: boolean;
@@ -31,33 +32,21 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%,-50%)",
-          zIndex: 301,
-          width: "min(460px, 90vw)",
-          background: "rgba(12,8,3,0.97)",
-          border: "2px solid #8B6914",
-          borderRadius: 6,
-          padding: "28px 32px",
-          boxShadow: "0 12px 48px rgba(0,0,0,0.7)",
+          position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+          zIndex: 301, width: "min(460px, 90vw)",
+          background: "rgba(12,8,3,0.97)", border: "2px solid #8B6914",
+          borderRadius: 6, padding: "28px 32px", boxShadow: "0 12px 48px rgba(0,0,0,0.7)",
         }}
       >
-        {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
-          <h2 style={{ fontSize: 16, color: "#c8a84b", margin: 0, letterSpacing: "0.12em" }}>
-            ⚙ 会話ボックス設定
+          <h2 style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, color: "#c8a84b", margin: 0, letterSpacing: "0.12em" }}>
+            <IconSettings size={16} /> 会話ボックス設定
           </h2>
-          <button
-            onClick={onClose}
-            style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20, color: "#8B6914", lineHeight: 1 }}
-          >
-            ✕
+          <button onClick={onClose} style={{ display: "flex", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "#8B6914", lineHeight: 1 }}>
+            <IconClose size={20} />
           </button>
         </div>
 
-        {/* Font size */}
         <section style={{ marginBottom: 28 }}>
           <p style={{ fontSize: 11, color: "#8B6914", letterSpacing: "0.15em", margin: "0 0 10px", textTransform: "uppercase" }}>
             ─ 文字サイズ
@@ -70,17 +59,13 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
                   key={key}
                   onClick={() => onChange({ ...appearance, fontSize: key })}
                   style={{
-                    flex: 1,
-                    padding: "12px 0",
+                    flex: 1, padding: "12px 0",
                     background: active ? "#8B6914" : "rgba(30,20,8,0.8)",
                     border: `1px solid ${active ? "#c8a84b" : "#4a3810"}`,
-                    borderRadius: 4,
-                    cursor: "pointer",
+                    borderRadius: 4, cursor: "pointer",
                     color: active ? "#1a0e06" : "#c8a84b",
                     fontWeight: active ? "bold" : "normal",
-                    fontSize: size,
-                    letterSpacing: "0.08em",
-                    transition: "all 0.15s",
+                    fontSize: size, letterSpacing: "0.08em", transition: "all 0.15s",
                   }}
                 >
                   {label}
@@ -90,7 +75,6 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
           </div>
         </section>
 
-        {/* Theme */}
         <section>
           <p style={{ fontSize: 11, color: "#8B6914", letterSpacing: "0.15em", margin: "0 0 10px", textTransform: "uppercase" }}>
             ─ 背景テーマ
@@ -103,17 +87,13 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
                   key={key}
                   onClick={() => onChange({ ...appearance, theme: key })}
                   style={{
-                    flex: 1,
-                    padding: "18px 8px",
+                    flex: 1, padding: "18px 8px",
                     background: bg,
                     border: `2px solid ${active ? "#c8a84b" : "#4a3810"}`,
-                    borderRadius: 4,
-                    cursor: "pointer",
-                    color: textColor,
-                    fontSize: 13,
+                    borderRadius: 4, cursor: "pointer",
+                    color: textColor, fontSize: 13,
                     fontWeight: active ? "bold" : "normal",
-                    letterSpacing: "0.08em",
-                    transition: "border-color 0.15s",
+                    letterSpacing: "0.08em", transition: "border-color 0.15s",
                   }}
                 >
                   {label}
@@ -123,7 +103,6 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
           </div>
         </section>
 
-        {/* Preview label */}
         <p style={{ fontSize: 11, color: "#4a3810", letterSpacing: "0.08em", margin: "20px 0 0", textAlign: "center" }}>
           ─ 変更は即時反映されます ─
         </p>

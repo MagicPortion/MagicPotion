@@ -41,6 +41,9 @@ export function ActionButton({
       onClick={onClick}
       disabled={disabled}
       style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
         background: variant === "primary" ? "#8B6914" : "rgba(14,8,2,0.92)",
         border: `1px solid ${variant === "primary" ? "#c8a84b" : "#5a4418"}`,
         borderRadius: 6,
