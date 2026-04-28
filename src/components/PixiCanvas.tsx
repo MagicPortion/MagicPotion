@@ -1,5 +1,6 @@
-import { useRef, useEffect } from "react";
-import { Application, Graphics, Text, TextStyle } from "pixi.js";
+import { useEffect } from "react";
+import { Graphics, Text, TextStyle, type Application } from "pixi.js";
+import { usePixiApp } from "../contexts/PixiAppContext";
 
 export interface DrawCommand {
   type: "rect" | "circle" | "text";
@@ -15,62 +16,24 @@ export interface DrawCommand {
 }
 
 interface PixiCanvasProps {
-  width: number;
-  height: number;
   commands: DrawCommand[];
   backgroundColor?: number;
-  style?: React.CSSProperties;
 }
 
-export default function PixiCanvas({
-  width,
-  height,
-  commands,
-  backgroundColor = 0xfff8e1,
-  style,
-}: PixiCanvasProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const appRef = useRef<Application | null>(null);
+export default function PixiCanvas({ commands, backgroundColor = 0xfff8e1 }: PixiCanvasProps) {
+  const app = usePixiApp();
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    if (!app) return;
+    draw(app, commands, backgroundColor);
+  }, [app, commands, backgroundColor]);
 
-    const app = new Application();
-    let cancelled = false;
-
-    app
-      .init({ width, height, background: backgroundColor, antialias: true })
-      .then(() => {
-        if (cancelled) { app.destroy(true); return; }
-        appRef.current = app;
-        container.appendChild(app.canvas as HTMLCanvasElement);
-        draw(app, commands);
-      });
-
-    return () => {
-      cancelled = true;
-      if (appRef.current) {
-        appRef.current.destroy(true);
-        appRef.current = null;
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [width, height]);
-
-  useEffect(() => {
-    if (appRef.current) draw(appRef.current, commands);
-  }, [commands]);
-
-  return (
-    <div
-      ref={containerRef}
-      style={{ display: "block", lineHeight: 0, ...style }}
-    />
-  );
+  // キャンバス自体は PixiAppProvider が固定位置でレンダリング済み
+  return null;
 }
 
-function draw(app: Application, commands: DrawCommand[]) {
+function draw(app: Application, commands: DrawCommand[], backgroundColor: number) {
+  app.renderer.background.color = backgroundColor;
   app.stage.removeChildren();
   for (const cmd of commands) {
     if (cmd.type === "rect") {

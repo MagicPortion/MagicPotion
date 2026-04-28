@@ -3,14 +3,18 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "imports": {
+    "#styled-system/*": "./styled-system/*"
+  },
   "scripts": {
-    "dev": "bun run vite",
-    "build": "tsc -b && bun run vite build",
+    "dev": "bun run panda codegen && bun run vite",
+    "build": "bun run panda codegen && tsc -b && bun run vite build",
     "lint": "bun run eslint .",
     "preview": "bun run vite preview",
-    "panda": "bun run panda"
+    "panda": "panda"
   },
   "dependencies": {
+    "animejs": "^4.3.6",
     "pixi.js": "^8.18.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
