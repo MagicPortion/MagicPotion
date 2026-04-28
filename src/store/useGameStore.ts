@@ -8,10 +8,9 @@ import {
 } from "../data/gameData";
 import type { BrewedPotion, SaleRecord } from "../data/types";
 
-export type DialogueFontSize = "normal" | "large" | "xl";
 export type DialogueTheme = "dark" | "parchment" | "semi";
-export interface DialogueAppearance { fontSize: DialogueFontSize; theme: DialogueTheme; }
-export const DEFAULT_APPEARANCE: DialogueAppearance = { fontSize: "large", theme: "dark" };
+export interface DialogueAppearance { theme: DialogueTheme; }
+export const DEFAULT_APPEARANCE: DialogueAppearance = { theme: "dark" };
 
 export type Scene =
   | "conversation"

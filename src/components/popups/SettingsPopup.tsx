@@ -1,4 +1,4 @@
-import type { DialogueAppearance, DialogueFontSize, DialogueTheme } from "../../store/useGameStore";
+import type { DialogueAppearance, DialogueTheme } from "../../store/useGameStore";
 import { IconSettings, IconClose } from "../ui/icons";
 
 interface SettingsPopupProps {
@@ -7,12 +7,6 @@ interface SettingsPopupProps {
   appearance: DialogueAppearance;
   onChange: (next: DialogueAppearance) => void;
 }
-
-const FONT_OPTIONS: { key: DialogueFontSize; label: string; size: string }[] = [
-  { key: "normal", label: "小", size: "18px" },
-  { key: "large",  label: "中", size: "22px" },
-  { key: "xl",     label: "大", size: "26px" },
-];
 
 const THEME_OPTIONS: { key: DialogueTheme; label: string; bg: string; textColor: string }[] = [
   { key: "dark",      label: "石の闇",  bg: "rgba(10,6,2,0.93)",      textColor: "#c8a84b" },
@@ -46,34 +40,6 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
             <IconClose size={20} />
           </button>
         </div>
-
-        <section style={{ marginBottom: 28 }}>
-          <p style={{ fontSize: 11, color: "#8B6914", letterSpacing: "0.15em", margin: "0 0 10px", textTransform: "uppercase" }}>
-            ─ 文字サイズ
-          </p>
-          <div style={{ display: "flex", gap: 8 }}>
-            {FONT_OPTIONS.map(({ key, label, size }) => {
-              const active = appearance.fontSize === key;
-              return (
-                <button
-                  key={key}
-                  onClick={() => onChange({ ...appearance, fontSize: key })}
-                  style={{
-                    flex: 1, padding: "12px 0",
-                    background: active ? "#8B6914" : "rgba(30,20,8,0.8)",
-                    border: `1px solid ${active ? "#c8a84b" : "#4a3810"}`,
-                    borderRadius: 4, cursor: "pointer",
-                    color: active ? "#1a0e06" : "#c8a84b",
-                    fontWeight: active ? "bold" : "normal",
-                    fontSize: size, letterSpacing: "0.08em", transition: "all 0.15s",
-                  }}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-        </section>
 
         <section>
           <p style={{ fontSize: 11, color: "#8B6914", letterSpacing: "0.15em", margin: "0 0 10px", textTransform: "uppercase" }}>

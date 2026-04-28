@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { animate, stagger } from "animejs";
 import { useGameStore } from "../../../store/useGameStore";
-import { THEMES, FONT_SIZE, SPEECH_BOTTOM, SPEECH_SIDE, type ThemeTokens } from "./dialogueThemes";
+import { THEMES, type ThemeTokens } from "./dialogueThemes";
+import { css } from "@styled-system/css";
 
 export interface SpeechBoxHandle {
   click: () => void;
@@ -25,7 +26,7 @@ const SpeechBox = forwardRef<SpeechBoxHandle, SpeechBoxProps>(function SpeechBox
 ) {
   const { dialogueAppearance } = useGameStore();
   const t = THEMES[dialogueAppearance.theme];
-  const fontSize = FONT_SIZE[dialogueAppearance.fontSize];
+  const fontSize = 34;
 
   const textRef = useRef<HTMLSpanElement>(null);
   const animRef = useRef<ReturnType<typeof animate> | null>(null);
@@ -71,67 +72,102 @@ const SpeechBox = forwardRef<SpeechBoxHandle, SpeechBoxProps>(function SpeechBox
 
   return (
     <div
-      style={{
+      className={css({
         position: "absolute",
-        bottom: SPEECH_BOTTOM,
-        left: SPEECH_SIDE,
-        right: SPEECH_SIDE,
-        zIndex: 51,
-        background: t.bg,
-        border: `2px solid ${t.border}`,
-        borderRadius: 10,
-        padding: "28px 36px 30px",
-        userSelect: "none",
-        cursor: showChoices ? "default" : "pointer",
-      }}
+        bottom: "80px",
+        left: "24px",
+        right: "24px",
+        zIndex: 49,
+        pointerEvents: "none",
+      })}
     >
-      {/* 話者名 */}
-      <p style={{
-        margin: "0 0 12px",
-        fontSize: 13,
-        fontWeight: "bold",
-        color: t.nameText,
-        letterSpacing: "0.16em",
-      }}>
-        ❖ {speakerName} ❖
-      </p>
-
-      {/* セリフ */}
-      <p style={{
-        margin: showChoices ? "0 0 16px" : "0 0 14px",
-        fontSize,
-        lineHeight: 1.8,
-        color: t.text,
-        letterSpacing: "0.03em",
-        minHeight: `${fontSize * 1.8 * 2.5}px`,
-      }}>
-        <span ref={textRef} />
-      </p>
-
-      {/* 選択肢 */}
-      {showChoices && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          {choices!.map((c, i) => (
-            <ChoiceButton key={i} label={c.label} onSelect={c.onSelect} t={t} fontSize={fontSize} />
-          ))}
+      <div className={css({ display: "flex", flexDirection: "column", gap: "8px", alignItems: "stretch" })}>
+        {/* 話者名（ボックスとは別に上に表示） */}
+        <div
+          aria-hidden
+          className={css({
+            alignSelf: "flex-start",
+            pointerEvents: "none",
+            borderRadius: "8px",
+            px: "12px",
+            py: "6px",
+            fontWeight: "bold",
+            letterSpacing: "0.16em",
+            userSelect: "none",
+          })}
+          style={{
+            fontSize: `${Math.round(fontSize * 1.15)}px`,
+            background: t.bg,
+            border: `2px solid ${t.border}`,
+            color: t.nameText,
+          }}
+        >
+          ❖ {speakerName} ❖
         </div>
-      )}
 
-      {/* 進むインジケーター ▼ バウンス（選択肢表示中は非表示） */}
-      {!showChoices && (
-        <p style={{
-          margin: 0,
-          textAlign: "right",
-          fontSize: 20,
-          color: t.nameText,
-          animation: "advanceBounce 0.9s ease-in-out infinite",
-          opacity: animating ? 0 : 1,
-          transition: "opacity 0.3s",
-          lineHeight: 1,
-        }}>
-          ▼
-        </p>
-      )}
+        {/* 会話ボックス本体 */}
+        <div
+          onClick={handleClick}
+          className={css({
+            borderRadius: "10px",
+            px: "36px",
+            pt: "28px",
+            pb: "30px",
+            userSelect: "none",
+            pointerEvents: "auto",
+          })}
+          style={{
+            cursor: showChoices ? "default" : "pointer",
+            background: t.bg,
+            border: `2px solid ${t.border}`,
+          }}
+        >
+          {/* セリフ */}
+          <p
+            className={css({
+              lineHeight: 1.8,
+              letterSpacing: "0.03em",
+            })}
+            style={{
+              margin: showChoices ? "0 0 16px" : "0 0 14px",
+              fontSize: `${fontSize}px`,
+              minHeight: `${fontSize * 1.8 * 2.5}px`,
+              color: t.text,
+            }}
+          >
+            <span ref={textRef} />
+          </p>
+
+          {/* 選択肢 */}
+          {showChoices && (
+            <div className={css({ display: "flex", flexDirection: "column", gap: "6px" })}>
+              {choices!.map((c, i) => (
+                <ChoiceButton key={i} label={c.label} onSelect={c.onSelect} t={t} fontSize={fontSize} />
+              ))}
+            </div>
+          )}
+
+          {/* 進むインジケーター ▼ バウンス（選択肢表示中は非表示） */}
+          {!showChoices && (
+            <p
+              className={css({
+                textAlign: "right",
+                animation: "advanceBounce 0.9s ease-in-out infinite",
+                transition: "opacity 0.3s",
+                lineHeight: 1,
+                m: 0,
+              })}
+              style={{
+                fontSize: "20px",
+                opacity: animating ? 0 : 1,
+                color: t.nameText,
+              }}
+            >
+              ▼
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   );
 });
@@ -152,19 +188,22 @@ function ChoiceButton({
       onClick={(e) => { e.stopPropagation(); onSelect(); }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{
+      className={css({
         display: "block",
         width: "100%",
-        padding: "10px 20px",
-        background: hovered ? t.choiceBgHover : t.choiceBg,
-        border: `1px solid ${t.border}`,
-        borderRadius: 6,
-        color: t.text,
-        fontSize: Math.round(fontSize * 0.78),
+        px: "20px",
+        py: "10px",
+        borderRadius: "6px",
         cursor: "pointer",
         textAlign: "left",
         letterSpacing: "0.04em",
         transition: "background 0.15s",
+      })}
+      style={{
+        background: hovered ? t.choiceBgHover : t.choiceBg,
+        fontSize: `${Math.round(fontSize * 0.78)}px`,
+        border: `1px solid ${t.border}`,
+        color: t.text,
       }}
     >
       ▷ {label}

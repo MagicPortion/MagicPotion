@@ -1,7 +1,5 @@
-import type { DialogueFontSize, DialogueTheme } from "../../../store/useGameStore";
+import type { DialogueTheme } from "../../../store/useGameStore";
 
-export const TOOLBAR_H = 40;
-export const SPEECH_BOTTOM = TOOLBAR_H + 8;
 export const SPEECH_SIDE = 24;
 
 export type ThemeTokens = {
@@ -52,8 +50,3 @@ export const THEMES: Record<DialogueTheme, ThemeTokens> = {
   },
 };
 
-export const FONT_SIZE: Record<DialogueFontSize, number> = {
-  normal: 22,
-  large: 28,
-  xl: 36,
-};
