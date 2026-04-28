@@ -80,7 +80,7 @@ const SpeechBox = forwardRef<SpeechBoxHandle, SpeechBoxProps>(function SpeechBox
         background: t.bg,
         border: `2px solid ${t.border}`,
         borderRadius: 10,
-        padding: "20px 36px 22px",
+        padding: "28px 36px 30px",
         userSelect: "none",
         cursor: showChoices ? "default" : "pointer",
       }}
@@ -103,6 +103,7 @@ const SpeechBox = forwardRef<SpeechBoxHandle, SpeechBoxProps>(function SpeechBox
         lineHeight: 1.8,
         color: t.text,
         letterSpacing: "0.03em",
+        minHeight: `${fontSize * 1.8 * 2.5}px`,
       }}>
         <span ref={textRef} />
       </p>

@@ -18,27 +18,27 @@ export default function SceneToolbar({ onSettings, onHint, onRecipe, actions }: 
     <div
       style={{
         position: "absolute",
-        bottom: 0,
+        bottom: 2,
         left: 0,
         right: 0,
         zIndex: 50,
         height: TOOLBAR_H,
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 32px",
+        justifyContent: "center",
+        padding: "0 12px",
         background: "none",
         userSelect: "none",
       }}
     >
-      <div style={{ display: "flex", gap: 8 }}>
-        <ToolBtn icon={<IconSettings size={14} />} label="設定"  onClick={onSettings} t={t} />
-        <ToolBtn icon={<IconHint    size={14} />} label="ヒント" onClick={onHint}     t={t} />
-        <ToolBtn icon={<IconRecipe  size={14} />} label="レシピ" onClick={onRecipe}   t={t} />
+      <div style={{ display: "flex", gap: 40 }}>
+        <ToolBtn icon={<IconSettings size={20} />} label="設定"  onClick={onSettings} t={t} />
+        <ToolBtn icon={<IconHint    size={20} />} label="ヒント" onClick={onHint}     t={t} />
+        <ToolBtn icon={<IconRecipe  size={20} />} label="レシピ" onClick={onRecipe}   t={t} />
       </div>
 
       {actions && (
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <div style={{ position: "absolute", right: 12, display: "flex", gap: 8, alignItems: "center" }}>
           {actions}
         </div>
       )}
@@ -60,13 +60,13 @@ function ToolBtn({
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 5,
+        gap: 20,
         background: t.btnBg,
         border: `1px solid ${t.btnBorder}`,
         borderRadius: 6,
-        padding: "8px 18px",
+        padding: "12px 84px",
         cursor: "pointer",
-        fontSize: 14,
+        fontSize: 16,
         color: t.btnText,
         letterSpacing: "0.06em",
         whiteSpace: "nowrap",

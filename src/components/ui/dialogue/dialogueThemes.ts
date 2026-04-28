@@ -1,7 +1,7 @@
 import type { DialogueFontSize, DialogueTheme } from "../../../store/useGameStore";
 
-export const TOOLBAR_H = 60;
-export const SPEECH_BOTTOM = TOOLBAR_H + 14;
+export const TOOLBAR_H = 40;
+export const SPEECH_BOTTOM = TOOLBAR_H + 8;
 export const SPEECH_SIDE = 24;
 
 export type ThemeTokens = {
