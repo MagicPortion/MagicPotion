@@ -77,25 +77,25 @@ export default function GameManager() {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              px: "20px",
-              py: "10px",
+              px: "40px",
+              py: "20px",
               bg: bg,
               boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
               transition: "background 0.3s ease",
             })}
           >
-            <h1 style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 20, fontWeight: "bold", color: text, margin: 0 }}>
-              <IconFlask size={20} /> Magic Potion
+            <h1 style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 40, fontWeight: "bold", color: text, margin: 0 }}>
+              <IconFlask size={36} /> Magic Potion
             </h1>
-            <div style={{ display: "flex", gap: 12, fontSize: 14, color: text, alignItems: "center" }}>
-              <span style={{ background: "rgba(255,255,255,0.45)", borderRadius: 20, padding: "4px 14px" }}>
+            <div style={{ display: "flex", gap: 16, fontSize: 28, color: text, alignItems: "center" }}>
+              <span style={{ background: "rgba(255,255,255,0.45)", borderRadius: 24, padding: "8px 18px" }}>
                 {day}日目
               </span>
-              <span style={{ background: "rgba(255,255,255,0.45)", borderRadius: 20, padding: "4px 14px" }}>
+              <span style={{ background: "rgba(255,255,255,0.45)", borderRadius: 24, padding: "8px 18px" }}>
                 {SCENE_LABEL[scene]}
               </span>
-              <span style={{ display: "flex", alignItems: "center", gap: 5, background: "rgba(255,255,255,0.45)", borderRadius: 20, padding: "4px 14px", fontWeight: "bold" }}>
-                <IconCoin size={15} /> {money}G
+              <span style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.45)", borderRadius: 24, padding: "8px 18px", fontWeight: "bold" }}>
+                <IconCoin size={22} /> {money}G
               </span>
             </div>
           </header>
