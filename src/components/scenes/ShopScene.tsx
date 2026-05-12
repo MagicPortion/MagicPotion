@@ -2,21 +2,27 @@ import { useMemo, useState } from "react";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
-import { MATERIALS, shuffleArray, type MaterialDef } from "../../data/gameData";
+import { MATERIALS, SHOP_SLOTS_BY_LEVEL, shuffleArray, type MaterialDef } from "../../data/gameData";
 import DialogueBox, { ActionButton } from "../ui/dialogue/DialogueBox";
 import ShopMessage from "../ui/shop/ShopMessage";
 import ShopItemGrid from "../ui/shop/ShopItemGrid";
 import InventoryPanel from "../ui/shop/InventoryPanel";
 
 export default function ShopScene() {
-  const { materials, buyMaterial, advanceScene } = useGameStore();
+  const { materials, buyMaterial, shopLevel, advanceScene } = useGameStore();
+  const shopSlots = Math.max(5, SHOP_SLOTS_BY_LEVEL[shopLevel] ?? 3);
   const [message, setMessage] = useState("いらっしゃいませ！材料をお選びください。");
-  const [shopItems] = useState<MaterialDef[]>(() => shuffleArray(MATERIALS).slice(0, 6));
+  const [shopItems, setShopItems] = useState<MaterialDef[]>(() => shuffleArray(MATERIALS).slice(0, shopSlots));
   const { width, height } = useWindowSize();
 
   const handleBuy = (item: MaterialDef) => {
     const success = buyMaterial(item.id, item.price);
     setMessage(success ? `${item.name}を購入しました！` : "お金が足りません…");
+  };
+
+  const refreshShopItems = () => {
+    setShopItems(shuffleArray(MATERIALS).slice(0, shopSlots));
+    setMessage("品揃えをリフレッシュしました。");
   };
 
   const commands = useMemo<DrawCommand[]>(() => [
@@ -29,7 +35,7 @@ export default function ShopScene() {
     <div style={{ position: "relative", width, height, overflow: "hidden" }}>
       <PixiCanvas commands={commands} backgroundColor={0xfff9c4} />
       <ShopMessage message={message} />
-      <ShopItemGrid items={shopItems} onBuy={handleBuy} />
+      <ShopItemGrid items={shopItems} shopLevel={shopLevel} onBuy={handleBuy} onRefresh={refreshShopItems} />
       <InventoryPanel materials={materials} />
       <DialogueBox
         actions={<ActionButton onClick={advanceScene}>買い物を終える →</ActionButton>}
