@@ -46,8 +46,7 @@ export default function ConversationScene() {
 
   return (
     <div
-      style={{ position: "relative", width, height, overflow: "hidden", cursor: "pointer" }}
-      onClick={() => dialogueRef.current?.click()}
+      style={{ position: "relative", width, height, overflow: "hidden", cursor: "pointer" }} 
     >
       <PixiCanvas commands={commands} backgroundColor={0xfff0f5} />
       <DialogueBox
