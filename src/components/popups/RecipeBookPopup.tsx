@@ -69,62 +69,37 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                     borderRadius: 12, padding: "24px", minHeight: 180, cursor: onSelectRecipe && canBrew ? 'pointer' : 'default',
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, width: 260 }}>
-                    <Dot colorHex={potion?.colorHex ?? "808080"} size={26} />
-                    <span style={{ fontSize: 26, fontWeight: "bold", color: "#c8a84b" }}>{potion?.name}</span>
-                  </div>
-
-                  <div style={{ fontSize: 48, color: "#4a3810", fontWeight: "bold" }}>→</div>
-
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 140 }}>
-                    <Dot colorHex={base?.colorHex ?? "aaaaaa"} size={26} />
-                    <span style={{ fontSize: 24, color: "#e8d8b8", marginTop: 10 }}>{base?.name}</span>
-                    <img
-                      src={`/src/assets/materials/${recipe.baseId}.png`}
-                      alt={base?.name ?? ""}
-                      style={{ width: 110, height: 72, objectFit: 'contain', marginTop: 10 }}
-                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-                    />
-                  </div>
-
-                  <div style={{ fontSize: 36, color: "#4a3810", fontWeight: "bold" }}>＋</div>
-
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 140 }}>
-                    <Dot colorHex={accent?.colorHex ?? "aaaaaa"} size={26} />
-                    <span style={{ fontSize: 24, color: "#e8d8b8", marginTop: 10 }}>{accent?.name}</span>
-                    <img
-                      src={`/src/assets/materials/${recipe.accentId}.png`}
-                      alt={accent?.name ?? ""}
-                      style={{ width: 110, height: 72, objectFit: 'contain', marginTop: 10 }}
-                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "flex-end", gap: 10, width: 160, marginLeft: "auto" }}>
-                    <span style={{ background: "#1a0e06", border: "1px solid #8B6914", borderRadius: 22, padding: "6px 12px", fontSize: 18, color: "#c8a84b", whiteSpace: "nowrap" }}>
-                      Lv.{level}
-                    </span>
-                    <span style={{ fontSize: 24, fontWeight: "bold", color: "#c8a84b", whiteSpace: "nowrap", minWidth: 72, textAlign: "right" }}>
-                      {price}G
-                    </span>
-                    {onSelectRecipe && (
-                      <button
-                        onClick={() => onSelectRecipe(recipe.baseId, recipe.accentId)}
-                        disabled={!canBrew}
-                        className={css({
-                          bg: canBrew ? "pastel.mint" : "transparent",
-                          border: "1px solid", borderColor: canBrew ? "pastel.sage" : "#4a3810",
-                          borderRadius: "6px", p: "6px 14px",
-                          cursor: canBrew ? "pointer" : "not-allowed",
-                          fontSize: "13px", color: canBrew ? "#4a3f55" : "#4a3810",
-                          whiteSpace: "nowrap", opacity: canBrew ? "1" : "0.5",
-                          _hover: { bg: canBrew ? "pastel.sage" : "transparent" },
-                        })}
-                      >
-                        セット
-                      </button>
-                    )}
-                  </div>
+                  <Dot colorHex={base?.colorHex ?? "aaaaaa"} />
+                  <span style={{ fontSize: 15, color: "#e8d8b8" }}>{base?.name}</span>
+                  <span style={{ fontSize: 15, color: "#4a3810" }}>＋</span>
+                  <Dot colorHex={accent?.colorHex ?? "aaaaaa"} />
+                  <span style={{ fontSize: 15, color: "#e8d8b8" }}>{accent?.name}</span>
+                  <span style={{ fontSize: 15, color: "#4a3810", margin: "0 2px" }}>＝</span>
+                  <Dot colorHex={potion?.colorHex ?? "808080"} />
+                  <span style={{ fontSize: 17, fontWeight: "bold", color: "#c8a84b", flex: 1 }}>{potion?.name}</span>
+                  <span style={{ background: "#1a0e06", border: "1px solid #8B6914", borderRadius: 20, padding: "2px 8px", fontSize: 13, color: "#c8a84b", whiteSpace: "nowrap" }}>
+                    Lv.{level}
+                  </span>
+                  <span style={{ fontSize: 15, fontWeight: "bold", color: "#c8a84b", whiteSpace: "nowrap", minWidth: 48, textAlign: "right" }}>
+                    {price}G
+                  </span>
+                  {onSelectRecipe && (
+                    <button
+                      onClick={() => onSelectRecipe(recipe.baseId, recipe.accentId)}
+                      disabled={!canBrew}
+                      className={css({
+                        bg: canBrew ? "pastel.mint" : "transparent",
+                        border: "1px solid", borderColor: canBrew ? "pastel.sage" : "#4a3810",
+                        borderRadius: "4px", p: "4px 12px",
+                        cursor: canBrew ? "pointer" : "not-allowed",
+                        fontSize: "12px", color: canBrew ? "#4a3f55" : "#4a3810",
+                        whiteSpace: "nowrap", opacity: canBrew ? "1" : "0.5",
+                        _hover: { bg: canBrew ? "pastel.sage" : "transparent" },
+                      })}
+                    >
+                      セット
+                    </button>
+                  )}
                 </div>
               );
             })}
