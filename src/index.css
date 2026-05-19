@@ -32,3 +32,41 @@ body, html {
   0%, 100% { transform: translateY(0);   opacity: 1;   }
   55%       { transform: translateY(8px); opacity: 0.45; }
 }
+
+@keyframes resultPop {
+  0%   { transform: scale(0.7); opacity: 0; }
+  70%  { transform: scale(1.06); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes brewPopupIn {
+  0%   { transform: scale(0.72); opacity: 0; }
+  55%  { transform: scale(1.04); }
+  100% { transform: scale(1);    opacity: 1; }
+}
+
+@keyframes brewOverlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes orbPulseGlow {
+  0%, 100% { filter: brightness(1) saturate(1); }
+  50%       { filter: brightness(1.4) saturate(1.25); }
+}
+
+@keyframes sparkleFly {
+  0%   { transform: translateX(0)     scale(1.4); opacity: 1; }
+  100% { transform: translateX(110px) scale(0);   opacity: 0; }
+}
+
+@keyframes shelfSlideIn {
+  from { transform: translateX(44px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes shelfBadgePop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.15); }
+  100% { transform: scale(1);   opacity: 1; }
+}
