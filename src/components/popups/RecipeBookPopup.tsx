@@ -46,6 +46,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
             調合するか、朝のレシピ習得で覚えよう！
           </p>
         ) : (
+
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(760px, 1fr))", gap: 22 }}>
             {knownRecipes.map(([recipeId, level]) => {
               const recipe = getRecipe(recipeId);
@@ -69,37 +70,52 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                     borderRadius: 12, padding: "24px", minHeight: 180, cursor: onSelectRecipe && canBrew ? 'pointer' : 'default',
                   }}
                 >
-                  <Dot colorHex={base?.colorHex ?? "aaaaaa"} />
-                  <span style={{ fontSize: 15, color: "#e8d8b8" }}>{base?.name}</span>
-                  <span style={{ fontSize: 15, color: "#4a3810" }}>＋</span>
-                  <Dot colorHex={accent?.colorHex ?? "aaaaaa"} />
-                  <span style={{ fontSize: 15, color: "#e8d8b8" }}>{accent?.name}</span>
-                  <span style={{ fontSize: 15, color: "#4a3810", margin: "0 2px" }}>＝</span>
-                  <Dot colorHex={potion?.colorHex ?? "808080"} />
-                  <span style={{ fontSize: 17, fontWeight: "bold", color: "#c8a84b", flex: 1 }}>{potion?.name}</span>
-                  <span style={{ background: "#1a0e06", border: "1px solid #8B6914", borderRadius: 20, padding: "2px 8px", fontSize: 13, color: "#c8a84b", whiteSpace: "nowrap" }}>
-                    Lv.{level}
-                  </span>
-                  <span style={{ fontSize: 15, fontWeight: "bold", color: "#c8a84b", whiteSpace: "nowrap", minWidth: 48, textAlign: "right" }}>
-                    {price}G
-                  </span>
-                  {onSelectRecipe && (
-                    <button
-                      onClick={() => onSelectRecipe(recipe.baseId, recipe.accentId)}
-                      disabled={!canBrew}
-                      className={css({
-                        bg: canBrew ? "pastel.mint" : "transparent",
-                        border: "1px solid", borderColor: canBrew ? "pastel.sage" : "#4a3810",
-                        borderRadius: "4px", p: "4px 12px",
-                        cursor: canBrew ? "pointer" : "not-allowed",
-                        fontSize: "12px", color: canBrew ? "#4a3f55" : "#4a3810",
-                        whiteSpace: "nowrap", opacity: canBrew ? "1" : "0.5",
-                        _hover: { bg: canBrew ? "pastel.sage" : "transparent" },
-                      })}
-                    >
-                      セット
-                    </button>
-                  )}
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 140 }}>
+                    <Dot colorHex={base?.colorHex ?? "aaaaaa"} size={20} />
+                    <span style={{ fontSize: 16, color: "#e8d8b8", marginTop: 8 }}>{base?.name}</span>
+                    <div style={{ width: 72, height: 48, marginTop: 6 }} />
+                  </div>
+
+                  <div style={{ fontSize: 18, color: "#4a3810" }}>＋</div>
+
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 140 }}>
+                    <Dot colorHex={accent?.colorHex ?? "aaaaaa"} size={20} />
+                    <span style={{ fontSize: 16, color: "#e8d8b8", marginTop: 8 }}>{accent?.name}</span>
+                    <div style={{ width: 72, height: 48, marginTop: 6 }} />
+                  </div>
+
+                  <div style={{ fontSize: 18, color: "#4a3810" }}>＝</div>
+
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1 }}>
+                    <Dot colorHex={potion?.colorHex ?? "808080"} size={20} />
+                    <span style={{ fontSize: 20, fontWeight: "bold", color: "#c8a84b" }}>{potion?.name}</span>
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
+                    <span style={{ background: "#1a0e06", border: "1px solid #8B6914", borderRadius: 20, padding: "4px 10px", fontSize: 13, color: "#c8a84b", whiteSpace: "nowrap" }}>
+                      Lv.{level}
+                    </span>
+                    <span style={{ fontSize: 16, fontWeight: "bold", color: "#c8a84b", whiteSpace: "nowrap", minWidth: 56, textAlign: "right" }}>
+                      {price}G
+                    </span>
+                    {onSelectRecipe && (
+                      <button
+                        onClick={() => onSelectRecipe(recipe.baseId, recipe.accentId)}
+                        disabled={!canBrew}
+                        className={css({
+                          bg: canBrew ? "pastel.mint" : "transparent",
+                          border: "1px solid", borderColor: canBrew ? "pastel.sage" : "#4a3810",
+                          borderRadius: "6px", p: "6px 14px",
+                          cursor: canBrew ? "pointer" : "not-allowed",
+                          fontSize: "13px", color: canBrew ? "#4a3f55" : "#4a3810",
+                          whiteSpace: "nowrap", opacity: canBrew ? "1" : "0.5",
+                          _hover: { bg: canBrew ? "pastel.sage" : "transparent" },
+                        })}
+                      >
+                        セット
+                      </button>
+                    )}
+                  </div>
                 </div>
               );
             })}
