@@ -26,14 +26,14 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
         onClick={(e) => e.stopPropagation()}
         style={{
           position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-          zIndex: 301, width: "min(600px, 90vw)", maxHeight: "72vh", overflowY: "auto",
-          background: "rgba(12,8,3,0.97)", border: "2px solid #8B6914",
-          borderRadius: 6, padding: "28px 32px", boxShadow: "0 12px 48px rgba(0,0,0,0.7)",
+          zIndex: 301, width: "min(1100px, 95vw)", maxHeight: "80vh", overflowY: "auto",
+          background: "rgba(12,8,3,0.98)", border: "2px solid #8B6914",
+          borderRadius: 10, padding: "32px 36px", boxShadow: "0 16px 64px rgba(0,0,0,0.75)",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-          <h2 style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 19, color: "#c8a84b", margin: 0, letterSpacing: "0.1em" }}>
-            <IconRecipe size={16} /> レシピ帳
+          <h2 style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 28, color: "#c8a84b", margin: 0, letterSpacing: "0.12em" }}>
+            <IconRecipe size={26} /> レシピ帳
           </h2>
           <button onClick={onClose} style={{ display: "flex", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "#8B6914" }}>
             <IconClose size={18} />
@@ -46,7 +46,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
             調合するか、朝のレシピ習得で覚えよう！
           </p>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(460px, 1fr))", gap: 14 }}>
             {knownRecipes.map(([recipeId, level]) => {
               const recipe = getRecipe(recipeId);
               if (!recipe) return null;
@@ -63,42 +63,57 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                 <div
                   key={recipeId}
                   style={{
-                    display: "flex", alignItems: "center", gap: 8,
-                    background: "rgba(30,20,8,0.7)", border: "1px solid #4a3810",
-                    borderRadius: 4, padding: "10px 14px",
+                    display: "flex", alignItems: "center", gap: 18,
+                    background: "rgba(30,20,8,0.78)", border: "1px solid #4a3810",
+                    borderRadius: 8, padding: "16px", minHeight: 100,
                   }}
                 >
-                  <Dot colorHex={base?.colorHex ?? "aaaaaa"} />
-                  <span style={{ fontSize: 15, color: "#e8d8b8" }}>{base?.name}</span>
-                  <span style={{ fontSize: 15, color: "#4a3810" }}>＋</span>
-                  <Dot colorHex={accent?.colorHex ?? "aaaaaa"} />
-                  <span style={{ fontSize: 15, color: "#e8d8b8" }}>{accent?.name}</span>
-                  <span style={{ fontSize: 15, color: "#4a3810", margin: "0 2px" }}>＝</span>
-                  <Dot colorHex={potion?.colorHex ?? "808080"} />
-                  <span style={{ fontSize: 17, fontWeight: "bold", color: "#c8a84b", flex: 1 }}>{potion?.name}</span>
-                  <span style={{ background: "#1a0e06", border: "1px solid #8B6914", borderRadius: 20, padding: "2px 8px", fontSize: 13, color: "#c8a84b", whiteSpace: "nowrap" }}>
-                    Lv.{level}
-                  </span>
-                  <span style={{ fontSize: 15, fontWeight: "bold", color: "#c8a84b", whiteSpace: "nowrap", minWidth: 48, textAlign: "right" }}>
-                    {price}G
-                  </span>
-                  {onSelectRecipe && (
-                    <button
-                      onClick={() => onSelectRecipe(recipe.baseId, recipe.accentId)}
-                      disabled={!canBrew}
-                      className={css({
-                        bg: canBrew ? "pastel.mint" : "transparent",
-                        border: "1px solid", borderColor: canBrew ? "pastel.sage" : "#4a3810",
-                        borderRadius: "4px", p: "4px 12px",
-                        cursor: canBrew ? "pointer" : "not-allowed",
-                        fontSize: "12px", color: canBrew ? "#4a3f55" : "#4a3810",
-                        whiteSpace: "nowrap", opacity: canBrew ? "1" : "0.5",
-                        _hover: { bg: canBrew ? "pastel.sage" : "transparent" },
-                      })}
-                    >
-                      セット
-                    </button>
-                  )}
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 140 }}>
+                    <Dot colorHex={base?.colorHex ?? "aaaaaa"} size={20} />
+                    <span style={{ fontSize: 16, color: "#e8d8b8", marginTop: 8 }}>{base?.name}</span>
+                    <div style={{ width: 72, height: 48, marginTop: 6 }} />
+                  </div>
+
+                  <div style={{ fontSize: 18, color: "#4a3810" }}>＋</div>
+
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 140 }}>
+                    <Dot colorHex={accent?.colorHex ?? "aaaaaa"} size={20} />
+                    <span style={{ fontSize: 16, color: "#e8d8b8", marginTop: 8 }}>{accent?.name}</span>
+                    <div style={{ width: 72, height: 48, marginTop: 6 }} />
+                  </div>
+
+                  <div style={{ fontSize: 18, color: "#4a3810" }}>＝</div>
+
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1 }}>
+                    <Dot colorHex={potion?.colorHex ?? "808080"} size={20} />
+                    <span style={{ fontSize: 20, fontWeight: "bold", color: "#c8a84b" }}>{potion?.name}</span>
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }}>
+                    <span style={{ background: "#1a0e06", border: "1px solid #8B6914", borderRadius: 20, padding: "4px 10px", fontSize: 13, color: "#c8a84b", whiteSpace: "nowrap" }}>
+                      Lv.{level}
+                    </span>
+                    <span style={{ fontSize: 16, fontWeight: "bold", color: "#c8a84b", whiteSpace: "nowrap", minWidth: 56, textAlign: "right" }}>
+                      {price}G
+                    </span>
+                    {onSelectRecipe && (
+                      <button
+                        onClick={() => onSelectRecipe(recipe.baseId, recipe.accentId)}
+                        disabled={!canBrew}
+                        className={css({
+                          bg: canBrew ? "pastel.mint" : "transparent",
+                          border: "1px solid", borderColor: canBrew ? "pastel.sage" : "#4a3810",
+                          borderRadius: "6px", p: "6px 14px",
+                          cursor: canBrew ? "pointer" : "not-allowed",
+                          fontSize: "13px", color: canBrew ? "#4a3f55" : "#4a3810",
+                          whiteSpace: "nowrap", opacity: canBrew ? "1" : "0.5",
+                          _hover: { bg: canBrew ? "pastel.sage" : "transparent" },
+                        })}
+                      >
+                        セット
+                      </button>
+                    )}
+                  </div>
                 </div>
               );
             })}
@@ -109,8 +124,8 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
   );
 }
 
-function Dot({ colorHex }: { colorHex: string }) {
+function Dot({ colorHex, size = 12 }: { colorHex: string; size?: number }) {
   return (
-    <span style={{ display: "inline-block", width: 12, height: 12, borderRadius: "50%", backgroundColor: `#${colorHex}`, flexShrink: 0, border: "1px solid rgba(255,255,255,0.2)" }} />
+    <span style={{ display: "inline-block", width: size, height: size, borderRadius: "50%", backgroundColor: `#${colorHex}`, flexShrink: 0, border: "1px solid rgba(255,255,255,0.2)" }} />
   );
 }
