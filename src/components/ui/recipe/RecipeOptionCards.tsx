@@ -31,10 +31,10 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
       }}
     >
       <div style={{ marginBottom: 12 }}>
-        <h2 style={{ fontSize: 17, fontWeight: "bold", color: "#6b5b73", margin: 0 }}>
+        <h2 style={{ fontSize: 20, fontWeight: "bold", color: "#6b5b73", margin: 0 }}>
           今日のポーションレシピ
         </h2>
-        <p style={{ fontSize: 12, color: "#9b8aaa", margin: "4px 0 0" }}>
+        <p style={{ fontSize: 14, color: "#9b8aaa", margin: "4px 0 0" }}>
           1つ選ぶとそのレシピのレベルが上がり、より高値で売れるようになります
         </p>
       </div>
@@ -62,11 +62,11 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
               })}
             >
               <span style={{ display: "block", width: 56, height: 56, borderRadius: "50%", backgroundColor: `#${opt.potion.colorHex}`, boxShadow: `0 4px 16px #${opt.potion.colorHex}88`, flexShrink: 0 }} />
-              <span style={{ fontSize: 14, fontWeight: "bold", color: "#4a3f55", textAlign: "center", lineHeight: 1.3 }}>
+              <span style={{ fontSize: 16, fontWeight: "bold", color: "#4a3f55", textAlign: "center", lineHeight: 1.3 }}>
                 {opt.potion.name}
               </span>
-              <span style={{ fontSize: 13, color: "#8b7f99" }}>{opt.nextPrice}G</span>
-              <span className={css({ fontSize: "11px", fontWeight: "bold", px: "10px", py: "3px", borderRadius: "20px", bg: isKnown ? "pastel.lilac" : "pastel.mint", color: "#4a3f55", whiteSpace: "nowrap" })}>
+              <span style={{ fontSize: 15, color: "#8b7f99" }}>{opt.nextPrice}G</span>
+              <span className={css({ fontSize: "13px", fontWeight: "bold", px: "10px", py: "3px", borderRadius: "20px", bg: isKnown ? "pastel.lilac" : "pastel.mint", color: "#4a3f55", whiteSpace: "nowrap" })}>
                 {isKnown ? `Lv.${opt.level} → ${opt.nextLevel}` : "Lv.1 習得"}
               </span>
             </button>
