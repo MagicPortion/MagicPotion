@@ -4,79 +4,128 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import { MATERIALS, getPotion, colorNum } from "../../data/gameData";
 import DialogueBox, { ActionButton } from "../ui/dialogue/DialogueBox";
-import BrewMessage from "../ui/brew/BrewMessage";
-import MaterialPanel from "../ui/brew/MaterialPanel";
+import BrewPanel, { type BrewResult } from "../ui/brew/BrewPanel";
+import MaterialPickerPopup from "../ui/brew/MaterialPickerPopup";
+import BrewResultPopup from "../ui/brew/BrewResultPopup";
+import PotionShelf from "../ui/brew/PotionShelf";
 
 export default function BrewScene() {
   const { materials, brew, advanceScene } = useGameStore();
   const [selectedBase, setSelectedBase] = useState<string | null>(null);
   const [selectedAccent, setSelectedAccent] = useState<string | null>(null);
-  const [message, setMessage] = useState("材料を選んで調合しよう！");
-  const [cauldronColorHex, setCauldronColorHex] = useState("5f9ea0");
+  const [pickerOpen, setPickerOpen] = useState<"base" | "accent" | null>(null);
+  const [cauldronColorHex, setCauldronColorHex] = useState("3d3d5c");
+  const [brewCount, setBrewCount] = useState(1);
+  const [brewResults, setBrewResults] = useState<BrewResult[] | null>(null);
   const { width, height } = useWindowSize();
 
-  const ownedBases   = MATERIALS.filter((m) => m.category === "base"   && (materials[m.id] ?? 0) > 0);
-  const ownedAccents = MATERIALS.filter((m) => m.category === "accent" && (materials[m.id] ?? 0) > 0);
+  const allBases   = MATERIALS.filter((m) => m.category === "base");
+  const allAccents = MATERIALS.filter((m) => m.category === "accent");
+
+  const maxBrew = selectedBase && selectedAccent
+    ? Math.min(materials[selectedBase] ?? 0, materials[selectedAccent] ?? 0)
+    : 0;
+
+  const handleSelectBase = (id: string) => {
+    setSelectedBase(id);
+    setBrewCount(1);
+  };
+
+  const handleSelectAccent = (id: string) => {
+    setSelectedAccent(id);
+    setBrewCount(1);
+  };
 
   const handleBrew = () => {
-    if (!selectedBase || !selectedAccent) { setMessage("材料を2つ選んでください！"); return; }
-    const brewed = brew(selectedBase, selectedAccent);
-    if (brewed) {
+    if (!selectedBase || !selectedAccent) return;
+    const results: BrewResult[] = [];
+    let lastColorHex = "808080";
+    for (let i = 0; i < brewCount; i++) {
+      const brewed = brew(selectedBase, selectedAccent);
+      if (!brewed) break;
       const potionDef = getPotion(brewed.potionId);
-      setCauldronColorHex(potionDef?.colorHex ?? "808080");
-      setMessage(`✨ ${potionDef?.name ?? "謎の薬"}（Lv.${brewed.level} / ${brewed.sellPrice}G）が完成！`);
+      if (potionDef) {
+        lastColorHex = potionDef.colorHex;
+        results.push({ name: potionDef.name, colorHex: potionDef.colorHex, level: brewed.level, sellPrice: brewed.sellPrice });
+      }
+    }
+    if (results.length > 0) {
+      setCauldronColorHex(lastColorHex);
+      setBrewResults(results);
       setSelectedBase(null);
       setSelectedAccent(null);
-    } else {
-      setMessage("調合できません…材料が足りないか、組み合わせが違うみたい。");
+      setBrewCount(1);
     }
+  };
+
+  const handleClosePopup = () => {
+    setBrewResults(null);
   };
 
   const handleSelectRecipe = (baseId: string, accentId: string) => {
     setSelectedBase(baseId);
     setSelectedAccent(accentId);
-    setMessage("材料をセットしました！「調合する！」を押してください。");
+    setBrewCount(1);
   };
 
   const commands = useMemo<DrawCommand[]>(() => [
-    { type: "rect", x: 0, y: 0, width, height, color: 0x1a1a2e },
-    { type: "rect", x: width / 2 - 60, y: height * 0.4, width: 120, height: 100, color: colorNum(cauldronColorHex) },
-    { type: "text", x: width / 2 - 22, y: height * 0.4 + 42, text: "大釜", fontSize: 14, textColor: "#fff" },
-    { type: "rect", x: width / 2 - 220, y: height * 0.35, width: 80, height: 130, color: 0xffb6c1 },
-    { type: "text", x: width / 2 - 210, y: height * 0.35 + 60, text: "魔女", fontSize: 14, textColor: "#888" },
+    { type: "rect",   x: 0,               y: 0,              width,      height,      color: 0x0a0816 },
+    { type: "rect",   x: width / 2 - 190, y: height * 0.52,  width: 380, height: 290, color: 0x1c1c2e },
+    { type: "rect",   x: width / 2 - 210, y: height * 0.52,  width: 420, height: 38,  color: 0x26263a },
+    { type: "circle", x: width / 2,        y: height * 0.64,  radius: 148,             color: colorNum(cauldronColorHex) },
+    { type: "rect",   x: width / 2 - 168,  y: height * 0.80,  width: 38,  height: 58,  color: 0x1c1c2e },
+    { type: "rect",   x: width / 2 + 130,  y: height * 0.80,  width: 38,  height: 58,  color: 0x1c1c2e },
   ], [width, height, cauldronColorHex]);
 
   return (
     <div style={{ position: "relative", width, height, overflow: "hidden" }}>
-      <PixiCanvas commands={commands} backgroundColor={0x0d0d1a} />
-      <BrewMessage message={message} />
-      <MaterialPanel
-        title="ベース材料"
-        items={ownedBases}
-        counts={materials}
-        selectedId={selectedBase}
-        onSelect={setSelectedBase}
-        side="left"
+      <PixiCanvas commands={commands} backgroundColor={0x0a0816} />
+
+      <PotionShelf />
+
+      <BrewPanel
+        selectedBase={selectedBase}
+        selectedAccent={selectedAccent}
+        onPickBase={() => setPickerOpen("base")}
+        onPickAccent={() => setPickerOpen("accent")}
+        result={null}
+        onBrew={handleBrew}
+        brewCount={brewCount}
+        maxBrew={maxBrew}
+        onBrewCountChange={setBrewCount}
       />
-      <MaterialPanel
-        title="アクセント材料"
-        items={ownedAccents}
-        counts={materials}
-        selectedId={selectedAccent}
-        onSelect={setSelectedAccent}
-        side="right"
-      />
+
+      {pickerOpen === "base" && (
+        <MaterialPickerPopup
+          title="ベース材料"
+          items={allBases}
+          counts={materials}
+          selectedId={selectedBase}
+          onSelect={handleSelectBase}
+          onClose={() => setPickerOpen(null)}
+        />
+      )}
+      {pickerOpen === "accent" && (
+        <MaterialPickerPopup
+          title="アクセント材料"
+          items={allAccents}
+          counts={materials}
+          selectedId={selectedAccent}
+          onSelect={handleSelectAccent}
+          onClose={() => setPickerOpen(null)}
+        />
+      )}
+
+      {brewResults !== null && (
+        <BrewResultPopup results={brewResults} onClose={handleClosePopup} />
+      )}
+
       <DialogueBox
         onRecipeSelect={handleSelectRecipe}
         actions={
-          <>
-            <ActionButton onClick={handleBrew} disabled={!selectedBase || !selectedAccent}>
-              調合する！
-            </ActionButton>
-            <ActionButton variant="secondary" onClick={advanceScene}>
-              陳列へ →
-            </ActionButton>
-          </>
+          <ActionButton variant="secondary" onClick={advanceScene}>
+            陳列へ →
+          </ActionButton>
         }
       />
     </div>
