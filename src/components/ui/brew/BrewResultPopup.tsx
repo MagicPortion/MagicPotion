@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react";
 import { css } from "../../../../styled-system/css";
 import type { BrewResult } from "./BrewPanel";
 
@@ -12,11 +13,22 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
   const potion = results[0];
   const count  = results.length;
   const total  = results.reduce((s, r) => s + r.sellPrice, 0);
+  const mountTime = useRef(0);
+
+  useEffect(() => {
+    mountTime.current = Date.now();
+  }, []);
+
+  const handleClose = () => {
+    // 誤クリック・スキップクリックの連打による即時クローズを防ぐため、マウント後500ms以内は閉じる処理を無視する
+    if (mountTime.current === 0 || Date.now() - mountTime.current < 500) return;
+    onClose();
+  };
 
   return (
     // カード内も含めてどこをタップしても閉じる。zIndex: 60でSceneToolbar(50)より上に出す
     <div
-      onClick={onClose}
+      onClick={handleClose}
       style={{
         position: "absolute", inset: 0, zIndex: 60,
         animation: "brewOverlayIn 0.18s ease forwards",
@@ -49,7 +61,7 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
         {/* 装飾ライン（上） */}
         <div className={css({ display: "flex", alignItems: "center", gap: "12px", mb: "28px", width: "100%" })}>
           <div className={css({ flex: 1, height: "1px", bg: "linear-gradient(90deg, transparent, #c8a84b66)" })} />
-          <span className={css({ fontSize: "14px", color: "#c8a84b", letterSpacing: "0.24em", whiteSpace: "nowrap" })}>
+          <span className={css({ fontSize: "28px", color: "#c8a84b", letterSpacing: "0.24em", whiteSpace: "nowrap" })}>
             POTION COMPLETE
           </span>
           <div className={css({ flex: 1, height: "1px", bg: "linear-gradient(270deg, transparent, #c8a84b66)" })} />
@@ -112,10 +124,10 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
         </div>
 
         {/* ポーション名 */}
-        <h2 className={css({ fontSize: "40px", fontWeight: "bold", color: "#f0e6c8", m: "0 0 8px", letterSpacing: "0.06em" })}>
+        <h2 className={css({ fontSize: "48px", fontWeight: "bold", color: "#f0e6c8", m: "0 0 8px", letterSpacing: "0.06em" })}>
           {potion.name}
         </h2>
-        <p className={css({ fontSize: "22px", color: "#8b7a5c", m: "0 0 24px", letterSpacing: "0.08em" })}>
+        <p className={css({ fontSize: "28px", color: "#c8a84b", m: "0 0 24px", letterSpacing: "0.08em", fontWeight: "bold" })}>
           Lv.{potion.level}
         </p>
 
@@ -131,7 +143,7 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
         })}>
           {count > 1 ? (
             <>
-              <p className={css({ fontSize: "20px", color: "#8b7a5c", m: "0 0 6px" })}>
+              <p className={css({ fontSize: "28px", color: "#e8d8b8", m: "0 0 6px", fontWeight: "bold" })}>
                 1本 {potion.sellPrice}G × {count}本
               </p>
               <p className={css({ fontSize: "32px", fontWeight: "bold", color: "#c8a84b", m: 0 })}>
@@ -148,7 +160,7 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
         {/* 装飾ライン（下） */}
         <div className={css({ width: "100%", height: "1px", bg: "linear-gradient(90deg, transparent, #c8a84b44, transparent)", my: "24px" })} />
 
-        <p className={css({ fontSize: "18px", color: "rgba(200,168,75,0.4)", letterSpacing: "0.1em", m: 0 })}>
+        <p className={css({ fontSize: "26px", color: "#c8a84b", letterSpacing: "0.1em", m: 0, fontWeight: "bold" })}>
           タップして閉じる
         </p>
       </div>

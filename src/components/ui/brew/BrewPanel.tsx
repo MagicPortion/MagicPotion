@@ -48,7 +48,7 @@ export default function BrewPanel({
         border: "1px solid rgba(100,80,180,0.25)",
       })}
     >
-      <p style={{ fontSize: 11, color: "#5a4a80", letterSpacing: "0.2em", margin: "0 0 20px", textAlign: "center", textTransform: "uppercase" }}>
+      <p className={css({ fontSize: "28px", color: "#e8d8b8", letterSpacing: "0.2em", margin: "0 0 20px", textAlign: "center", textTransform: "uppercase" })}>
         スロットを選んで素材を指定してください
       </p>
 
@@ -66,27 +66,63 @@ export default function BrewPanel({
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 24 }}>
           <button
             onClick={() => onBrewCountChange(Math.max(1, brewCount - 1))}
-            style={{ background: "rgba(200,168,75,0.12)", border: "1px solid rgba(200,168,75,0.3)", color: "#c8a84b", width: 36, height: 36, borderRadius: 8, cursor: "pointer", fontSize: 20, display: "flex", alignItems: "center", justifyContent: "center" }}
-            className={css({ _hover: { bg: "rgba(200,168,75,0.22)" }, transition: "background 0.12s" })}
+            className={css({
+              bg: "rgba(200,168,75,0.12)",
+              border: "1px solid rgba(200,168,75,0.3)",
+              color: "#c8a84b",
+              width: "60px",
+              height: "60px",
+              borderRadius: "12px",
+              cursor: "pointer",
+              fontSize: "30px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "background 0.12s",
+              _hover: { bg: "rgba(200,168,75,0.22)" },
+            })}
           >
             −
           </button>
-          <span style={{ fontSize: 18, color: "#e8d8b8", minWidth: 80, textAlign: "center", fontWeight: "bold" }}>
+          <span className={css({ fontSize: "36px", color: "#ffffff", minWidth: "120px", textAlign: "center", fontWeight: "bold" })}>
             ×{brewCount}
-            <span style={{ fontSize: 12, color: "#5a4a80", fontWeight: "normal", marginLeft: 6 }}>/ 最大{maxBrew}</span>
+            <span className={css({ fontSize: "26px", color: "#c8a84b", fontWeight: "normal", marginLeft: "8px" })}>/ 最大{maxBrew}</span>
           </span>
           <button
             onClick={() => onBrewCountChange(Math.min(maxBrew, brewCount + 1))}
-            style={{ background: "rgba(200,168,75,0.12)", border: "1px solid rgba(200,168,75,0.3)", color: "#c8a84b", width: 36, height: 36, borderRadius: 8, cursor: "pointer", fontSize: 20, display: "flex", alignItems: "center", justifyContent: "center" }}
-            className={css({ _hover: { bg: "rgba(200,168,75,0.22)" }, transition: "background 0.12s" })}
+            className={css({
+              bg: "rgba(200,168,75,0.12)",
+              border: "1px solid rgba(200,168,75,0.3)",
+              color: "#c8a84b",
+              width: "60px",
+              height: "60px",
+              borderRadius: "12px",
+              cursor: "pointer",
+              fontSize: "30px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "background 0.12s",
+              _hover: { bg: "rgba(200,168,75,0.22)" },
+            })}
           >
             ＋
           </button>
           {brewCount < maxBrew && (
             <button
               onClick={() => onBrewCountChange(maxBrew)}
-              style={{ background: "rgba(200,168,75,0.08)", border: "1px solid rgba(200,168,75,0.2)", color: "#8b7a5c", fontSize: 12, padding: "6px 14px", borderRadius: 8, cursor: "pointer" }}
-              className={css({ _hover: { color: "#c8a84b", bg: "rgba(200,168,75,0.15)" }, transition: "all 0.12s" })}
+              className={css({
+                bg: "rgba(200,168,75,0.08)",
+                border: "1px solid rgba(200,168,75,0.2)",
+                color: "#c8a84b",
+                fontSize: "26px",
+                px: "20px",
+                py: "8px",
+                borderRadius: "8px",
+                cursor: "pointer",
+                transition: "all 0.12s",
+                _hover: { color: "#ffffff", bg: "rgba(200,168,75,0.25)" },
+              })}
             >
               全部
             </button>
@@ -99,16 +135,17 @@ export default function BrewPanel({
         <button
           onClick={onBrew}
           disabled={!canBrew}
+          // background・border・color・opacityがcanBrewの状態によって動的に変わるためinline styleを使用
           style={{
             background: canBrew ? "#8B6914" : "rgba(30,20,8,0.4)",
             border: `2px solid ${canBrew ? "#c8a84b" : "#2a1808"}`,
-            color: canBrew ? "#1a0e06" : "#3a2810",
+            color: canBrew ? "#1a0e06" : "#7a6655",
             opacity: canBrew ? 1 : 0.5,
           }}
           className={css({
             display: "flex", alignItems: "center", justifyContent: "center",
             px: "72px", py: "18px",
-            fontSize: "20px", fontWeight: "bold",
+            fontSize: "36px", fontWeight: "bold",
             borderRadius: "10px",
             cursor: "pointer",
             letterSpacing: "0.1em",
