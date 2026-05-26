@@ -62,7 +62,7 @@ export default function Header({
           display: "flex",
           gap: 10,
 
-          fontSize: 13,
+          fontSize: 24,
           color: text,
 
           alignItems: "center",
@@ -71,7 +71,7 @@ export default function Header({
         <span
           style={{
             background: "rgba(255,255,255,0.45)",
-            borderRadius: 16,
+            borderRadius: 6,
             padding: "3px 12px",
           }}
         >
