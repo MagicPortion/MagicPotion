@@ -28,47 +28,51 @@ export default function Header({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        px: "20px",
-        py: "10px",
+
+        px: "24px",
+        py: "6px",
+
         bg,
-        boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
+        boxShadow: "0 2px 10px rgba(0,0,0,0.12)",
       })}
     >
-      {/* 左側：ロゴ＋タイトル画像 */}
+      {/* 左側：ロゴ */}
       <h1
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 12,
           margin: 0,
         }}
       >
-        <img
-          src="/MagicPotion/logo.png"
-          alt="logo"
-          style={{
-            width: 220,
-            height: 120,
-            objectFit: "contain",
-          }}
-        />
+      <img
+        src="/MagicPotion/logo.png"
+        alt="logo"
+        style={{
+          height: 90,
+          width: "auto",
+          objectFit: "contain",
+          display: "block",
+        }}
+      />
       </h1>
 
       {/* 右側：ゲーム情報 */}
       <div
         style={{
           display: "flex",
-          gap: 12,
-          fontSize: 14,
+          gap: 10,
+
+          fontSize: 13,
           color: text,
+
           alignItems: "center",
         }}
       >
         <span
           style={{
             background: "rgba(255,255,255,0.45)",
-            borderRadius: 20,
-            padding: "4px 14px",
+            borderRadius: 16,
+            padding: "3px 12px",
           }}
         >
           {day}日目
@@ -77,8 +81,8 @@ export default function Header({
         <span
           style={{
             background: "rgba(255,255,255,0.45)",
-            borderRadius: 20,
-            padding: "4px 14px",
+            borderRadius: 16,
+            padding: "3px 12px",
           }}
         >
           {label}
@@ -87,8 +91,8 @@ export default function Header({
         <span
           style={{
             background: "rgba(255,255,255,0.45)",
-            borderRadius: 20,
-            padding: "4px 14px",
+            borderRadius: 16,
+            padding: "3px 12px",
             fontWeight: "bold",
           }}
         >
