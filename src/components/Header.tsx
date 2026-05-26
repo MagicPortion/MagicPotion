@@ -45,8 +45,8 @@ export default function Header({
         }}
       >
       <img
-        src="/MagicPotion/logo.png"
-        alt="logo"
+        src="/MagicPotion/title.png"
+        alt="title"
         style={{
           height: 90,
           width: "auto",
