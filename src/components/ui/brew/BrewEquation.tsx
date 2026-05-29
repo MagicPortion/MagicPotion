@@ -39,7 +39,7 @@ function SlotBtn({
       aria-label={label}
       // width・height・border・backgroundは状態依存かつテーマと調和するためinline styleを使用
       style={{
-        width: 220, height: 220,
+        width: 330, height: 230,
         borderRadius: 20,
         border: item
           ? "2.5px solid rgba(200,168,75,0.85)"
@@ -67,7 +67,7 @@ function SlotBtn({
             backgroundColor: `#${item.colorHex}`,
             boxShadow: `0 2px 24px #${item.colorHex}aa`,
           }} />
-          <span className={css({ fontSize: "32px", color: "#ffffff", fontWeight: "bold", textAlign: "center", px: "8px" })}>{item.name}</span>
+          <span className={css({ fontSize: "26px", color: "#ffffff", fontWeight: "bold", textAlign: "center", px: "8px" })}>{item.name}</span>
         </>
       ) : (
         <span className={css({ fontSize: "32px", color: "rgba(255,255,255,0.75)", letterSpacing: "0.06em", textAlign: "center", lineHeight: 1.3 })}>
@@ -84,7 +84,7 @@ function ResultSlot({ result }: { result: BrewResult | null }) {
     return (
       // width・heightはSlotBtnとのレイアウト対称性維持のためinline style
       <div style={{
-        width: 220, height: 250, borderRadius: 20,
+        width: 330, height: 230, borderRadius: 20,
         border: "2.5px dashed rgba(200,168,75,0.3)",
         background: "rgba(8,5,20,0.92)",
         display: "flex", flexDirection: "column",
@@ -97,23 +97,23 @@ function ResultSlot({ result }: { result: BrewResult | null }) {
   return (
     // width・heightは他スロットとの一貫性維持のためinline style
     <div style={{
-      width: 220, height: 250, borderRadius: 20,
+      width: 330, height: 230, borderRadius: 20,
       border: "2.5px solid rgba(200,168,75,0.95)",
       background: "rgba(8,5,20,0.95)",
       display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center", gap: 10,
+      alignItems: "center", justifyContent: "center", gap: 6,
       animation: "resultPop 0.25s ease",
-      padding: "16px 8px 12px",
+      padding: "10px 8px",
     }}>
       {/* カラーオーブ。colorHexが動的のためinline style */}
       <span style={{
-        display: "block", width: 100, height: 100, borderRadius: "50%",
+        display: "block", width: 80, height: 80, borderRadius: "50%",
         backgroundColor: `#${result.colorHex}`,
         boxShadow: `0 2px 28px #${result.colorHex}`,
         flexShrink: 0,
       }} />
-      <span className={css({ fontSize: "32px", color: "#ffffff", fontWeight: "bold", textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" })}>{result.name}</span>
-      <span className={css({ fontSize: "26px", color: "#c8a84b", fontWeight: "bold", whiteSpace: "nowrap" })}>Lv.{result.level} / {result.sellPrice}G</span>
+      <span className={css({ fontSize: "20px", color: "#ffffff", fontWeight: "bold", textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" })}>{result.name}</span>
+      <span className={css({ fontSize: "16px", color: "#c8a84b", fontWeight: "bold", whiteSpace: "nowrap" })}>Lv.{result.level} / {result.sellPrice}G</span>
     </div>
   );
 }

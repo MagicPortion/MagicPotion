@@ -1,5 +1,6 @@
 import { css } from "../../../../styled-system/css";
 import type { MaterialDef } from "../../../data/types";
+import MaterialCard from "./MaterialCard";
 
 interface MaterialPickerPopupProps {
   title: string;
@@ -11,7 +12,12 @@ interface MaterialPickerPopupProps {
 }
 
 export default function MaterialPickerPopup({
-  title, items, counts, selectedId, onSelect, onClose,
+  title,
+  items,
+  counts,
+  selectedId,
+  onSelect,
+  onClose,
 }: MaterialPickerPopupProps) {
   const ownedItems = items.filter((item) => (counts[item.id] ?? 0) > 0);
 
@@ -35,100 +41,32 @@ export default function MaterialPickerPopup({
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "20px",
+          gap: "24px",
           overflowX: "auto",
           maxWidth: "90%",
-          p: "24px 32px 32px",
+          p: "32px 40px 40px",
         })}
       >
         {/* タイトル */}
-        <p className={css({ fontSize: "32px", color: "#c8a84b", letterSpacing: "0.2em", m: 0, textTransform: "uppercase" })}>
+        <p className={css({ fontSize: "36px", color: "#c8a84b", letterSpacing: "0.2em", m: 0, textTransform: "uppercase", fontWeight: "bold" })}>
           {title}
         </p>
 
         {/* カード横並び */}
-        <div className={css({ display: "flex", flexDirection: "row", gap: "24px" })}>
-          {ownedItems.map((item) => {
-            const count = counts[item.id] ?? 0;
-            const isSelected = selectedId === item.id;
-
-            return (
-              // 個数バッジを絶対配置するためにrelativeラッパーが必要
-              <div key={item.id} className={css({ position: "relative" })}>
-                <button
-                  onClick={() => { onSelect(item.id); onClose(); }}
-                  // border・background・boxShadowがisSelectedで動的かつ動的カラーコードとの調和のためinline styleを使用
-                  style={{
-                    border: `2px solid ${isSelected ? "#c8a84b" : "rgba(200,168,75,0.25)"}`,
-                    background: isSelected
-                      ? "linear-gradient(rgba(200,168,75,0.14), rgba(200,168,75,0.14)), rgba(8,5,20,0.92)"
-                      : "rgba(8,5,20,0.92)",
-                    boxShadow: isSelected
-                      ? "0 0 40px rgba(200,168,75,0.4), 0 8px 40px rgba(0,0,0,0.7)"
-                      : "0 8px 40px rgba(0,0,0,0.6)",
-                  }}
-                  className={css({
-                    borderRadius: "20px",
-                    p: "36px 24px 28px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: "20px",
-                    cursor: "pointer",
-                    transition: "all 0.15s",
-                    width: "280px",
-                    height: "340px",
-                    _hover: { filter: "brightness(1.15)" },
-                  })}
-                >
-                  {/* 選択済みチェック */}
-                  {isSelected && (
-                    <span className={css({ position: "absolute", top: "14px", right: "16px" })}>
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c8a84b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </span>
-                  )}
-
-                  {/* カラーオーブ。colorHexが動的のためinline style */}
-                  <span style={{
-                    display: "block",
-                    width: 140, height: 140,
-                    borderRadius: "50%",
-                    backgroundColor: `#${item.colorHex}`,
-                    boxShadow: `0 4px 32px #${item.colorHex}77`,
-                    flexShrink: 0,
-                  }} />
-
-                  {/* 素材名 */}
-                  <span className={css({ fontSize: "34px", fontWeight: "bold", color: "#ffffff", letterSpacing: "0.05em", textAlign: "center" })}>
-                    {item.name}
-                  </span>
-                </button>
-
-                {/* 個数バッジ。カード右下に絶対配置。1個の場合は非表示 */}
-                {count > 1 && (
-                  <span className={css({
-                    position: "absolute",
-                    bottom: "-12px",
-                    right: "-12px",
-                    fontSize: "40px",
-                    fontWeight: "bold",
-                    color: "#c8a84b",
-                    bg: "rgba(8,5,20,0.95)",
-                    border: "1.5px solid rgba(200,168,75,0.4)",
-                    borderRadius: "16px",
-                    px: "14px",
-                    py: "4px",
-                    lineHeight: 1,
-                    pointerEvents: "none",
-                  })}>
-                    {count}
-                  </span>
-                )}
-              </div>
-            );
-          })}
+        <div className={css({ display: "flex", flexDirection: "row", gap: "28px" })}>
+          {ownedItems.map((item) => (
+            <MaterialCard
+              key={item.id}
+              item={item}
+              count={counts[item.id] ?? 0}
+              isSelected={selectedId === item.id}
+              onClick={() => {
+                onSelect(item.id);
+                onClose();
+              }}
+              variant="picker"
+            />
+          ))}
         </div>
       </div>
     </div>

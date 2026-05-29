@@ -61,7 +61,7 @@ export default function PotionShelf() {
         <div className={css({ height: "2px", bg: "rgba(200,168,75,0.4)" })} />
       </div>
 
-      {/* ポーションアイテム。4個以上の場合はスクロール可能 */}
+      {/* ポーションアイテム。4個程度まで表示、それ以上はスクロール可能 */}
       <div
         ref={itemsRef}
         className={css({
