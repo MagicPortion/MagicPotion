@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from "react";
 import { css } from "../../../../styled-system/css";
 import { useGameStore } from "../../../store/useGameStore";
 import { getPotion } from "../../../data/gameData";
@@ -13,6 +14,19 @@ interface ShelfGroup {
 
 export default function PotionShelf() {
   const { brewedPotions } = useGameStore();
+  const itemsRef = useRef<HTMLDivElement>(null);
+  const [canScroll, setCanScroll] = useState(false);
+
+  useEffect(() => {
+    const checkScroll = () => {
+      if (itemsRef.current) {
+        setCanScroll(itemsRef.current.scrollHeight > itemsRef.current.clientHeight);
+      }
+    };
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, [brewedPotions.length]);
 
   const groups = Object.values(
     brewedPotions.reduce<Record<string, ShelfGroup>>((acc, p) => {
@@ -47,8 +61,18 @@ export default function PotionShelf() {
         <div className={css({ height: "2px", bg: "rgba(200,168,75,0.4)" })} />
       </div>
 
-      {/* ポーションアイテム */}
-      <div className={css({ display: "flex", flexDirection: "column", gap: "12px" })}>
+      {/* ポーションアイテム。4個以上の場合はスクロール可能 */}
+      <div
+        ref={itemsRef}
+        className={css({
+          display: "flex",
+          flexDirection: "column",
+          gap: "12px",
+          maxHeight: "540px",
+          overflowY: "auto",
+          position: "relative",
+        })}
+      >
         {groups.map((g, i) => (
           <div
             key={g.key}
@@ -97,6 +121,21 @@ export default function PotionShelf() {
           </div>
         ))}
       </div>
+
+      {/* スクロール可能な場合、下向き矢印を表示 */}
+      {canScroll && (
+        <div className={css({
+          alignSelf: "center",
+          mt: "8px",
+          color: "#c8a84b",
+          animation: "advanceBounce 1s ease-in-out infinite",
+          opacity: 0.6,
+        })}>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </div>
+      )}
     </div>
   );
 }
