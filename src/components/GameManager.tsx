@@ -1,4 +1,4 @@
-import { css } from "../../styled-system/css";
+import { css } from "#styled-system/css";
 import { useGameStore } from "../store/useGameStore";
 import type { Scene } from "../store/useGameStore";
 import { useGameScale } from "../hooks/useGameScale";
@@ -47,54 +47,50 @@ export default function GameManager() {
 
   return (
     // レターボックス：ウィンドウ全体を黒で埋め、ゲームエリアを中央に
-    <div style={{ width: "100vw", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#000", overflow: "hidden" }}>
-      {/* クリップ領域：スケール後の実際の表示サイズ */}
-      <div style={{ width: scaledW, height: scaledH, overflow: "hidden", position: "relative", flexShrink: 0 }}>
-        {/* ゲームコンテナ：常に 1280×720、CSS scale で拡縮 */}
+    <div className={css({ width: "100vw", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#000", overflow: "hidden" })}>
+      {/* クリップ領域：スケール後の実際の表示サイズ。width/height は動的計算値のためinline style */}
+      <div style={{ width: scaledW, height: scaledH }} className={css({ overflow: "hidden", position: "relative", flexShrink: 0 })}>
+        {/* ゲームコンテナ：常に GAME_W×GAME_H、CSS scale で拡縮。transform・width・height は動的のためinline style */}
         <div
-          style={{
-            width: GAME_W,
-            height: GAME_H,
-            transform: `scale(${scale})`,
-            transformOrigin: "top left",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            overflow: "hidden",
-          }}
+          style={{ width: GAME_W, height: GAME_H, transform: `scale(${scale})` }}
+          className={css({ transformOrigin: "top left", position: "absolute", top: 0, left: 0, overflow: "hidden" })}
         >
           <PixiAppProvider>
             {/* シーン切り替え：key でリマウントして CSS フェード */}
-            <div key={scene} className="scene-enter" style={{ width: "100%", height: "100%" }}>
+            <div key={scene} className={`scene-enter ${css({ width: "100%", height: "100%" })}`}>
               {renderScene(scene)}
             </div>
           </PixiAppProvider>
 
           {/* HUD：Pixi不要なのでProvider外に配置、常に表示 */}
           <header
-            style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 100 }}
             className={css({
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              px: "40px",
-              py: "20px",
+              position: "absolute", top: 0, left: 0, right: 0, zIndex: 100,
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+              px: "40px", py: "20px",
               bg: bg,
               boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
               transition: "background 0.3s ease",
             })}
           >
-            <h1 style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 40, fontWeight: "bold", color: text, margin: 0 }}>
+            {/* color: text はシーンごとの動的テーマ色のためinline style */}
+            <h1
+              style={{ color: text }}
+              className={css({ display: "flex", alignItems: "center", gap: "12px", fontSize: "40px", fontWeight: "bold", m: 0 })}
+            >
               <IconFlask size={36} /> Magic Potion
             </h1>
-            <div style={{ display: "flex", gap: 16, fontSize: 28, color: text, alignItems: "center" }}>
-              <span style={{ background: "rgba(255,255,255,0.45)", borderRadius: 24, padding: "8px 18px" }}>
+            <div
+              style={{ color: text }}
+              className={css({ display: "flex", gap: "16px", fontSize: "28px", alignItems: "center" })}
+            >
+              <span className={css({ bg: "rgba(255,255,255,0.45)", borderRadius: "24px", px: "18px", py: "8px" })}>
                 {day}日目
               </span>
-              <span style={{ background: "rgba(255,255,255,0.45)", borderRadius: 24, padding: "8px 18px" }}>
+              <span className={css({ bg: "rgba(255,255,255,0.45)", borderRadius: "24px", px: "18px", py: "8px" })}>
                 {SCENE_LABEL[scene]}
               </span>
-              <span style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.45)", borderRadius: 24, padding: "8px 18px", fontWeight: "bold" }}>
+              <span className={css({ display: "flex", alignItems: "center", gap: "8px", bg: "rgba(255,255,255,0.45)", borderRadius: "24px", px: "18px", py: "8px", fontWeight: "bold" })}>
                 <IconCoin size={22} /> {money}G
               </span>
             </div>

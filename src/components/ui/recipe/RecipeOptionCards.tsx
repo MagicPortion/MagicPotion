@@ -1,4 +1,4 @@
-import { css } from "../../../../styled-system/css";
+import { css } from "#styled-system/css";
 import type { PotionDef } from "../../../data/types";
 
 export interface RecipeOption {

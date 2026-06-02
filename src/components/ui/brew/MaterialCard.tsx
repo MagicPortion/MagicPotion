@@ -1,5 +1,6 @@
-import { css } from "../../../../styled-system/css";
+import { css } from "#styled-system/css";
 import type { MaterialDef } from "../../../data/types";
+import ColorOrb from "../common/ColorOrb";
 
 interface MaterialCardProps {
   item: MaterialDef;
@@ -42,50 +43,20 @@ export default function MaterialCard({
           transition: "all 0.15s",
           _hover: { filter: "brightness(1.15)" },
           ...(isPicker
-            ? {
-                p: "44px 28px 32px",
-                gap: "24px",
-                width: "336px",
-                height: "408px",
-              }
-            : {
-                p: "16px 20px",
-                gap: "0px",
-              }),
+            ? { p: "44px 28px 32px", gap: "24px", width: "336px", height: "408px" }
+            : { p: "16px 20px", gap: "0px" }),
         })}
       >
-        {/* 選択済みチェック */}
         {isSelected && isPicker && (
           <span className={css({ position: "absolute", top: "14px", right: "16px" })}>
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#c8a84b"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c8a84b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </span>
         )}
 
-        {/* カラーオーブ。colorHexが動的のためinline style */}
-        <span
-          style={{
-            display: "block",
-            width: isPicker ? 208 : 64,
-            height: isPicker ? 208 : 64,
-            borderRadius: "50%",
-            backgroundColor: `#${item.colorHex}`,
-            boxShadow: `0 4px 32px #${item.colorHex}77`,
-            flexShrink: 0,
-          }}
-        />
+        <ColorOrb colorHex={item.colorHex} size={isPicker ? 208 : 64} />
 
-        {/* 素材名 */}
         {isPicker && (
           <span className={css({ fontSize: "30px", fontWeight: "bold", color: "#ffffff", letterSpacing: "0.05em", textAlign: "center" })}>
             {item.name}
@@ -104,7 +75,6 @@ export default function MaterialCard({
         )}
       </button>
 
-      {/* 個数バッジ。1個の場合は非表示 */}
       {count > 1 && (
         <span
           className={css({

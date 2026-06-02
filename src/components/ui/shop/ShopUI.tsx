@@ -2,7 +2,7 @@ import { IconRefresh } from '../icons';
 import ShopCard from './ShopCard';
 import ShopActionBar from './ShopActionBar';
 import type { MaterialDef } from '../../../data/types';
-import { css } from '../../../../styled-system/css';
+import { css } from "#styled-system/css";
 
 interface ShopMaterialItem extends MaterialDef {
   instanceId: string;
@@ -31,17 +31,6 @@ interface ShopUIProps {
   onExit: () => void;
 }
 
-const getMaterialEmoji = (id: string) => {
-  if (id === "water") return "💧";
-  if (id === "herb") return "🌿";
-  if (id === "mushroom") return "🍄";
-  if (id === "slime") return "🧪";
-  if (id === "fire_essence") return "🔥";
-  if (id === "moon_dust") return "✨";
-  if (id === "fairy_wing") return "🪶";
-  if (id === "crystal") return "💎";
-  return "📦";
-};
 
 export default function ShopUI({
   money, shopItems, quantities, soldOutItems, totalCost, canBuy, currentRefreshCost,
@@ -118,7 +107,7 @@ export default function ShopUI({
         <ShopActionBar totalCost={totalCost} canBuy={canBuy} hasSelectedItems={hasSelectedItems} setShowBuyModal={setShowBuyModal} setShowExitModal={setShowExitModal} onClear={() => setQuantities({})} />
       </div>
 
-      {/* 🔄 品揃え更新モーダル */}
+      {/* 品揃え更新モーダル */}
       {showRefreshModal && (
         <div className={modalOverlayStyle}>
           <div className={modalContentStyle}>
@@ -133,7 +122,7 @@ export default function ShopUI({
         </div>
       )}
 
-      {/* 🛍️ 購入確認リストモーダル */}
+      {/* 購入確認リストモーダル */}
       {showBuyModal && (
         <div className={modalOverlayStyle}>
           <div className={modalContentStyle}>
@@ -148,7 +137,7 @@ export default function ShopUI({
                   <div className={css({ mt: "6px", bg: "#fafafa", borderRadius: "8px", p: "8px" })}>
                     {selectedBaseItems.map(item => (
                       <div key={item.instanceId} className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", py: "4px" })}>
-                        <span className={css({ fontSize: "15px", fontWeight: "bold", color: "#222" })}>{getMaterialEmoji(item.id)} {item.name}</span>
+                        <span className={css({ fontSize: "15px", fontWeight: "bold", color: "#222" })}>{item.name}</span>
                         {/* 【修正】テンプレートリテラルで安全に文字列結合しました */}
                         <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`-${item.price} G`}</span>
                       </div>
@@ -164,7 +153,7 @@ export default function ShopUI({
                   <div className={css({ mt: "6px", bg: "#fafafa", borderRadius: "8px", p: "8px" })}>
                     {selectedAccentItems.map(item => (
                       <div key={item.instanceId} className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", py: "4px" })}>
-                        <span className={css({ fontSize: "15px", fontWeight: "bold", color: "#222" })}>{getMaterialEmoji(item.id)} {item.name}</span>
+                        <span className={css({ fontSize: "15px", fontWeight: "bold", color: "#222" })}>{item.name}</span>
                         {/* 【修正】こちらも同様に修正完了 */}
                         <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`-${item.price} G`}</span>
                       </div>
@@ -195,7 +184,7 @@ export default function ShopUI({
         </div>
       )}
 
-      {/* 🚪 退店確認モーダル */}
+      {/* 退店確認モーダル */}
       {showExitModal && (
         <div className={modalOverlayStyle}>
           <div className={modalContentStyle}>

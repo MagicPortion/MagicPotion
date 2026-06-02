@@ -8,7 +8,7 @@ import BrewPanel, { type BrewResult } from "../ui/brew/BrewPanel";
 import MaterialPickerPopup from "../ui/brew/MaterialPickerPopup";
 import BrewResultPopup from "../ui/brew/BrewResultPopup";
 import PotionShelf from "../ui/brew/PotionShelf";
-import { css } from "../../../styled-system/css";
+import { css } from "#styled-system/css";
 
 export default function BrewScene() {
   const { materials, brew, advanceScene } = useGameStore();

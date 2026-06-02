@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { css } from "../../../../styled-system/css";
+import { css } from "#styled-system/css";
 import type { BrewResult } from "./BrewPanel";
 
 interface BrewResultPopupProps {

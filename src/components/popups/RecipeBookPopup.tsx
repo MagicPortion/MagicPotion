@@ -1,4 +1,4 @@
-import { css } from "../../../styled-system/css";
+import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { getMaterial, getPotion, getRecipe, calcSellPrice } from "../../data/gameData";
 import { IconRecipe, IconClose } from "../ui/icons";
