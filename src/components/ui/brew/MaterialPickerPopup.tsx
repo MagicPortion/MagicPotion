@@ -1,0 +1,74 @@
+import { css } from "../../../../styled-system/css";
+import type { MaterialDef } from "../../../data/types";
+import MaterialCard from "./MaterialCard";
+
+interface MaterialPickerPopupProps {
+  title: string;
+  items: MaterialDef[];
+  counts: Record<string, number>;
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  onClose: () => void;
+}
+
+export default function MaterialPickerPopup({
+  title,
+  items,
+  counts,
+  selectedId,
+  onSelect,
+  onClose,
+}: MaterialPickerPopupProps) {
+  const ownedItems = items.filter((item) => (counts[item.id] ?? 0) > 0);
+
+  return (
+    // 暗くぼかしたフルスクリーンオーバーレイ。カード外クリックで閉じる
+    <div
+      onClick={onClose}
+      style={{
+        position: "absolute",
+        inset: 0,
+        zIndex: 55,
+        backgroundColor: "rgba(6, 4, 12, 0.8)",
+        backdropFilter: "blur(12px)",
+      }}
+      className={css({ display: "flex", alignItems: "center", justifyContent: "center" })}
+    >
+      {/* スクロール可能なカードエリア。クリック伝播を止めて閉じないようにする */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className={css({
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "24px",
+          overflowX: "auto",
+          maxWidth: "90%",
+          p: "32px 40px 40px",
+        })}
+      >
+        {/* タイトル */}
+        <p className={css({ fontSize: "36px", color: "#c8a84b", letterSpacing: "0.2em", m: 0, textTransform: "uppercase", fontWeight: "bold" })}>
+          {title}
+        </p>
+
+        {/* カード横並び */}
+        <div className={css({ display: "flex", flexDirection: "row", gap: "28px" })}>
+          {ownedItems.map((item) => (
+            <MaterialCard
+              key={item.id}
+              item={item}
+              count={counts[item.id] ?? 0}
+              isSelected={selectedId === item.id}
+              onClick={() => {
+                onSelect(item.id);
+                onClose();
+              }}
+              variant="picker"
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
