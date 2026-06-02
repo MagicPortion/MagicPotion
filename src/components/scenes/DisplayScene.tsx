@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
@@ -31,7 +32,7 @@ export default function DisplayScene() {
   ], [width, height]);
 
   return (
-    <div style={{ position: "relative", width, height, overflow: "hidden" }}>
+    <div style={{ width, height }} className={css({ position: "relative", overflow: "hidden" })}>
       <PixiCanvas commands={commands} backgroundColor={0x0d0d20} />
       <PotionSelectPanel
         brewedPotions={brewedPotions}
