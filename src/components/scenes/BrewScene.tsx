@@ -179,7 +179,7 @@ export default function BrewScene() {
   }, [width, height, cauldronColorHex, isBrewing, bubbles]);
 
   return (
-    <div style={{ position: "relative", width, height, overflow: "hidden" }}>
+    <div style={{ width, height }} className={css({ position: "relative", overflow: "hidden" })}>
       <PixiCanvas commands={commands} backgroundColor={0x0a0816} />
 
       {/* 演出中（isBrewing === true）は中央の調合パネルと棚を隠す */}
@@ -242,7 +242,7 @@ export default function BrewScene() {
       {isBrewing && (
         <div
           onClick={handleSkip}
-          style={{
+          className={css({
             position: "absolute",
             inset: 0,
             zIndex: 90,
@@ -250,7 +250,7 @@ export default function BrewScene() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-          }}
+          })}
         >
           <span
             className={css({

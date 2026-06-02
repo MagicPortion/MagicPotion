@@ -4,14 +4,16 @@ import type { Scene } from "../store/useGameStore";
 import { useGameScale } from "../hooks/useGameScale";
 import { GAME_W, GAME_H } from "../hooks/gameConstants";
 import { PixiAppProvider } from "../contexts/PixiAppContext";
+import Header from "./Header";
+import TitleScene from "./scenes/TitleScene";
 import ConversationScene from "./scenes/ConversationScene";
 import RecipeLearningScene from "./scenes/RecipeLearningScene";
 import ShopScene from "./scenes/ShopScene";
 import BrewScene from "./scenes/BrewScene";
 import DisplayScene from "./scenes/DisplayScene";
-import { IconFlask, IconCoin } from "./ui/icons";
 
 const SCENE_LABEL: Record<Scene, string> = {
+  title:           "",
   conversation:    "朝",
   recipe_learning: "朝",
   shop:            "昼",
@@ -20,6 +22,7 @@ const SCENE_LABEL: Record<Scene, string> = {
 };
 
 const SCENE_COLOR: Record<Scene, { bg: string; text: string }> = {
+  title:           { bg: "transparent", text: "#ffffff" },
   conversation:    { bg: "pastel.rose",     text: "#6b5b73" },
   recipe_learning: { bg: "pastel.rose",     text: "#6b5b73" },
   shop:            { bg: "pastel.lemon",    text: "#7a6000" },
@@ -29,6 +32,7 @@ const SCENE_COLOR: Record<Scene, { bg: string; text: string }> = {
 
 const renderScene = (scene: Scene) => {
   switch (scene) {
+    case "title":           return <TitleScene />;
     case "conversation":    return <ConversationScene />;
     case "recipe_learning": return <RecipeLearningScene />;
     case "shop":            return <ShopScene />;
@@ -62,39 +66,16 @@ export default function GameManager() {
             </div>
           </PixiAppProvider>
 
-          {/* HUD：Pixi不要なのでProvider外に配置、常に表示 */}
-          <header
-            className={css({
-              position: "absolute", top: 0, left: 0, right: 0, zIndex: 100,
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-              px: "40px", py: "20px",
-              bg: bg,
-              boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
-              transition: "background 0.3s ease",
-            })}
-          >
-            {/* color: text はシーンごとの動的テーマ色のためinline style */}
-            <h1
-              style={{ color: text }}
-              className={css({ display: "flex", alignItems: "center", gap: "12px", fontSize: "40px", fontWeight: "bold", m: 0 })}
-            >
-              <IconFlask size={36} /> Magic Potion
-            </h1>
-            <div
-              style={{ color: text }}
-              className={css({ display: "flex", gap: "16px", fontSize: "28px", alignItems: "center" })}
-            >
-              <span className={css({ bg: "rgba(255,255,255,0.45)", borderRadius: "24px", px: "18px", py: "8px" })}>
-                {day}日目
-              </span>
-              <span className={css({ bg: "rgba(255,255,255,0.45)", borderRadius: "24px", px: "18px", py: "8px" })}>
-                {SCENE_LABEL[scene]}
-              </span>
-              <span className={css({ display: "flex", alignItems: "center", gap: "8px", bg: "rgba(255,255,255,0.45)", borderRadius: "24px", px: "18px", py: "8px", fontWeight: "bold" })}>
-                <IconCoin size={22} /> {money}G
-              </span>
-            </div>
-          </header>
+          {/* HUD：タイトル画面では非表示 */}
+          {scene !== "title" && (
+            <Header
+              bg={bg}
+              text={text}
+              label={SCENE_LABEL[scene]}
+              day={day}
+              money={money}
+            />
+          )}
         </div>
       </div>
     </div>
