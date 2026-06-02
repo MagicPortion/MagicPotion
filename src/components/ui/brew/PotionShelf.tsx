@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { css } from "../../../../styled-system/css";
+import { css } from "#styled-system/css";
 import { useGameStore } from "../../../store/useGameStore";
 import { getPotion } from "../../../data/gameData";
 import type { PotionDef } from "../../../data/types";

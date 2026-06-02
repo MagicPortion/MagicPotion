@@ -1,4 +1,4 @@
-import { css } from "../../../../styled-system/css";
+import { css } from "#styled-system/css";
 import { getPotion } from "../../../data/gameData";
 import type { BrewedPotion } from "../../../data/types";
 

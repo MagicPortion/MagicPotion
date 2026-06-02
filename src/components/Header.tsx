@@ -1,4 +1,5 @@
-import { css } from "../../styled-system/css";
+import { css } from "#styled-system/css";
+import { IconCoin } from "./ui/icons";
 
 type HeaderProps = {
   bg: string;
@@ -38,12 +39,7 @@ export default function Header({ bg, text, label, day, money }: HeaderProps) {
       {/* color: text はシーンごとに異なる動的テーマ色のためinline style */}
       <div
         style={{ color: text }}
-        className={css({
-          display: "flex",
-          gap: "10px",
-          fontSize: "24px",
-          alignItems: "center",
-        })}
+        className={css({ display: "flex", gap: "10px", fontSize: "24px", alignItems: "center" })}
       >
         <span className={css({ bg: "rgba(255,255,255,0.45)", borderRadius: "6px", px: "12px", py: "3px" })}>
           {day}日目
@@ -51,8 +47,8 @@ export default function Header({ bg, text, label, day, money }: HeaderProps) {
         <span className={css({ bg: "rgba(255,255,255,0.45)", borderRadius: "16px", px: "12px", py: "3px" })}>
           {label}
         </span>
-        <span className={css({ bg: "rgba(255,255,255,0.45)", borderRadius: "16px", px: "12px", py: "3px", fontWeight: "bold" })}>
-          💰 {money}G
+        <span className={css({ display: "flex", alignItems: "center", gap: "6px", bg: "rgba(255,255,255,0.45)", borderRadius: "16px", px: "12px", py: "3px", fontWeight: "bold" })}>
+          <IconCoin size={20} /> {money}G
         </span>
       </div>
     </header>

@@ -1,4 +1,4 @@
-import { css } from "../../../../styled-system/css";
+import { css } from "#styled-system/css";
 import { MATERIALS } from "../../../data/gameData";
 import BrewEquation from "./BrewEquation";
 

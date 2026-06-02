@@ -1,4 +1,4 @@
-import { css } from "../../../../styled-system/css";
+import { css } from "#styled-system/css";
 import type { MaterialDef } from "../../../data/types";
 
 interface MaterialCardGridProps {
