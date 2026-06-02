@@ -3,6 +3,7 @@ import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import DialogueBox, { type DialogueBoxHandle } from "../ui/dialogue/DialogueBox";
+import Character from "../ui/character/Character";
 
 export default function ConversationScene() {
   const { day, lastSaleResult, advanceScene } = useGameStore();
@@ -40,8 +41,6 @@ export default function ConversationScene() {
 
   const commands = useMemo<DrawCommand[]>(() => [
     { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
-    { type: "rect", x: width * 0.5 - 50, y: height * 0.2, width: 100, height: 160, color: 0xffb6c1 },
-    { type: "text", x: width * 0.5 - 26, y: height * 0.2 + 68, text: "魔女", fontSize: 14, textColor: "#888" },
   ], [width, height]);
 
   return (
@@ -49,6 +48,9 @@ export default function ConversationScene() {
       style={{ position: "relative", width, height, overflow: "hidden", cursor: "pointer" }} 
     >
       <PixiCanvas commands={commands} backgroundColor={0xfff0f5} />
+      
+      <Character character="witch" />
+      
       <DialogueBox
         ref={dialogueRef}
         speakerName="魔女"
