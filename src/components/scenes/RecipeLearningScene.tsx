@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
@@ -40,7 +41,7 @@ export default function RecipeLearningScene() {
   };
 
   return (
-    <div style={{ position: "relative", width, height, overflow: "hidden" }}>
+    <div style={{ width, height }} className={css({ position: "relative", overflow: "hidden" })}>
       <PixiCanvas commands={commands} backgroundColor={0xfde8f0} />
       <RecipeOptionCards options={options} onLearn={handleLearn} />
       <DialogueBox
