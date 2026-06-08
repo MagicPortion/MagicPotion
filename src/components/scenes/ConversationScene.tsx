@@ -6,10 +6,22 @@ import DialogueBox, { type DialogueBoxHandle } from "../ui/dialogue/DialogueBox"
 import Character from "../ui/character/Character";
 
 export default function ConversationScene() {
-  const { day, lastSaleResult, advanceScene } = useGameStore();
+  const { day, lastSaleResult, advanceScene, scene } = useGameStore();
   const { width, height } = useWindowSize();
 
   const dialogues = useMemo(() => {
+    if (scene === "conversation_move") {
+    return [
+      "さあ、材料を仕入れに行こう！",
+      "お店に向かうよ。準備はいい？",
+    ];
+  }
+  if (scene === "conversation_brew") {
+    return [
+      "材料が揃ったね！",
+      "さあ、ポーションを調合しよう！",
+    ];
+  }
     if (day === 1) {
       return [
         "魔法のポーション屋へようこそ！",
@@ -49,7 +61,14 @@ export default function ConversationScene() {
     >
       <PixiCanvas commands={commands} backgroundColor={0xfff0f5} />
       
-      <Character character="witch" />
+    <Character
+      character="witch"
+      imageSrc={
+        scene === "conversation_brew"
+          ? "/MagicPotion/assets/witch-coat.png"
+          : undefined
+      }
+/>
       
       <DialogueBox
         ref={dialogueRef}

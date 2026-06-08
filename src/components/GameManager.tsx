@@ -11,33 +11,43 @@ import RecipeLearningScene from "./scenes/RecipeLearningScene";
 import ShopScene from "./scenes/ShopScene";
 import BrewScene from "./scenes/BrewScene";
 import DisplayScene from "./scenes/DisplayScene";
+import ConversationShopkeeperScene from "./scenes/ConversationShopkeeperScene";
 
 const SCENE_LABEL: Record<Scene, string> = {
-  title:           "",
-  conversation:    "朝",
-  recipe_learning: "朝",
-  shop:            "昼",
-  brew:            "夜",
-  display:         "夜",
+  title:                    "",
+  conversation:             "朝",
+  recipe_learning:          "朝",
+  conversation_move:        "朝",
+  conversation_shopkeeper:  "昼",
+  shop:                     "昼",
+  conversation_brew:        "夜",
+  brew:                     "夜",
+  display:                  "夜",
 };
 
 const SCENE_COLOR: Record<Scene, { bg: string; text: string }> = {
-  title:           { bg: "transparent", text: "#ffffff" },
-  conversation:    { bg: "pastel.rose",     text: "#6b5b73" },
-  recipe_learning: { bg: "pastel.rose",     text: "#6b5b73" },
-  shop:            { bg: "pastel.lemon",    text: "#7a6000" },
-  brew:            { bg: "pastel.lavender", text: "#4a3f55" },
-  display:         { bg: "pastel.lavender", text: "#4a3f55" },
+  title:                    { bg: "transparent",    text: "#ffffff" },
+  conversation:             { bg: "pastel.rose",    text: "#6b5b73" },
+  recipe_learning:          { bg: "pastel.rose",    text: "#6b5b73" },
+  conversation_move:        { bg: "pastel.rose",    text: "#6b5b73" },
+  conversation_shopkeeper:  { bg: "pastel.lemon",   text: "#7a6000" },
+  shop:                     { bg: "pastel.lemon",   text: "#7a6000" },
+  conversation_brew:        { bg: "pastel.lavender", text: "#4a3f55" },
+  brew:                     { bg: "pastel.lavender", text: "#4a3f55" },
+  display:                  { bg: "pastel.lavender", text: "#4a3f55" },
 };
 
 const renderScene = (scene: Scene) => {
   switch (scene) {
-    case "title":           return <TitleScene />;
-    case "conversation":    return <ConversationScene />;
-    case "recipe_learning": return <RecipeLearningScene />;
-    case "shop":            return <ShopScene />;
-    case "brew":            return <BrewScene />;
-    case "display":         return <DisplayScene />;
+    case "title":                   return <TitleScene />;
+    case "conversation":            return <ConversationScene />;
+    case "recipe_learning":         return <RecipeLearningScene />;
+    case "conversation_move":       return <ConversationScene />;
+    case "conversation_shopkeeper": return <ConversationShopkeeperScene />;
+    case "shop":                    return <ShopScene />;
+    case "conversation_brew":       return <ConversationScene />;
+    case "brew":                    return <BrewScene />;
+    case "display":                 return <DisplayScene />;
   }
 };
 
