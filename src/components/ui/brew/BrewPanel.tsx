@@ -7,6 +7,7 @@ export interface BrewResult {
   colorHex: string;
   level: number;
   sellPrice: number;
+  isNew: boolean;
 }
 
 interface BrewPanelProps {

@@ -28,6 +28,7 @@ export interface BrewedPotion {
   recipeId: string;
   level: number;
   sellPrice: number;
+  isNew: boolean;
 }
 
 export interface SaleRecord {

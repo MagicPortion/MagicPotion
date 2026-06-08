@@ -52,7 +52,8 @@ export default function BrewScene() {
       const potionDef = getPotion(brewed.potionId);
       if (potionDef) {
         lastColorHex = potionDef.colorHex;
-        results.push({ name: potionDef.name, colorHex: potionDef.colorHex, level: brewed.level, sellPrice: brewed.sellPrice });
+        // isNew はバッチ内の最初の1本のみ立てる（2本目以降は同じレシピを既知として扱う）
+        results.push({ name: potionDef.name, colorHex: potionDef.colorHex, level: brewed.level, sellPrice: brewed.sellPrice, isNew: i === 0 && brewed.isNew });
       }
     }
     if (results.length > 0) {

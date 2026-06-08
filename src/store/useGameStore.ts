@@ -63,6 +63,7 @@ export interface GameState {
   reloadDailyOptions: () => boolean;
   confirmDisplay: (potions: BrewedPotion[]) => void;
   advanceScene: () => void;
+  sellAll: () => void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -112,6 +113,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       recipeId: recipe.id,
       level,
       sellPrice: calcSellPrice(potionDef.basePrice, level),
+      isNew: currentLevel === 0,
     };
 
     set({
@@ -168,6 +170,24 @@ export const useGameStore = create<GameState>((set, get) => ({
       displayedPotions: [],
       lastSaleResult: saleResult,
       scene: "conversation",
+      dailyRecipeOptions: pickDailyOptions(),
+    });
+  },
+
+  sellAll: () => {
+    const s = get();
+    const allPotions = [...s.brewedPotions];
+    const saleResult: SaleRecord[] = allPotions.map((p) => ({
+      name: getPotion(p.potionId)?.name ?? "ポーション",
+      price: p.sellPrice,
+    }));
+    const earned = saleResult.reduce((sum, r) => sum + r.price, 0);
+    set({
+      money: s.money + earned,
+      day: s.day + 1,
+      brewedPotions: [],
+      displayedPotions: [],
+      lastSaleResult: saleResult,
       dailyRecipeOptions: pickDailyOptions(),
     });
   },

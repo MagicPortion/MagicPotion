@@ -1,58 +1,86 @@
-import { useMemo, useState } from "react";
-import { css } from "../../../styled-system/css";
+import { useEffect, useRef, useState } from "react";
+import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
-import { useWindowSize } from "../../hooks/useWindowSize";
-import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
-import { SHOP_SLOTS_BY_LEVEL } from "../../data/gameData";
+import { getPotion } from "../../data/gameData";
 import type { BrewedPotion } from "../../data/types";
-import DialogueBox, { ActionButton } from "../ui/dialogue/DialogueBox";
-import PotionSelectPanel from "../ui/display/PotionSelectPanel";
+import PotionSaleAnimation, { type AnimationSlot, ANIM } from "../ui/display/PotionSaleAnimation";
+import SaleResultPopup from "../ui/display/SaleResultPopup";
+import BlackoutDay from "../ui/display/BlackoutDay";
+
+const GAME_W = 1920;
+const GAME_H = 1080;
+const CENTER_X = GAME_W / 2;
+const CENTER_Y = GAME_H / 2 - 20;
+const LINEUP_Y = GAME_H - 150;
+
+type Phase = "animating" | "summary" | "blackout";
+
+function buildSlots(potions: BrewedPotion[]): AnimationSlot[] {
+  const n = potions.length;
+  if (n === 0) return [];
+  const spacing = Math.min(220, n === 1 ? 0 : (GAME_W - 400) / (n - 1));
+  const originX = GAME_W / 2 - (spacing * (n - 1)) / 2;
+  return potions.map((p, i) => {
+    const lineupX = originX + i * spacing;
+    return {
+      id: p.instanceId,
+      colorHex: getPotion(p.potionId)?.colorHex ?? "888888",
+      lineupX,
+      dx: CENTER_X - lineupX,
+      dy: CENTER_Y - LINEUP_Y,
+      sellPrice: p.sellPrice,
+    };
+  });
+}
 
 export default function DisplayScene() {
-  const { brewedPotions, shopLevel, confirmDisplay, advanceScene, setScene } = useGameStore();
-  const { width, height } = useWindowSize();
-  const slots = SHOP_SLOTS_BY_LEVEL[shopLevel] ?? 3;
-  const [selected, setSelected] = useState<BrewedPotion[]>([]);
+  const { brewedPotions, day, sellAll, setScene } = useGameStore();
 
-  const toggleSelect = (potion: BrewedPotion) => {
-    if (selected.some((p) => p.instanceId === potion.instanceId)) {
-      setSelected(selected.filter((p) => p.instanceId !== potion.instanceId));
-    } else if (selected.length < slots) {
-      setSelected([...selected, potion]);
+  const [snapshotPotions] = useState<BrewedPotion[]>(() => [...brewedPotions]);
+  const [slots] = useState<AnimationSlot[]>(() => buildSlots(brewedPotions));
+  const [phase, setPhase] = useState<Phase>("animating");
+  const [launched, setLaunched] = useState(false);
+
+  const soldRef = useRef(false);
+  useEffect(() => {
+    if (soldRef.current) return;
+    soldRef.current = true;
+    sellAll();
+  }, [sellAll]);
+
+  useEffect(() => {
+    if (slots.length === 0) {
+      const t = setTimeout(() => setPhase("summary"), 0);
+      return () => clearTimeout(t);
     }
-  };
+    const t1 = setTimeout(() => setLaunched(true), ANIM.ENTER_DURATION + ANIM.ENTER_DELAY);
+    const lastLaunch = (slots.length - 1) * ANIM.STAGGER;
+    const t2 = setTimeout(
+      () => setPhase("summary"),
+      ANIM.ENTER_DURATION + ANIM.ENTER_DELAY + lastLaunch + ANIM.ARC_DURATION + ANIM.MONEY_DURATION + 400
+    );
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [slots.length]);
 
-  const handleConfirm = () => {
-    confirmDisplay(selected);
-    advanceScene();
-  };
-
-  const commands = useMemo<DrawCommand[]>(() => [
-    { type: "rect", x: 0, y: 0, width, height, color: 0x16213e },
-  ], [width, height]);
+  useEffect(() => {
+    if (phase !== "blackout") return;
+    const t = setTimeout(() => setScene("conversation"), 600 + 2500 + 200);
+    return () => clearTimeout(t);
+  }, [phase, setScene]);
 
   return (
-    <div style={{ width, height }} className={css({ position: "relative", overflow: "hidden" })}>
-      <PixiCanvas commands={commands} backgroundColor={0x0d0d20} />
-      <PotionSelectPanel
-        brewedPotions={brewedPotions}
-        slots={slots}
-        shopLevel={shopLevel}
-        selected={selected}
-        onToggle={toggleSelect}
-      />
-      <DialogueBox
-        actions={
-          <>
-            <ActionButton variant="secondary" onClick={() => setScene("brew")}>
-              ← 調合に戻る
-            </ActionButton>
-            <ActionButton onClick={handleConfirm}>
-              {selected.length === 0 ? "何も置かずに翌朝へ →" : `${selected.length}本を陳列して翌朝へ →`}
-            </ActionButton>
-          </>
-        }
-      />
+    <div
+      className={css({ position: "fixed", inset: 0, overflow: "hidden" })}
+      // 深夜の固定背景色のためinline style
+      style={{ background: "#0d0d20" }}
+    >
+      {phase === "animating" && (
+        <PotionSaleAnimation slots={slots} launched={launched} />
+      )}
+      {phase === "summary" && (
+        <SaleResultPopup potions={snapshotPotions} onClose={() => setPhase("blackout")} />
+      )}
+      {phase === "blackout" && <BlackoutDay day={day} />}
     </div>
   );
 }
