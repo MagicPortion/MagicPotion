@@ -26,7 +26,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
         onClick={(e) => e.stopPropagation()}
         className={css({
           position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-          zIndex: 301, w: "min(1500px,98vw)", maxH: "88vh", overflowY: "auto",
+          zIndex: 301, w: "min(1800px,98vw)", maxH: "90vh", overflowY: "auto",
           background: "rgba(12,8,3,0.98)", border: "2px solid #8B6914",
           borderRadius: "12px", p: "42px 48px", boxShadow: "0 20px 96px rgba(0,0,0,0.78)",
         })}
@@ -49,7 +49,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
             調合するか、朝のレシピ習得で覚えよう！
           </p>
         ) : (
-          <div className={css({ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(760px, 1fr))", gap: "22px" })}>
+          <div className={css({ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(810px, 1fr))", gap: "20px" })}>
             {knownRecipes.map(([recipeId, level]) => {
               const recipe = getRecipe(recipeId);
               if (!recipe) return null;
@@ -69,48 +69,48 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                   // cursor は canBrew の動的値のためinline style
                   style={{ cursor: onSelectRecipe && canBrew ? "pointer" : "default" }}
                   className={css({
-                    display: "flex", alignItems: "center", gap: "24px",
+                    display: "flex", alignItems: "center", gap: "20px",
                     background: "rgba(30,20,8,0.78)", border: "1px solid #4a3810",
-                    borderRadius: "12px", p: "24px", minH: "180px",
+                    borderRadius: "12px", p: "20px", minH: "160px",
                   })}
                 >
                   {/* ポーション名エリア */}
-                  <div className={css({ display: "flex", alignItems: "center", gap: "12px", w: "260px" })}>
-                    <Dot colorHex={potion?.colorHex ?? "808080"} size={26} />
-                    <span className={css({ fontSize: "30px", fontWeight: "bold", color: "#c8a84b" })}>{potion?.name}</span>
+                  <div className={css({ display: "flex", alignItems: "center", gap: "12px", w: "200px", flexShrink: 0 })}>
+                    <Dot colorHex={potion?.colorHex ?? "808080"} size={24} />
+                    <span className={css({ fontSize: "28px", fontWeight: "bold", color: "#c8a84b" })}>{potion?.name}</span>
                   </div>
 
-                  <div className={css({ fontSize: "48px", color: "#4a3810", fontWeight: "bold" })}>→</div>
+                  <div className={css({ fontSize: "40px", color: "#4a3810", fontWeight: "bold", flexShrink: 0 })}>→</div>
 
                   {/* ベース素材エリア */}
-                  <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", w: "160px" })}>
-                    <Dot colorHex={base?.colorHex ?? "aaaaaa"} size={26} />
-                    <span className={css({ fontSize: "28px", color: "#e8d8b8", mt: "10px", textAlign: "center" })}>{base?.name}</span>
+                  <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", w: "130px", flexShrink: 0 })}>
+                    <Dot colorHex={base?.colorHex ?? "aaaaaa"} size={24} />
+                    <span className={css({ fontSize: "26px", color: "#e8d8b8", mt: "8px", textAlign: "center" })}>{base?.name}</span>
                     {/* 画像は public/assets/materials/ に配置して /MagicPotion/ ベースパスで参照 */}
                     <img
                       src={`/MagicPotion/assets/materials/${recipe.baseId}.png`}
                       alt={base?.name ?? ""}
-                      className={css({ w: "110px", h: "72px", objectFit: "contain", mt: "10px" })}
+                      className={css({ w: "90px", h: "60px", objectFit: "contain", mt: "8px" })}
                       onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                     />
                   </div>
 
-                  <div className={css({ fontSize: "36px", color: "#4a3810", fontWeight: "bold" })}>＋</div>
+                  <div className={css({ fontSize: "30px", color: "#4a3810", fontWeight: "bold", flexShrink: 0 })}>＋</div>
 
                   {/* アクセント素材エリア */}
-                  <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", w: "160px" })}>
-                    <Dot colorHex={accent?.colorHex ?? "aaaaaa"} size={26} />
-                    <span className={css({ fontSize: "28px", color: "#e8d8b8", mt: "10px", textAlign: "center" })}>{accent?.name}</span>
+                  <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", w: "130px", flexShrink: 0 })}>
+                    <Dot colorHex={accent?.colorHex ?? "aaaaaa"} size={24} />
+                    <span className={css({ fontSize: "26px", color: "#e8d8b8", mt: "8px", textAlign: "center" })}>{accent?.name}</span>
                     <img
                       src={`/MagicPotion/assets/materials/${recipe.accentId}.png`}
                       alt={accent?.name ?? ""}
-                      className={css({ w: "110px", h: "72px", objectFit: "contain", mt: "10px" })}
+                      className={css({ w: "90px", h: "60px", objectFit: "contain", mt: "8px" })}
                       onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                     />
                   </div>
 
                   {/* レベル・価格・セットボタン */}
-                  <div className={css({ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "flex-end", gap: "10px", w: "160px", ml: "auto" })}>
+                  <div className={css({ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "flex-end", gap: "8px", ml: "auto", flexShrink: 0 })}>
                     <span className={css({ background: "#1a0e06", border: "1px solid #8B6914", borderRadius: "22px", px: "12px", py: "6px", fontSize: "30px", color: "#c8a84b", whiteSpace: "nowrap" })}>
                       Lv.{level}
                     </span>
