@@ -20,33 +20,36 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
     <>
       <div
         onClick={(e) => { e.stopPropagation(); onClose(); }}
-        style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 }}
+        className={css({ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 })}
       />
       <div
         onClick={(e) => e.stopPropagation()}
-        style={{
+        className={css({
           position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-          zIndex: 301, width: "min(1500px, 98vw)", maxHeight: "88vh", overflowY: "auto",
+          zIndex: 301, w: "min(1500px,98vw)", maxH: "88vh", overflowY: "auto",
           background: "rgba(12,8,3,0.98)", border: "2px solid #8B6914",
-          borderRadius: 12, padding: "42px 48px", boxShadow: "0 20px 96px rgba(0,0,0,0.78)",
-        }}
+          borderRadius: "12px", p: "42px 48px", boxShadow: "0 20px 96px rgba(0,0,0,0.78)",
+        })}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-          <h2 style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 28, color: "#c8a84b", margin: 0, letterSpacing: "0.12em" }}>
-            <IconRecipe size={26} /> レシピ帳
+        <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", mb: "20px" })}>
+          <h2 className={css({ display: "flex", alignItems: "center", gap: "12px", fontSize: "30px", color: "#c8a84b", m: 0, letterSpacing: "0.12em" })}>
+            <IconRecipe size={28} /> レシピ帳
           </h2>
-          <button onClick={onClose} style={{ display: "flex", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "#8B6914" }}>
-            <IconClose size={18} />
+          <button
+            onClick={onClose}
+            className={css({ display: "flex", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "#8B6914" })}
+          >
+            <IconClose size={28} />
           </button>
         </div>
 
         {knownRecipes.length === 0 ? (
-          <p style={{ textAlign: "center", color: "#8B6914", fontSize: 17, padding: "20px 0", letterSpacing: "0.06em" }}>
+          <p className={css({ textAlign: "center", color: "#8B6914", fontSize: "30px", p: "20px 0", letterSpacing: "0.06em" })}>
             まだレシピがありません。<br />
             調合するか、朝のレシピ習得で覚えよう！
           </p>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(760px, 1fr))", gap: 22 }}>
+          <div className={css({ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(760px, 1fr))", gap: "22px" })}>
             {knownRecipes.map(([recipeId, level]) => {
               const recipe = getRecipe(recipeId);
               if (!recipe) return null;
@@ -63,60 +66,67 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                 <div
                   key={recipeId}
                   onClick={() => { if (onSelectRecipe && canBrew) { onSelectRecipe(recipe.baseId, recipe.accentId); onClose(); } }}
-                  style={{
-                    display: "flex", alignItems: "center", gap: 24,
+                  // cursor は canBrew の動的値のためinline style
+                  style={{ cursor: onSelectRecipe && canBrew ? "pointer" : "default" }}
+                  className={css({
+                    display: "flex", alignItems: "center", gap: "24px",
                     background: "rgba(30,20,8,0.78)", border: "1px solid #4a3810",
-                    borderRadius: 12, padding: "24px", minHeight: 180, cursor: onSelectRecipe && canBrew ? 'pointer' : 'default',
-                  }}
+                    borderRadius: "12px", p: "24px", minH: "180px",
+                  })}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, width: 260 }}>
+                  {/* ポーション名エリア */}
+                  <div className={css({ display: "flex", alignItems: "center", gap: "12px", w: "260px" })}>
                     <Dot colorHex={potion?.colorHex ?? "808080"} size={26} />
-                    <span style={{ fontSize: 26, fontWeight: "bold", color: "#c8a84b" }}>{potion?.name}</span>
+                    <span className={css({ fontSize: "30px", fontWeight: "bold", color: "#c8a84b" })}>{potion?.name}</span>
                   </div>
 
-                  <div style={{ fontSize: 48, color: "#4a3810", fontWeight: "bold" }}>→</div>
+                  <div className={css({ fontSize: "48px", color: "#4a3810", fontWeight: "bold" })}>→</div>
 
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 140 }}>
+                  {/* ベース素材エリア */}
+                  <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", w: "160px" })}>
                     <Dot colorHex={base?.colorHex ?? "aaaaaa"} size={26} />
-                    <span style={{ fontSize: 24, color: "#e8d8b8", marginTop: 10 }}>{base?.name}</span>
+                    <span className={css({ fontSize: "28px", color: "#e8d8b8", mt: "10px", textAlign: "center" })}>{base?.name}</span>
+                    {/* 画像は public/assets/materials/ に配置して /MagicPotion/ ベースパスで参照 */}
                     <img
-                      src={`/src/assets/materials/${recipe.baseId}.png`}
+                      src={`/MagicPotion/assets/materials/${recipe.baseId}.png`}
                       alt={base?.name ?? ""}
-                      style={{ width: 110, height: 72, objectFit: 'contain', marginTop: 10 }}
-                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                      className={css({ w: "110px", h: "72px", objectFit: "contain", mt: "10px" })}
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                     />
                   </div>
 
-                  <div style={{ fontSize: 36, color: "#4a3810", fontWeight: "bold" }}>＋</div>
+                  <div className={css({ fontSize: "36px", color: "#4a3810", fontWeight: "bold" })}>＋</div>
 
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 140 }}>
+                  {/* アクセント素材エリア */}
+                  <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", w: "160px" })}>
                     <Dot colorHex={accent?.colorHex ?? "aaaaaa"} size={26} />
-                    <span style={{ fontSize: 24, color: "#e8d8b8", marginTop: 10 }}>{accent?.name}</span>
+                    <span className={css({ fontSize: "28px", color: "#e8d8b8", mt: "10px", textAlign: "center" })}>{accent?.name}</span>
                     <img
-                      src={`/src/assets/materials/${recipe.accentId}.png`}
+                      src={`/MagicPotion/assets/materials/${recipe.accentId}.png`}
                       alt={accent?.name ?? ""}
-                      style={{ width: 110, height: 72, objectFit: 'contain', marginTop: 10 }}
-                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                      className={css({ w: "110px", h: "72px", objectFit: "contain", mt: "10px" })}
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                     />
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "flex-end", gap: 10, width: 160, marginLeft: "auto" }}>
-                    <span style={{ background: "#1a0e06", border: "1px solid #8B6914", borderRadius: 22, padding: "6px 12px", fontSize: 18, color: "#c8a84b", whiteSpace: "nowrap" }}>
+                  {/* レベル・価格・セットボタン */}
+                  <div className={css({ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "flex-end", gap: "10px", w: "160px", ml: "auto" })}>
+                    <span className={css({ background: "#1a0e06", border: "1px solid #8B6914", borderRadius: "22px", px: "12px", py: "6px", fontSize: "30px", color: "#c8a84b", whiteSpace: "nowrap" })}>
                       Lv.{level}
                     </span>
-                    <span style={{ fontSize: 24, fontWeight: "bold", color: "#c8a84b", whiteSpace: "nowrap", minWidth: 72, textAlign: "right" }}>
+                    <span className={css({ fontSize: "28px", fontWeight: "bold", color: "#c8a84b", whiteSpace: "nowrap", minW: "72px", textAlign: "right" })}>
                       {price}G
                     </span>
                     {onSelectRecipe && (
                       <button
-                        onClick={() => onSelectRecipe(recipe.baseId, recipe.accentId)}
+                        onClick={(e) => { e.stopPropagation(); onSelectRecipe(recipe.baseId, recipe.accentId); onClose(); }}
                         disabled={!canBrew}
                         className={css({
                           bg: canBrew ? "pastel.mint" : "transparent",
                           border: "1px solid", borderColor: canBrew ? "pastel.sage" : "#4a3810",
                           borderRadius: "6px", p: "6px 14px",
                           cursor: canBrew ? "pointer" : "not-allowed",
-                          fontSize: "13px", color: canBrew ? "#4a3f55" : "#4a3810",
+                          fontSize: "30px", color: canBrew ? "#4a3f55" : "#4a3810",
                           whiteSpace: "nowrap", opacity: canBrew ? "1" : "0.5",
                           _hover: { bg: canBrew ? "pastel.sage" : "transparent" },
                         })}
@@ -137,6 +147,10 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
 
 function Dot({ colorHex, size = 12 }: { colorHex: string; size?: number }) {
   return (
-    <span style={{ display: "inline-block", width: size, height: size, borderRadius: "50%", backgroundColor: `#${colorHex}`, flexShrink: 0, border: "1px solid rgba(255,255,255,0.2)" }} />
+    // backgroundColor は動的な colorHex のためinline style、size も動的のためinline style
+    <span
+      style={{ backgroundColor: `#${colorHex}`, width: size, height: size }}
+      className={css({ display: "inline-block", borderRadius: "50%", flexShrink: 0, border: "1px solid rgba(255,255,255,0.2)" })}
+    />
   );
 }

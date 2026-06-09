@@ -13,6 +13,7 @@ export interface DialogueAppearance { theme: DialogueTheme; }
 export const DEFAULT_APPEARANCE: DialogueAppearance = { theme: "dark" };
 
 export type Scene =
+  | "title"
   | "conversation"
   | "recipe_learning"
   | "conversation_move"

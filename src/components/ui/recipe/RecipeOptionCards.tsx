@@ -17,29 +17,29 @@ interface RecipeOptionCardsProps {
 export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCardsProps) {
   return (
     <div
-      style={{
+      className={css({
         position: "absolute",
-        bottom: 80,
+        bottom: "80px",
         left: 0,
         right: 0,
         zIndex: 10,
-        padding: "20px 32px 16px",
+        p: "20px 32px 16px",
         background: "rgba(255,248,252,0.96)",
         backdropFilter: "blur(8px)",
         borderTop: "2px solid rgba(255,182,193,0.4)",
         boxShadow: "0 -8px 32px rgba(0,0,0,0.08)",
-      }}
+      })}
     >
-      <div style={{ marginBottom: 12 }}>
-        <h2 style={{ fontSize: 20, fontWeight: "bold", color: "#6b5b73", margin: 0 }}>
+      <div className={css({ mb: "12px" })}>
+        <h2 className={css({ fontSize: "30px", fontWeight: "bold", color: "#6b5b73", m: 0 })}>
           今日のポーションレシピ
         </h2>
-        <p style={{ fontSize: 14, color: "#9b8aaa", margin: "4px 0 0" }}>
+        <p className={css({ fontSize: "24px", color: "#9b8aaa", m: "4px 0 0" })}>
           1つ選ぶとそのレシピのレベルが上がり、より高値で売れるようになります
         </p>
       </div>
 
-      <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+      <div className={css({ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" })}>
         {options.map((opt) => {
           const isKnown = opt.level > 0;
           return (
@@ -51,7 +51,7 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
                 bg: "white", border: "3px solid",
                 borderColor: isKnown ? "pastel.lilac" : "pastel.mint",
                 borderRadius: "20px", p: "20px 16px 16px",
-                cursor: "pointer", width: "130px",
+                cursor: "pointer", width: "200px",
                 boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
                 transition: "all 0.18s",
                 _hover: {
@@ -61,12 +61,24 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
                 },
               })}
             >
-              <span style={{ display: "block", width: 56, height: 56, borderRadius: "50%", backgroundColor: `#${opt.potion.colorHex}`, boxShadow: `0 4px 16px #${opt.potion.colorHex}88`, flexShrink: 0 }} />
-              <span style={{ fontSize: 16, fontWeight: "bold", color: "#4a3f55", textAlign: "center", lineHeight: 1.3 }}>
+              {/* backgroundColor・boxShadow は動的な colorHex のためinline style */}
+              <span
+                style={{
+                  backgroundColor: `#${opt.potion.colorHex}`,
+                  boxShadow: `0 4px 16px #${opt.potion.colorHex}88`,
+                }}
+                className={css({ display: "block", w: "64px", h: "64px", borderRadius: "50%", flexShrink: 0 })}
+              />
+              <span className={css({ fontSize: "30px", fontWeight: "bold", color: "#4a3f55", textAlign: "center", lineHeight: 1.3 })}>
                 {opt.potion.name}
               </span>
-              <span style={{ fontSize: 15, color: "#8b7f99" }}>{opt.nextPrice}G</span>
-              <span className={css({ fontSize: "13px", fontWeight: "bold", px: "10px", py: "3px", borderRadius: "20px", bg: isKnown ? "pastel.lilac" : "pastel.mint", color: "#4a3f55", whiteSpace: "nowrap" })}>
+              <span className={css({ fontSize: "24px", color: "#8b7f99" })}>{opt.nextPrice}G</span>
+              <span className={css({
+                fontSize: "24px", fontWeight: "bold",
+                px: "10px", py: "3px", borderRadius: "20px",
+                bg: isKnown ? "pastel.lilac" : "pastel.mint",
+                color: "#4a3f55", whiteSpace: "nowrap",
+              })}>
                 {isKnown ? `Lv.${opt.level} → ${opt.nextLevel}` : "Lv.1 習得"}
               </span>
             </button>
