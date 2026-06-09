@@ -8,12 +8,25 @@ interface MaterialPickerPopupProps {
   selectedId: string | null;
   onSelect: (id: string) => void;
   onClose: () => void;
+  suggestedItems?: MaterialDef[];
+  suggestedRecipes?: {
+    materialId: string;
+    potionName: string;
+    currentLevel: number;
+    nextLevel: number;
+    currentPrice: number;
+    nextPrice: number;
+  }[];
 }
 
 export default function MaterialPickerPopup({
-  title, items, counts, selectedId, onSelect, onClose,
+  title, items, counts, selectedId, onSelect, onClose, suggestedItems = [], suggestedRecipes = [],
 }: MaterialPickerPopupProps) {
   const ownedItems = items.filter((item) => (counts[item.id] ?? 0) > 0);
+  const ownedSuggestedItems =
+  suggestedItems.filter(
+    (item) => (counts[item.id] ?? 0) > 0
+  );
 
   return (
     // 暗くぼかしたフルスクリーンオーバーレイ。カード外クリックで閉じる
@@ -51,6 +64,8 @@ export default function MaterialPickerPopup({
           {ownedItems.map((item) => {
             const count = counts[item.id] ?? 0;
             const isSelected = selectedId === item.id;
+            const suggestedRecipe = suggestedRecipes.find((recipe) => recipe.materialId === item.id);
+            const isSuggested = ownedSuggestedItems.some((suggested) => suggested.id === item.id);
 
             return (
               // 個数バッジを絶対配置するためにrelativeラッパーが必要
@@ -105,6 +120,84 @@ export default function MaterialPickerPopup({
                     {item.name}
                   </span>
                 </button>
+
+                {isSuggested && suggestedRecipe && (
+                  <div
+                    className={css({
+                      position: "absolute",
+                      top: "100%",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      mt: "12px",
+
+                      minWidth: "240px",
+
+                      bg: "rgba(8,5,20,0.97)",
+                      border: "2px solid rgba(200,168,75,0.8)",
+                      borderRadius: "18px",
+
+                      px: "24px",
+                      py: "16px",
+
+                      textAlign: "center",
+                      whiteSpace: "nowrap",
+
+                      boxShadow: "0 0 20px rgba(200,168,75,0.25)",
+
+                      pointerEvents: "none",
+                    })}
+                  >
+                    {/* ポーション名 */}
+                    <div
+                      className={css({
+                        fontSize: "30px",
+                        fontWeight: "bold",
+                        color: "#ffffff",
+                        mb: "6px",
+                      })}
+                    >
+                      {suggestedRecipe.potionName}
+                    </div>
+
+                    {/* レベル推移 */}
+                    <div
+                      className={css({
+                        fontSize: "24px",
+                        fontWeight: "bold",
+                        color: "#c8a84b",
+                      })}
+                    >
+                      Lv.{suggestedRecipe.currentLevel}
+                      {" → "}
+                      Lv.{suggestedRecipe.nextLevel}
+                    </div>
+
+                    {/* 売値推移 */}
+                    <div
+                      className={css({
+                        fontSize: "24px",
+                        fontWeight: "bold",
+                        color: "#7CFF8F",
+                      })}
+                    >
+                      {suggestedRecipe.currentPrice}G
+                      {" → "}
+                      {suggestedRecipe.nextPrice}G
+                    </div>
+
+                    {/* 増加量 */}
+                    <div
+                      className={css({
+                        fontSize: "22px",
+                        fontWeight: "bold",
+                        color: "#8AD8FF",
+                        mt: "4px",
+                      })}
+                    >
+                      +{suggestedRecipe.nextPrice - suggestedRecipe.currentPrice}G
+                    </div>
+                  </div>
+                )}
 
                 {/* 個数バッジ。カード右下に絶対配置。1個の場合は非表示 */}
                 {count > 1 && (

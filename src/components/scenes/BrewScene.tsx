@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
-import { MATERIALS, getPotion, colorNum } from "../../data/gameData";
+import { MATERIALS, getPotion, colorNum, RECIPES, calcSellPrice } from "../../data/gameData";
 import DialogueBox, { ActionButton } from "../ui/dialogue/DialogueBox";
 import BrewPanel, { type BrewResult } from "../ui/brew/BrewPanel";
 import MaterialPickerPopup from "../ui/brew/MaterialPickerPopup";
@@ -11,7 +11,7 @@ import PotionShelf from "../ui/brew/PotionShelf";
 import { css } from "../../../styled-system/css";
 
 export default function BrewScene() {
-  const { materials, brew, advanceScene } = useGameStore();
+  const { materials, brew, advanceScene, recipeLevel } = useGameStore();
   const [selectedBase, setSelectedBase] = useState<string | null>(null);
   const [selectedAccent, setSelectedAccent] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState<"base" | "accent" | null>(null);
@@ -27,6 +27,102 @@ export default function BrewScene() {
 
   const allBases   = MATERIALS.filter((m) => m.category === "base");
   const allAccents = MATERIALS.filter((m) => m.category === "accent");
+
+  const suggestedItems = useMemo(() => {
+    if (pickerOpen === "accent" && selectedBase) {
+      return RECIPES
+        .filter((r) => (recipeLevel[r.id] ?? 0) > 0)
+        .filter((r) => r.baseId === selectedBase)
+        .map((r) => MATERIALS.find((m) => m.id === r.accentId))
+        .filter((m): m is NonNullable<typeof m> => Boolean(m))
+        .filter((m) => (materials[m.id] ?? 0) > 0);
+    }
+
+    if (pickerOpen === "base" && selectedAccent) {
+      return RECIPES
+        .filter((r) => (recipeLevel[r.id] ?? 0) > 0)
+        .filter((r) => r.accentId === selectedAccent)
+        .map((r) => MATERIALS.find((m) => m.id === r.baseId))
+        .filter((m): m is NonNullable<typeof m> => Boolean(m))
+        .filter((m) => (materials[m.id] ?? 0) > 0);
+    }
+
+    return [];
+  }, [pickerOpen, selectedBase, selectedAccent, recipeLevel, materials]);
+
+  const suggestedRecipes = useMemo(() => {
+    if (pickerOpen === "accent" && selectedBase) {
+      return RECIPES
+        .filter((r) => (recipeLevel[r.id] ?? 0) > 0)
+        .filter((r) => r.baseId === selectedBase)
+        .map((r) => {
+          const material = MATERIALS.find((m) => m.id === r.accentId);
+          const potion = getPotion(r.potionId);
+          const level = recipeLevel[r.id] ?? 1;
+
+          if (!material || !potion) return null;
+          if ((materials[material.id] ?? 0) <= 0) return null;
+
+          const currentLevel = level;
+          const nextLevel = level + 1;
+
+          const currentPrice =
+            calcSellPrice(potion.basePrice, currentLevel);
+
+          const nextPrice =
+            calcSellPrice(potion.basePrice, nextLevel);
+
+          return {
+            materialId: material.id,
+            potionName: potion.name,
+
+            currentLevel,
+            nextLevel,
+
+            currentPrice,
+            nextPrice,
+          };
+        })
+        .filter((x): x is NonNullable<typeof x> => Boolean(x));
+    }
+
+    if (pickerOpen === "base" && selectedAccent) {
+      return RECIPES
+        .filter((r) => (recipeLevel[r.id] ?? 0) > 0)
+        .filter((r) => r.accentId === selectedAccent)
+        .map((r) => {
+          const material = MATERIALS.find((m) => m.id === r.baseId);
+          const potion = getPotion(r.potionId);
+          const level = recipeLevel[r.id] ?? 1;
+
+          if (!material || !potion) return null;
+          if ((materials[material.id] ?? 0) <= 0) return null;
+
+          const currentLevel = level;
+          const nextLevel = level + 1;
+
+          const currentPrice =
+            calcSellPrice(potion.basePrice, currentLevel);
+
+          const nextPrice =
+            calcSellPrice(potion.basePrice, nextLevel);
+
+          return {
+            materialId: material.id,
+            potionName: potion.name,
+
+            currentLevel,
+            nextLevel,
+
+            currentPrice,
+            nextPrice,
+          };
+        })
+        .filter((x): x is NonNullable<typeof x> => Boolean(x));
+    }
+
+    return [];
+  }, [pickerOpen, selectedBase, selectedAccent, recipeLevel, materials]);
 
   const maxBrew = selectedBase && selectedAccent
     ? Math.min(materials[selectedBase] ?? 0, materials[selectedAccent] ?? 0)
@@ -209,6 +305,8 @@ export default function BrewScene() {
           selectedId={selectedBase}
           onSelect={handleSelectBase}
           onClose={() => setPickerOpen(null)}
+          suggestedItems={suggestedItems}
+          suggestedRecipes={suggestedRecipes}
         />
       )}
       {pickerOpen === "accent" && !isBrewing && (
@@ -219,6 +317,8 @@ export default function BrewScene() {
           selectedId={selectedAccent}
           onSelect={handleSelectAccent}
           onClose={() => setPickerOpen(null)}
+          suggestedItems={suggestedItems}
+          suggestedRecipes={suggestedRecipes}
         />
       )}
 
