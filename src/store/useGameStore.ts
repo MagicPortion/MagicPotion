@@ -15,11 +15,23 @@ export const DEFAULT_APPEARANCE: DialogueAppearance = { theme: "dark" };
 export type Scene =
   | "conversation"
   | "recipe_learning"
+  | "conversation_move"
+  | "conversation_shopkeeper"
   | "shop"
+  | "conversation_brew"
   | "brew"
   | "display";
 
-const SCENE_ORDER: Scene[] = ["conversation", "recipe_learning", "shop", "brew", "display"];
+const SCENE_ORDER: Scene[] = [
+  "conversation",
+  "recipe_learning",
+  "conversation_move",
+  "conversation_shopkeeper",
+  "shop",
+  "conversation_brew",
+  "brew",
+  "display",
+];
 
 let instanceCounter = 0;
 
@@ -55,7 +67,7 @@ export interface GameState {
 export const useGameStore = create<GameState>((set, get) => ({
   money: 1000,
   day: 1,
-  scene: "conversation",
+  scene: "title",
   shopLevel: 1,
   materials: {},
   brewedPotions: [],

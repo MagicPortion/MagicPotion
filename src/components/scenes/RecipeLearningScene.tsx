@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
@@ -6,6 +7,7 @@ import { RECIPES, getPotion, calcSellPrice } from "../../data/gameData";
 import DialogueBox, { ActionButton } from "../ui/dialogue/DialogueBox";
 import RecipeOptionCards from "../ui/recipe/RecipeOptionCards";
 import { IconRefresh } from "../ui/icons";
+import Character from "../ui/character/Character";
 
 export default function RecipeLearningScene() {
   const { dailyRecipeOptions, recipeLevel, learnRecipe, reloadDailyOptions, money, advanceScene } =
@@ -14,9 +16,7 @@ export default function RecipeLearningScene() {
   const [reloadMsg, setReloadMsg] = useState<string | null>(null);
 
   const commands = useMemo<DrawCommand[]>(() => [
-    { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
-    { type: "rect", x: width * 0.5 - 50, y: height * 0.12, width: 100, height: 150, color: 0xffb6c1 },
-    { type: "text", x: width * 0.5 - 26, y: height * 0.12 + 65, text: "魔女", fontSize: 14, textColor: "#888" },
+  { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
   ], [width, height]);
 
   const options = dailyRecipeOptions.flatMap((id) => {
@@ -40,8 +40,9 @@ export default function RecipeLearningScene() {
   };
 
   return (
-    <div style={{ position: "relative", width, height, overflow: "hidden" }}>
+    <div style={{ width, height }} className={css({ position: "relative", overflow: "hidden" })}>
       <PixiCanvas commands={commands} backgroundColor={0xfde8f0} />
+      <Character character="witch" />
       <RecipeOptionCards options={options} onLearn={handleLearn} />
       <DialogueBox
         actions={
