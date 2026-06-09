@@ -52,6 +52,7 @@ export interface GameState {
   recipeLevel: Record<string, number>;
   dailyRecipeOptions: string[];
   lastSaleResult: SaleRecord[];
+  knownPotionIds: string[];
 
   dialogueAppearance: DialogueAppearance;
   setDialogueAppearance: (a: DialogueAppearance) => void;
@@ -77,6 +78,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   recipeLevel: {},
   dailyRecipeOptions: pickDailyOptions(),
   lastSaleResult: [],
+  knownPotionIds: [],
   dialogueAppearance: DEFAULT_APPEARANCE,
   setDialogueAppearance: (a) => set({ dialogueAppearance: a }),
 
@@ -107,13 +109,16 @@ export const useGameStore = create<GameState>((set, get) => ({
         ? { ...s.recipeLevel, [recipe.id]: 1 }
         : s.recipeLevel;
 
+    // isNew はポーション単位で判定（同じポーションの別レシピでもNEWにしない）
+    const isNewPotion = !s.knownPotionIds.includes(recipe.potionId);
+
     const brewed: BrewedPotion = {
       instanceId: `p_${++instanceCounter}`,
       potionId: recipe.potionId,
       recipeId: recipe.id,
       level,
       sellPrice: calcSellPrice(potionDef.basePrice, level),
-      isNew: currentLevel === 0,
+      isNew: isNewPotion,
     };
 
     set({
@@ -124,6 +129,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       },
       brewedPotions: [...s.brewedPotions, brewed],
       recipeLevel: updatedLevels,
+      knownPotionIds: isNewPotion
+        ? [...s.knownPotionIds, recipe.potionId]
+        : s.knownPotionIds,
     });
     return brewed;
   },

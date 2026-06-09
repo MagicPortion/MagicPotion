@@ -21,12 +21,12 @@ export default function HintPopup({ isOpen, onClose }: HintPopupProps) {
     <>
       <div
         onClick={(e) => { e.stopPropagation(); onClose(); }}
-        style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 }}
+        style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 }}
       />
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+          position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
           zIndex: 301, width: "min(440px, 90vw)",
           background: "rgba(12,8,3,0.97)", border: "2px solid #8B6914",
           borderRadius: 6, padding: "28px 32px", boxShadow: "0 12px 48px rgba(0,0,0,0.7)",
