@@ -142,12 +142,25 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
         </div>
 
         {/* ポーション名 */}
-        <h2 className={css({ fontSize: "48px", fontWeight: "bold", color: "#f0e6c8", m: "0 0 8px", letterSpacing: "0.06em" })}>
+        <h2 className={css({ fontSize: "48px", fontWeight: "bold", color: "#f0e6c8", m: "0 0 16px", letterSpacing: "0.06em" })}>
           {potion.name}
         </h2>
-        <p className={css({ fontSize: "28px", color: "#c8a84b", m: "0 0 24px", letterSpacing: "0.08em", fontWeight: "bold" })}>
-          Lv.{potion.level}
-        </p>
+
+        {/* レベルバッジ */}
+        <div
+          // shelfBadgePop: バッジ出現アニメーションのためinline style
+          style={{ animation: "shelfBadgePop 0.4s cubic-bezier(0.34,1.56,0.64,1) 200ms both" }}
+          className={css({
+            display: "flex", alignItems: "center", gap: "10px",
+            bg: "rgba(200,168,75,0.18)", border: "2px solid #c8a84b",
+            borderRadius: "40px", px: "28px", py: "10px", mb: "24px",
+          })}
+        >
+          <span className={css({ fontSize: "28px", color: "#c8a84b", letterSpacing: "0.06em" })}>LEVEL</span>
+          <span className={css({ fontSize: "52px", fontWeight: "900", color: "#ffd700", lineHeight: 1, letterSpacing: "-0.02em" })}>
+            {potion.level}
+          </span>
+        </div>
 
         {/* 価格情報 */}
         <div className={css({

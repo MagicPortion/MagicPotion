@@ -52,7 +52,7 @@ export default function SaleResultPopup({ potions, onClose }: SaleResultPopupPro
   return (
     <div
       className={css({
-        position: "fixed", inset: 0, zIndex: 100,
+        position: "absolute", inset: 0, zIndex: 100,
         display: "flex", alignItems: "center", justifyContent: "center",
         bg: "rgba(0,0,0,0.85)",
       })}
@@ -99,13 +99,25 @@ export default function SaleResultPopup({ potions, onClose }: SaleResultPopupPro
               >
                 <ColorOrb colorHex={g.colorHex} size={64} />
 
-                <div className={css({ flex: 1, display: "flex", flexDirection: "column", gap: "4px" })}>
+                <div className={css({ flex: 1, display: "flex", flexDirection: "column", gap: "8px" })}>
                   <span className={css({ fontWeight: "700", color: "white", fontSize: "32px" })}>
                     {g.name}
                   </span>
-                  <span className={css({ color: "rgba(255,255,255,0.55)", fontSize: "30px" })}>
-                    Lv.{g.level} &times; {g.count}本
-                  </span>
+                  <div className={css({ display: "flex", alignItems: "center", gap: "12px" })}>
+                    <span
+                      className={css({
+                        bg: "rgba(200,168,75,0.25)", border: "1px solid #c8a84b",
+                        borderRadius: "20px", px: "12px", py: "4px",
+                        fontSize: "28px", fontWeight: "900", color: "#ffd700",
+                        whiteSpace: "nowrap", letterSpacing: "-0.02em",
+                      })}
+                    >
+                      Lv.{g.level}
+                    </span>
+                    <span className={css({ color: "rgba(255,255,255,0.65)", fontSize: "28px" })}>
+                      &times; {g.count}本
+                    </span>
+                  </div>
                 </div>
 
                 <span className={css({ fontWeight: "700", color: "rgba(100,230,160,1)", letterSpacing: "0.04em", fontSize: "34px" })}>
