@@ -10,7 +10,7 @@ import { IconRefresh } from "../ui/icons";
 import Character from "../ui/character/Character";
 
 export default function RecipeLearningScene() {
-  const { dailyRecipeOptions, recipeLevel, learnRecipe, reloadDailyOptions, money, advanceScene } =
+  const { dailyRecipeOptions, recipeLevel, learnRecipe, reloadDailyOptions, money, advanceScene, setIsInventoryOpen } =
     useGameStore();
   const { width, height } = useWindowSize();
   const [reloadMsg, setReloadMsg] = useState<string | null>(null);
@@ -45,6 +45,7 @@ export default function RecipeLearningScene() {
       <Character character="witch" />
       <RecipeOptionCards options={options} onLearn={handleLearn} />
       <DialogueBox
+        onInventory={() => setIsInventoryOpen(true)}
         actions={
           <>
             {reloadMsg && (

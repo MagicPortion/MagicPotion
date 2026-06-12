@@ -54,6 +54,9 @@ export interface GameState {
   lastSaleResult: SaleRecord[];
   knownPotionIds: string[];
 
+  isInventoryOpen: boolean;
+  setIsInventoryOpen: (open: boolean) => void;
+
   dialogueAppearance: DialogueAppearance;
   setDialogueAppearance: (a: DialogueAppearance) => void;
 
@@ -79,6 +82,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   dailyRecipeOptions: pickDailyOptions(),
   lastSaleResult: [],
   knownPotionIds: [],
+  isInventoryOpen: false,
+  setIsInventoryOpen: (open) => set({ isInventoryOpen: open }),
   dialogueAppearance: DEFAULT_APPEARANCE,
   setDialogueAppearance: (a) => set({ dialogueAppearance: a }),
 

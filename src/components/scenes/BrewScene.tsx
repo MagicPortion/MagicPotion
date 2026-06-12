@@ -11,7 +11,7 @@ import PotionShelf from "../ui/brew/PotionShelf";
 import { css } from "#styled-system/css";
 
 export default function BrewScene() {
-  const { materials, brew, advanceScene } = useGameStore();
+  const { materials, brew, advanceScene, setIsInventoryOpen } = useGameStore();
   const [selectedBase, setSelectedBase] = useState<string | null>(null);
   const [selectedAccent, setSelectedAccent] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState<"base" | "accent" | null>(null);
@@ -237,6 +237,7 @@ export default function BrewScene() {
       {/* 演出中（isBrewing === true）はダイアログボックス（ツールバー含む）を隠す */}
       {!isBrewing && (
         <DialogueBox
+          onInventory={() => setIsInventoryOpen(true)}
           onRecipeSelect={handleSelectRecipe}
           actions={
             <ActionButton variant="secondary" onClick={advanceScene}>

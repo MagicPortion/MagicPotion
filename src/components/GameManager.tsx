@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { css } from "#styled-system/css";
 import { useGameStore } from "../store/useGameStore";
 import type { Scene } from "../store/useGameStore";
@@ -54,12 +53,9 @@ const renderScene = (scene: Scene) => {
 };
 
 export default function GameManager() {
-  const { scene, day, money, materials, brewedPotions } = useGameStore();
+  const { scene, day, money, materials, brewedPotions, isInventoryOpen, setIsInventoryOpen } = useGameStore();
   const scale = useGameScale();
   const { bg, text } = SCENE_COLOR[scene];
-
-  // ★ 持ち物ボックスを開くためのスイッチ
-  const [isInventoryOpen, setIsInventoryOpen] = useState(false);
 
   const scaledW = Math.floor(GAME_W * scale);
   const scaledH = Math.floor(GAME_H * scale);
@@ -89,26 +85,6 @@ export default function GameManager() {
               label={SCENE_LABEL[scene]}
               day={day}
               money={money}
-            />
-          )}
-
-          {/* ★ これです！お友達の黒いフッターがまだ裏で繋がっていないため、
-              一時的に「確実に持ち物ボックスが開く透明なクリック領域」をフッターの上に重ねました。
-              これで下の黒い「持ち物」を押した時に、確実にボックスが開くようになります！ */}
-          {scene !== "title" && !isInventoryOpen && (
-            <div 
-              onClick={() => setIsInventoryOpen(true)}
-              style={{
-                position: "absolute",
-                bottom: "0px",
-                left: "50%",
-                transform: "translateX(-50%)",
-                width: "400px",  // お友達のフッターのメニュー幅に合わせたサイズ
-                height: "100px", // フッターの高さ
-                zIndex: 100,     // フッターより手前に配置してクリックを奪う
-                cursor: "pointer",
-                backgroundColor: "rgba(0, 0, 0, 0)" // 完全に透明
-              }}
             />
           )}
 
