@@ -6,7 +6,7 @@ import DialogueBox, { type DialogueBoxHandle } from "../ui/dialogue/DialogueBox"
 import Character from "../ui/character/Character";
 
 export default function ConversationShopkeeperScene() {
-  const { advanceScene } = useGameStore();
+  const { advanceScene, setIsInventoryOpen } = useGameStore();
   const { width, height } = useWindowSize();
 
   const dialogues = [
@@ -35,6 +35,7 @@ export default function ConversationShopkeeperScene() {
         speakerName="店主"
         text={dialogues[index]}
         onAdvance={handleAdvance}
+        onInventory={() => setIsInventoryOpen(true)}
       />
     </div>
   );

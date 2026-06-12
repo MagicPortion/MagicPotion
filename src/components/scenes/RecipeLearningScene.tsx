@@ -16,7 +16,7 @@ export default function RecipeLearningScene() {
   const [reloadMsg, setReloadMsg] = useState<string | null>(null);
 
   const commands = useMemo<DrawCommand[]>(() => [
-  { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
+    { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
   ], [width, height]);
 
   const options = dailyRecipeOptions.flatMap((id) => {
