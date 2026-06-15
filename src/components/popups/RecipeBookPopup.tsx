@@ -31,13 +31,13 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
     <>
       <div
         onClick={(e) => { e.stopPropagation(); onClose(); }}
-        className={css({ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 })}
+        className={css({ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 })}
       />
       <div
         onClick={(e) => e.stopPropagation()}
         className={css({
-          position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-          zIndex: 301, w: "min(1800px,98vw)", maxH: "90vh", overflowY: "auto",
+          position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+          zIndex: 301, w: "1800px", maxH: "960px", overflowY: "auto",
           background: "rgba(12,8,3,0.98)", border: "2px solid #8B6914",
           borderRadius: "12px", p: "42px 48px", boxShadow: "0 20px 96px rgba(0,0,0,0.78)",
         })}

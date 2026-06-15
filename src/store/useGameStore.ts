@@ -52,6 +52,7 @@ export interface GameState {
   recipeLevel: Record<string, number>;
   dailyRecipeOptions: string[];
   lastSaleResult: SaleRecord[];
+  knownPotionIds: string[];
 
   dialogueAppearance: DialogueAppearance;
   setDialogueAppearance: (a: DialogueAppearance) => void;
@@ -63,6 +64,7 @@ export interface GameState {
   reloadDailyOptions: () => boolean;
   confirmDisplay: (potions: BrewedPotion[]) => void;
   advanceScene: () => void;
+  sellAll: () => void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -76,6 +78,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   recipeLevel: {},
   dailyRecipeOptions: pickDailyOptions(),
   lastSaleResult: [],
+  knownPotionIds: [],
   dialogueAppearance: DEFAULT_APPEARANCE,
   setDialogueAppearance: (a) => set({ dialogueAppearance: a }),
 
@@ -106,12 +109,19 @@ export const useGameStore = create<GameState>((set, get) => ({
         ? { ...s.recipeLevel, [recipe.id]: 1 }
         : s.recipeLevel;
 
+    // isNew はポーション単位で判定（同じポーションの別レシピでもNEWにしない）
+    const isNewPotion = !s.knownPotionIds.includes(recipe.potionId);
+    // isNewRecipe はレシピ単位で判定（未習得のレシピ）
+    const isNewRecipe = currentLevel === 0;
+
     const brewed: BrewedPotion = {
       instanceId: `p_${++instanceCounter}`,
       potionId: recipe.potionId,
       recipeId: recipe.id,
       level,
       sellPrice: calcSellPrice(potionDef.basePrice, level),
+      isNew: isNewPotion,
+      isNewRecipe,
     };
 
     set({
@@ -122,6 +132,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       },
       brewedPotions: [...s.brewedPotions, brewed],
       recipeLevel: updatedLevels,
+      knownPotionIds: isNewPotion
+        ? [...s.knownPotionIds, recipe.potionId]
+        : s.knownPotionIds,
     });
     return brewed;
   },
@@ -168,6 +181,24 @@ export const useGameStore = create<GameState>((set, get) => ({
       displayedPotions: [],
       lastSaleResult: saleResult,
       scene: "conversation",
+      dailyRecipeOptions: pickDailyOptions(),
+    });
+  },
+
+  sellAll: () => {
+    const s = get();
+    const allPotions = [...s.brewedPotions];
+    const saleResult: SaleRecord[] = allPotions.map((p) => ({
+      name: getPotion(p.potionId)?.name ?? "ポーション",
+      price: p.sellPrice,
+    }));
+    const earned = saleResult.reduce((sum, r) => sum + r.price, 0);
+    set({
+      money: s.money + earned,
+      day: s.day + 1,
+      brewedPotions: [],
+      displayedPotions: [],
+      lastSaleResult: saleResult,
       dailyRecipeOptions: pickDailyOptions(),
     });
   },

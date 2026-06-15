@@ -28,6 +28,8 @@ export interface BrewedPotion {
   recipeId: string;
   level: number;
   sellPrice: number;
+  isNew: boolean; // ポーション初回（未発見のポーション）
+  isNewRecipe: boolean; // レシピ初回（未習得のレシピ）
 }
 
 export interface SaleRecord {
