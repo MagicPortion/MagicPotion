@@ -6,7 +6,7 @@ import {
   RECIPES,
   shuffleArray,
 } from "../data/gameData";
-import type { BrewedPotion, SaleRecord } from "../data/types";
+import type { BrewedPotion, RecipeDef, SaleRecord } from "../data/types";
 
 export type DialogueTheme = "dark" | "parchment" | "semi";
 export interface DialogueAppearance { theme: DialogueTheme; }
@@ -37,8 +37,18 @@ const SCENE_ORDER: Scene[] = [
 let instanceCounter = 0;
 
 function pickDailyOptions(): string[] {
-  const nonMystery = RECIPES.filter((r) => r.potionId !== "mystery");
-  return shuffleArray(nonMystery.map((r) => r.id)).slice(0, 5);
+  const recipeGroups = RECIPES.reduce<Record<string, RecipeDef[]>>((acc, recipe) => {
+    if (recipe.potionId === "mystery") return acc;
+    const list = acc[recipe.potionId] ?? [];
+    return { ...acc, [recipe.potionId]: [...list, recipe] };
+  }, {});
+
+  const uniquePotionRecipes = Object.values(recipeGroups).map((group) => {
+    const shuffledGroup = shuffleArray(group);
+    return shuffledGroup[0];
+  });
+
+  return shuffleArray(uniquePotionRecipes).slice(0, 5).map((recipe) => recipe.id);
 }
 
 export interface GameState {

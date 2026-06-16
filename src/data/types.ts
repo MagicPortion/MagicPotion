@@ -6,6 +6,7 @@ export interface MaterialDef {
   category: MaterialCategory;
   colorHex: string;
   price: number;
+  spawnWeight: number;
 }
 
 export interface RecipeDef {
