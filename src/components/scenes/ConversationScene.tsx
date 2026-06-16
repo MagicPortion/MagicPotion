@@ -4,43 +4,51 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import DialogueBox, { type DialogueBoxHandle } from "../ui/dialogue/DialogueBox";
 import Character from "../ui/character/Character";
+import { firstDayMorningDialogue,firstDayMoveDialogue,firstDayBrewDialogue,morningDialogues,moveDialogues,brewDialogues} from "../../data/conversations";
 
 export default function ConversationScene() {
   const { day, lastSaleResult, advanceScene, scene, setIsInventoryOpen } = useGameStore();
   const { width, height } = useWindowSize();
 
   const dialogues = useMemo(() => {
+    //魔女-昼お店移動の会話
     if (scene === "conversation_move") {
-      return [
-        "さあ、材料を仕入れに行こう！",
-        "お店に向かうよ。準備はいい？",
-      ];
+      // 初日
+      if (day === 1) {
+        return firstDayMoveDialogue;
+      }
+      // 2日目以降
+      const randomSet =
+        moveDialogues[
+          Math.floor(Math.random() * moveDialogues.length)
+        ];
+      return [...randomSet];
     }
+    //魔女-夜ポーション調合の会話
     if (scene === "conversation_brew") {
-      return [
-        "材料が揃ったね！",
-        "さあ、ポーションを調合しよう！",
-      ];
+      // 初日
+      if (day === 1) {
+        return firstDayBrewDialogue;
+      }
+      // 2日目以降
+      const randomSet =
+        brewDialogues[
+          Math.floor(Math.random() * brewDialogues.length)
+        ];
+      return [...randomSet];
     }
+
+    //魔女-朝レシピ選択の会話
+    // 初日
     if (day === 1) {
-      return [
-        "魔法のポーション屋へようこそ！",
-        "今日からお店を開こう。まずはレシピを覚えてね。",
-        "材料を仕入れて、ポーションを調合しよう♪",
+      return firstDayMorningDialogue;
+    }
+    // 2日目以降
+    const randomSet =
+      morningDialogues[
+        Math.floor(Math.random() * morningDialogues.length)
       ];
-    }
-    const lines: string[] = [];
-    if (lastSaleResult.length > 0) {
-      const total = lastSaleResult.reduce((s, r) => s + r.price, 0);
-      lines.push(`昨日は${lastSaleResult.length}本が売れて合計 ${total}G 稼いだよ！`);
-      const best = [...lastSaleResult].sort((a, b) => b.price - a.price)[0];
-      lines.push(`一番高かったのは「${best.name}」の ${best.price}G だったね。`);
-    } else {
-      lines.push("昨日はポーションが売れなかった…");
-      lines.push("今日こそいい薬を作って売り上げを上げよう！");
-    }
-    lines.push("今日も頑張ろう！まずはレシピを選んでね。");
-    return lines;
+    return [...randomSet];
   }, [day, lastSaleResult, scene]);
 
   const [index, setIndex] = useState(0);

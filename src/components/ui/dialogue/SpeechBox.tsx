@@ -38,8 +38,13 @@ const SpeechBox = forwardRef<SpeechBoxHandle, SpeechBoxProps>(function SpeechBox
     animRef.current?.pause();
     el.innerHTML = "";
     text.split("").forEach((char) => {
+      if (char === "\n") {
+        el.appendChild(document.createElement("br"));
+        return;
+      }
+
       const span = document.createElement("span");
-      span.textContent = char === " " ? " " : char;
+      span.textContent = char;
       span.style.opacity = "0";
       el.appendChild(span);
     });
