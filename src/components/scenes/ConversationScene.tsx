@@ -6,22 +6,22 @@ import DialogueBox, { type DialogueBoxHandle } from "../ui/dialogue/DialogueBox"
 import Character from "../ui/character/Character";
 
 export default function ConversationScene() {
-  const { day, lastSaleResult, advanceScene, scene } = useGameStore();
+  const { day, lastSaleResult, advanceScene, scene, setIsInventoryOpen } = useGameStore();
   const { width, height } = useWindowSize();
 
   const dialogues = useMemo(() => {
     if (scene === "conversation_move") {
-    return [
-      "さあ、材料を仕入れに行こう！",
-      "お店に向かうよ。準備はいい？",
-    ];
-  }
-  if (scene === "conversation_brew") {
-    return [
-      "材料が揃ったね！",
-      "さあ、ポーションを調合しよう！",
-    ];
-  }
+      return [
+        "さあ、材料を仕入れに行こう！",
+        "お店に向かうよ。準備はいい？",
+      ];
+    }
+    if (scene === "conversation_brew") {
+      return [
+        "材料が揃ったね！",
+        "さあ、ポーションを調合しよう！",
+      ];
+    }
     if (day === 1) {
       return [
         "魔法のポーション屋へようこそ！",
@@ -41,7 +41,7 @@ export default function ConversationScene() {
     }
     lines.push("今日も頑張ろう！まずはレシピを選んでね。");
     return lines;
-  }, [day, lastSaleResult]);
+  }, [day, lastSaleResult, scene]);
 
   const [index, setIndex] = useState(0);
   const dialogueRef = useRef<DialogueBoxHandle>(null);
@@ -60,21 +60,20 @@ export default function ConversationScene() {
       style={{ position: "relative", width, height, overflow: "hidden", cursor: "pointer" }} 
     >
       <PixiCanvas commands={commands} backgroundColor={0xfff0f5} />
-      
-    <Character
-      character="witch"
-      imageSrc={
-        scene === "conversation_brew"
-          ? "/MagicPotion/assets/witch-coat.png"
-          : undefined
-      }
-/>
-      
+      <Character
+        character="witch"
+        imageSrc={
+          scene === "conversation_brew"
+            ? "/MagicPotion/assets/witch-coat.png"
+            : undefined
+        }
+      />
       <DialogueBox
         ref={dialogueRef}
         speakerName="魔女"
         text={dialogues[index]}
         onAdvance={handleAdvance}
+        onInventory={() => setIsInventoryOpen(true)}
       />
     </div>
   );
