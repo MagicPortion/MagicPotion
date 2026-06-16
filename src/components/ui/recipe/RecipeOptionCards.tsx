@@ -45,14 +45,14 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
           今日のポーションレシピ
         </h2>
         <p className={css({ fontSize: "24px", color: "#9b8aaa", m: "4px 0 0" })}>
-          1つ選ぶとそのレシピのレベルが上がり、より高値で売れるようになります
+          獲得するレシピを1つ選んでね
         </p>
       </div>
 
       <div
-      className={css({ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" })}
-      style={{ gridTemplateAreas: `"a b c" ". d e"` }}
-      >
+      className={css({ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: "16px" })}
+      style={{ gridTemplateAreas: `"a a b b c c" ". d d e e ."` }} // ← ここを6列分に修正
+    >
         {options.map((opt, i) => {
           const isKnown = opt.level > 0;
           const areas = ["a", "b", "c", "d", "e"];
