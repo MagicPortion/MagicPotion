@@ -17,19 +17,29 @@ interface RecipeOptionCardsProps {
 export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCardsProps) {
   return (
     <div
-      className={css({
-        position: "absolute",
-        bottom: "80px",
-        left: 0,
-        right: 0,
-        zIndex: 10,
-        p: "20px 32px 16px",
-        background: "rgba(255,248,252,0.96)",
-        backdropFilter: "blur(8px)",
-        borderTop: "2px solid rgba(255,182,193,0.4)",
-        boxShadow: "0 -8px 32px rgba(0,0,0,0.08)",
-      })}
-    >
+  className={css({
+    position: "absolute",
+    inset: 0,
+    zIndex: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "rgba(0,0,0,0.45)",
+  })}
+>
+  <div
+    className={css({
+      background: "rgba(243, 190, 159, 0.90)",
+      borderRadius: "24px",
+      p: "32px 40px",
+      boxShadow: "0 8px 40px rgba(0,0,0,0.25)",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "24px",
+    })}
+  >
+    
       <div className={css({ mb: "12px" })}>
         <h2 className={css({ fontSize: "30px", fontWeight: "bold", color: "#6b5b73", m: 0 })}>
           今日のポーションレシピ
@@ -39,12 +49,17 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
         </p>
       </div>
 
-      <div className={css({ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" })}>
-        {options.map((opt) => {
+      <div
+      className={css({ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" })}
+      style={{ gridTemplateAreas: `"a b c" ". d e"` }}
+      >
+        {options.map((opt, i) => {
           const isKnown = opt.level > 0;
+          const areas = ["a", "b", "c", "d", "e"];
           return (
             <button
               key={opt.id}
+              style={{ gridArea: areas[i] }}
               onClick={() => onLearn(opt.id)}
               className={css({
                 display: "flex", flexDirection: "column", alignItems: "center", gap: "10px",
@@ -86,5 +101,6 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
         })}
       </div>
     </div>
+  </div>  
   );
 }
