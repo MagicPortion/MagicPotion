@@ -4,15 +4,22 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import DialogueBox, { type DialogueBoxHandle } from "../ui/dialogue/DialogueBox";
 import Character from "../ui/character/Character";
+import { firstDayShopDialogue, shopDialogues } from "../../data/conversations";
 
 export default function ConversationShopkeeperScene() {
-  const { advanceScene, setIsInventoryOpen } = useGameStore();
+  const { day, advanceScene, setIsInventoryOpen } = useGameStore();
   const { width, height } = useWindowSize();
 
-  const dialogues = [
-    "いらっしゃい。冷やかしなら帰ってくれよ",
-    "いい材料が揃ってるよ。ゆっくり選んでくれ。",
-  ];
+const dialogues = useMemo(() => {
+  if (day === 1) {
+    return firstDayShopDialogue;
+  }
+  const randomSet =
+    shopDialogues[
+      Math.floor(Math.random() * shopDialogues.length)
+    ];
+  return [...randomSet];
+}, [day]);
 
   const [index, setIndex] = useState(0);
   const dialogueRef = useRef<DialogueBoxHandle>(null);
