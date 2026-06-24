@@ -1,10 +1,12 @@
 [
-  { "id": "water",        "name": "聖水",           "category": "base",   "colorHex": "87ceeb", "price": 50  },
-  { "id": "herb",         "name": "薬草",           "category": "base",   "colorHex": "90ee90", "price": 60  },
-  { "id": "mushroom",     "name": "キノコ",          "category": "base",   "colorHex": "deb887", "price": 70  },
-  { "id": "slime",        "name": "スライム液",      "category": "base",   "colorHex": "98fb98", "price": 80  },
-  { "id": "fire_essence", "name": "火のエッセンス",  "category": "accent", "colorHex": "ff6347", "price": 100 },
-  { "id": "moon_dust",    "name": "月の粉",          "category": "accent", "colorHex": "e6e6fa", "price": 120 },
-  { "id": "fairy_wing",   "name": "妖精の羽",        "category": "accent", "colorHex": "ffb6c1", "price": 90  },
-  { "id": "crystal",      "name": "クリスタル",      "category": "accent", "colorHex": "b0e0e6", "price": 110 }
+  { "id": "holy_water",      "name": "聖水",           "category": "base",   "colorHex": "87ceeb", "price": 100, "spawnWeight": 1 },
+  { "id": "dragon_blood",   "name": "ドラゴンの血",    "category": "base",   "colorHex": "b22222", "price": 80,  "spawnWeight": 2 },
+  { "id": "strong_sake",    "name": "すごい酒",       "category": "base",   "colorHex": "ffa500", "price": 50,  "spawnWeight": 3 },
+  { "id": "slime_gel",      "name": "スライムのジェル", "category": "base",   "colorHex": "98fb98", "price": 30,  "spawnWeight": 4 },
+  { "id": "honey_water",    "name": "蜜水",           "category": "base",   "colorHex": "ffdead", "price": 10,  "spawnWeight": 5 },
+  { "id": "dragon_tail",    "name": "ドラゴンの尻尾",  "category": "accent", "colorHex": "8b0000", "price": 100, "spawnWeight": 1 },
+  { "id": "fairy_wing",     "name": "妖精の羽根",      "category": "accent", "colorHex": "ffb6c1", "price": 80,  "spawnWeight": 2 },
+  { "id": "herb_accent",    "name": "薬草",           "category": "accent", "colorHex": "90ee90", "price": 50,  "spawnWeight": 3 },
+  { "id": "mandrake",       "name": "マンドラゴラ",    "category": "accent", "colorHex": "6b8e23", "price": 30,  "spawnWeight": 4 },
+  { "id": "poison_mushroom", "name": "毒キノコ",       "category": "accent", "colorHex": "556b2f", "price": 10,  "spawnWeight": 5 }
 ]

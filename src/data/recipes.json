@@ -1,18 +1,31 @@
 [
-  { "id": "water_fire",       "baseId": "water",    "accentId": "fire_essence", "potionId": "heal"     },
-  { "id": "water_moon",       "baseId": "water",    "accentId": "moon_dust",    "potionId": "mana"     },
-  { "id": "water_fairy",      "baseId": "water",    "accentId": "fairy_wing",   "potionId": "mystery"  },
-  { "id": "water_crystal",    "baseId": "water",    "accentId": "crystal",      "potionId": "mystery"  },
-  { "id": "herb_fire",        "baseId": "herb",     "accentId": "fire_essence", "potionId": "strength" },
-  { "id": "herb_fairy",       "baseId": "herb",     "accentId": "fairy_wing",   "potionId": "speed"    },
-  { "id": "herb_moon",        "baseId": "herb",     "accentId": "moon_dust",    "potionId": "mystery"  },
-  { "id": "herb_crystal",     "baseId": "herb",     "accentId": "crystal",      "potionId": "mystery"  },
-  { "id": "mushroom_crystal", "baseId": "mushroom", "accentId": "crystal",      "potionId": "shield"   },
-  { "id": "mushroom_fairy",   "baseId": "mushroom", "accentId": "fairy_wing",   "potionId": "luck"     },
-  { "id": "mushroom_fire",    "baseId": "mushroom", "accentId": "fire_essence", "potionId": "mystery"  },
-  { "id": "mushroom_moon",    "baseId": "mushroom", "accentId": "moon_dust",    "potionId": "mystery"  },
-  { "id": "slime_moon",       "baseId": "slime",    "accentId": "moon_dust",    "potionId": "sleep"    },
-  { "id": "slime_crystal",    "baseId": "slime",    "accentId": "crystal",      "potionId": "antidote" },
-  { "id": "slime_fire",       "baseId": "slime",    "accentId": "fire_essence", "potionId": "mystery"  },
-  { "id": "slime_fairy",      "baseId": "slime",    "accentId": "fairy_wing",   "potionId": "mystery"  }
+  { "id": "holy_water_dragon_tail",    "baseId": "holy_water",   "accentId": "dragon_tail",    "potionId": "premium_potion"   },
+  { "id": "holy_water_fairy_wing",    "baseId": "holy_water",   "accentId": "fairy_wing",     "potionId": "lucky_potion"     },
+  { "id": "holy_water_herb_accent",   "baseId": "holy_water",   "accentId": "herb_accent",    "potionId": "antidote_potion" },
+  { "id": "holy_water_mandrake",      "baseId": "holy_water",   "accentId": "mandrake",      "potionId": "heal_potion"      },
+  { "id": "holy_water_poison_mushroom", "baseId": "holy_water",  "accentId": "poison_mushroom", "potionId": "cold_potion"      },
+
+  { "id": "dragon_blood_dragon_tail",  "baseId": "dragon_blood", "accentId": "dragon_tail",    "potionId": "meh_potion"       },
+  { "id": "dragon_blood_fairy_wing",  "baseId": "dragon_blood", "accentId": "fairy_wing",     "potionId": "ward_potion"      },
+  { "id": "dragon_blood_herb_accent", "baseId": "dragon_blood", "accentId": "herb_accent",    "potionId": "sleep_potion"     },
+  { "id": "dragon_blood_mandrake",    "baseId": "dragon_blood", "accentId": "mandrake",      "potionId": "paralysis_potion" },
+  { "id": "dragon_blood_poison_mushroom", "baseId": "dragon_blood", "accentId": "poison_mushroom", "potionId": "poison_potion" },
+
+  { "id": "strong_sake_dragon_tail",   "baseId": "strong_sake",  "accentId": "dragon_tail",    "potionId": "sweet_potion"     },
+  { "id": "strong_sake_fairy_wing",   "baseId": "strong_sake",  "accentId": "fairy_wing",     "potionId": "speed_potion"     },
+  { "id": "strong_sake_herb_accent",  "baseId": "strong_sake",  "accentId": "herb_accent",    "potionId": "meh_potion"       },
+  { "id": "strong_sake_mandrake",     "baseId": "strong_sake",  "accentId": "mandrake",      "potionId": "meh_potion"       },
+  { "id": "strong_sake_poison_mushroom", "baseId": "strong_sake", "accentId": "poison_mushroom", "potionId": "bitter_potion"    },
+
+  { "id": "slime_gel_dragon_tail",    "baseId": "slime_gel",    "accentId": "dragon_tail",    "potionId": "hot_potion"       },
+  { "id": "slime_gel_fairy_wing",    "baseId": "slime_gel",    "accentId": "fairy_wing",     "potionId": "salve"            },
+  { "id": "slime_gel_herb_accent",   "baseId": "slime_gel",    "accentId": "herb_accent",    "potionId": "meh_potion"       },
+  { "id": "slime_gel_mandrake",      "baseId": "slime_gel",    "accentId": "mandrake",      "potionId": "meh_potion"       },
+  { "id": "slime_gel_poison_mushroom", "baseId": "slime_gel",   "accentId": "poison_mushroom", "potionId": "meh_potion"       },
+
+  { "id": "honey_water_dragon_tail",  "baseId": "honey_water",  "accentId": "dragon_tail",    "potionId": "strength_potion" },
+  { "id": "honey_water_fairy_wing",  "baseId": "honey_water",  "accentId": "fairy_wing",     "potionId": "meh_potion"       },
+  { "id": "honey_water_herb_accent", "baseId": "honey_water",  "accentId": "herb_accent",    "potionId": "meh_potion"       },
+  { "id": "honey_water_mandrake",    "baseId": "honey_water",  "accentId": "mandrake",      "potionId": "meh_potion"       },
+  { "id": "honey_water_poison_mushroom", "baseId": "honey_water", "accentId": "poison_mushroom", "potionId": "meh_potion"       }
 ]
