@@ -42,32 +42,39 @@ export default function MaterialPickerPopup({
           flexDirection: "column",
           alignItems: "center",
           gap: "24px",
-          overflowX: "auto",
           maxWidth: "90%",
           p: "32px 40px 40px",
         })}
       >
-        {/* タイトル */}
-        <p className={css({ fontSize: "36px", color: "#c8a84b", letterSpacing: "0.2em", m: 0, textTransform: "uppercase", fontWeight: "bold" })}>
-          {title}
-        </p>
+        {/* タイトル（固定） */}
+        <div className={css({ minHeight: "50px", display: "flex", alignItems: "center" })}>
+          <p className={css({ fontSize: "36px", color: "#c8a84b", letterSpacing: "0.2em", m: 0, textTransform: "uppercase", fontWeight: "bold" })}>
+            {title}
+          </p>
+        </div>
 
         {/* カード横並び */}
-        <div className={css({ display: "flex", flexDirection: "row", gap: "28px" })}>
-          {ownedItems.map((item) => (
-            <MaterialCard
-              key={item.id}
-              item={item}
-              count={counts[item.id] ?? 0}
-              isSelected={selectedId === item.id}
-              onClick={() => {
-                onSelect(item.id);
-                onClose();
-              }}
-              variant="picker"
-            />
-          ))}
-        </div>
+        {ownedItems.length > 0 ? (
+          <div className={css({ display: "flex", flexDirection: "row", gap: "28px", overflowX: "auto" })}>
+            {ownedItems.map((item) => (
+              <MaterialCard
+                key={item.id}
+                item={item}
+                count={counts[item.id] ?? 0}
+                isSelected={selectedId === item.id}
+                onClick={() => {
+                  onSelect(item.id);
+                  onClose();
+                }}
+                variant="picker"
+              />
+            ))}
+          </div>
+        ) : (
+          <p className={css({ fontSize: "28px", color: "#c8a84b", letterSpacing: "0.1em", textAlign: "center" })}>
+            所持している素材がありません
+          </p>
+        )}
       </div>
     </div>
   );

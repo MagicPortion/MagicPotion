@@ -3,7 +3,7 @@ import { Graphics, Text, TextStyle, type Application } from "pixi.js";
 import { usePixiApp } from "../contexts/PixiAppContext";
 
 export interface DrawCommand {
-  type: "rect" | "circle" | "text";
+  type: "rect" | "circle" | "text" | "image";
   x: number;
   y: number;
   width?: number;
@@ -13,6 +13,8 @@ export interface DrawCommand {
   text?: string;
   fontSize?: number;
   textColor?: string;
+  imageSrc?: string;
+  scaleX?: number;
 }
 
 interface PixiCanvasProps {
@@ -56,6 +58,22 @@ function draw(app: Application, commands: DrawCommand[], backgroundColor: number
       t.x = cmd.x;
       t.y = cmd.y;
       app.stage.addChild(t);
+    } else if (cmd.type === "image") {
+      const texture = app.loader ? app.loader.resources[cmd.imageSrc ?? ""]?.texture : null;
+      if (texture) {
+        const { Sprite } = require("pixi.js");
+        const sprite = new Sprite(texture);
+        sprite.x = cmd.x;
+        sprite.y = cmd.y;
+        if (cmd.width && cmd.height) {
+          sprite.width = cmd.width;
+          sprite.height = cmd.height;
+        }
+        if (cmd.scaleX !== undefined) {
+          sprite.scale.x = cmd.scaleX;
+        }
+        app.stage.addChild(sprite);
+      }
     }
   }
 }
