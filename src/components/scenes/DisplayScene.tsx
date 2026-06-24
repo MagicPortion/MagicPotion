@@ -34,19 +34,12 @@ function buildSlots(potions: BrewedPotion[]): AnimationSlot[] {
 }
 
 export default function DisplayScene() {
-  const { brewedPotions, day, sellAll, setScene } = useGameStore();
+  const { brewedPotions, day, advanceScene } = useGameStore();
 
   const [snapshotPotions] = useState<BrewedPotion[]>(() => [...brewedPotions]);
   const [slots] = useState<AnimationSlot[]>(() => buildSlots(brewedPotions));
   const [phase, setPhase] = useState<Phase>("animating");
   const [launched, setLaunched] = useState(false);
-
-  const soldRef = useRef(false);
-  useEffect(() => {
-    if (soldRef.current) return;
-    soldRef.current = true;
-    sellAll();
-  }, [sellAll]);
 
   useEffect(() => {
     if (slots.length === 0) {
@@ -64,9 +57,9 @@ export default function DisplayScene() {
 
   useEffect(() => {
     if (phase !== "blackout") return;
-    const t = setTimeout(() => setScene("conversation"), 600 + 2500 + 200);
+    const t = setTimeout(() => advanceScene(), 600 + 2500 + 200);
     return () => clearTimeout(t);
-  }, [phase, setScene]);
+  }, [phase, advanceScene]);
 
   return (
     <div
