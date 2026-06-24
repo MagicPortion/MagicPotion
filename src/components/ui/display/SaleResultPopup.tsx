@@ -85,7 +85,26 @@ export default function SaleResultPopup({ potions, onClose }: SaleResultPopupPro
         </h2>
 
         {/* ポーション一覧（スクロール可能） */}
-        <div className={css({ flex: 1, overflowY: "auto", px: "64px", py: "0" })}>
+        <div
+          className={css({ flex: 1, overflowY: "auto", px: "64px", py: "0", position: "relative" })}
+          style={{
+            scrollbarColor: "rgba(200,168,75,0.5) transparent",
+            scrollbarWidth: "thin",
+          }}
+        >
+          {/* スクロール下矢印指標 */}
+          <div
+            className={css({
+              position: "sticky", bottom: "0", left: 0, right: 0,
+              bg: "linear-gradient(to bottom, transparent, rgba(12,8,3,0.98))",
+              display: "flex", alignItems: "flex-end", justifyContent: "center",
+              height: "60px", pointerEvents: "none",
+            })}
+          >
+            <span className={css({ fontSize: "24px", color: "rgba(200,168,75,0.6)", animation: "bounce 1.5s ease-in-out infinite" })}>
+              ↓
+            </span>
+          </div>
           {potions.length === 0 ? (
             <p className={css({ textAlign: "center", color: "rgba(255,255,255,0.6)", m: "40px 0", fontSize: "32px" })}>
               今日は何も作りませんでした
@@ -98,7 +117,7 @@ export default function SaleResultPopup({ potions, onClose }: SaleResultPopupPro
                   className={css({
                     display: "flex", alignItems: "center", gap: "20px",
                     bg: "rgba(255,255,255,0.05)", borderRadius: "14px",
-                    p: "16px 24px", position: "relative", overflow: "hidden",
+                    p: "16px 24px", position: "relative",
                   })}
                 >
                   <ColorOrb colorHex={g.colorHex} size={64} />

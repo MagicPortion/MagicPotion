@@ -87,7 +87,7 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
           )}
 
           {/* オーブ + スパークル */}
-          <div className={css({ position: "relative", width: "280px", height: "280px", mb: "32px", flexShrink: 0, mx: "auto", overflow: "hidden" })}>
+          <div className={css({ position: "relative", width: "280px", height: "280px", mb: "32px", flexShrink: 0, mx: "auto" })}>
             {/* スパークル: 放射方向・色・delayが動的のためinline style */}
             <div style={{ position: "absolute", top: "50%", left: "50%", width: 0, height: 0, zIndex: 1 }}>
               {ANGLES.map((angle, i) => (
