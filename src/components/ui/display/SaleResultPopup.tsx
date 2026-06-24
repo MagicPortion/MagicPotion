@@ -17,6 +17,7 @@ interface PotionGroup {
   count: number;
   total: number;
   hasNew: boolean;
+  isFailed: boolean;
 }
 
 function groupPotions(potions: BrewedPotion[]): PotionGroup[] {
@@ -39,6 +40,7 @@ function groupPotions(potions: BrewedPotion[]): PotionGroup[] {
         count: 1,
         total: p.sellPrice,
         hasNew: p.isNew,
+        isFailed: p.isFailed,
       });
     }
   }
@@ -86,7 +88,7 @@ export default function SaleResultPopup({ potions, onClose }: SaleResultPopupPro
 
         {/* ポーション一覧（スクロール可能） */}
         <div
-          className={css({ flex: 1, overflowY: "auto", px: "64px", py: "0" })}
+          className={css({ flex: 1, overflowY: "auto", px: "64px", pt: "20px", pb: "0" })}
           style={{
             scrollbarColor: "rgba(200,168,75,0.5) transparent",
             scrollbarWidth: "thin",
@@ -134,7 +136,7 @@ export default function SaleResultPopup({ potions, onClose }: SaleResultPopupPro
                     +{g.total}G
                   </span>
 
-                  {g.hasNew && (
+                  {!g.isFailed && g.hasNew && (
                     <div className={css({ position: "absolute", top: "-14px", right: "16px" })}>
                       <NewBadge />
                     </div>
@@ -148,10 +150,11 @@ export default function SaleResultPopup({ potions, onClose }: SaleResultPopupPro
         {/* スクロール下矢印指標 */}
         {potions.length > 0 && (
           <div className={css({
-            flexShrink: 0, height: "40px",
+            flexShrink: 0, height: "50px",
             display: "flex", alignItems: "center", justifyContent: "center",
-            bg: "linear-gradient(to bottom, transparent, rgba(12,8,3,0.98))",
+            bg: "linear-gradient(to bottom, rgba(12,8,3,0), rgba(12,8,3,0.4))",
             color: "rgba(200,168,75,0.6)",
+            borderBottomLeftRadius: "12px", borderBottomRightRadius: "12px",
           })}>
             <span className={css({ fontSize: "24px", animation: "bounce 1.5s ease-in-out infinite" })}>
               ↓
