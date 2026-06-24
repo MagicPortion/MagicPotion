@@ -7,3 +7,6 @@ export { default as IconClose } from "./IconClose";
 export { default as IconDiamond } from "./IconDiamond";
 export { default as IconFlask } from "./IconFlask";
 export { default as IconCoin } from "./IconCoin";
+export { default as IconMorning } from "./IconMorning";
+export { default as IconAfternoon } from "./IconAfternoon";
+export { default as IconNight } from "./IconNight";

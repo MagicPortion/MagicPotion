@@ -14,6 +14,7 @@ import DisplayScene from "./scenes/DisplayScene";
 import ConversationShopkeeperScene from "./scenes/ConversationShopkeeperScene";
 import InventoryModal from "./ui/inventory/InventoryModal";
 
+
 const SCENE_LABEL: Record<Scene, string> = {
   title:                    "",
   conversation:             "朝",
@@ -26,17 +27,6 @@ const SCENE_LABEL: Record<Scene, string> = {
   display:                  "夜",
 };
 
-const SCENE_COLOR: Record<Scene, { bg: string; text: string }> = {
-  title:                    { bg: "transparent",    text: "#ffffff" },
-  conversation:             { bg: "pastel.rose",    text: "#6b5b73" },
-  recipe_learning:          { bg: "pastel.rose",    text: "#6b5b73" },
-  conversation_move:        { bg: "pastel.rose",    text: "#6b5b73" },
-  conversation_shopkeeper:  { bg: "pastel.lemon",   text: "#7a6000" },
-  shop:                     { bg: "pastel.lemon",   text: "#7a6000" },
-  conversation_brew:        { bg: "pastel.lavender", text: "#4a3f55" },
-  brew:                     { bg: "pastel.lavender", text: "#4a3f55" },
-  display:                  { bg: "pastel.lavender", text: "#4a3f55" },
-};
 
 const renderScene = (scene: Scene) => {
   switch (scene) {
@@ -55,7 +45,6 @@ const renderScene = (scene: Scene) => {
 export default function GameManager() {
   const { scene, day, money, materials, brewedPotions, isInventoryOpen, setIsInventoryOpen } = useGameStore();
   const scale = useGameScale();
-  const { bg, text } = SCENE_COLOR[scene];
 
   const scaledW = Math.floor(GAME_W * scale);
   const scaledH = Math.floor(GAME_H * scale);
@@ -77,11 +66,9 @@ export default function GameManager() {
             </div>
           </PixiAppProvider>
 
-          {/* HUD：タイトル画面では非表示 */}
+          {/* ヘッダー：タイトル画面では非表示 */}
           {scene !== "title" && (
             <Header
-              bg={bg}
-              text={text}
               label={SCENE_LABEL[scene]}
               day={day}
               money={money}
@@ -90,10 +77,10 @@ export default function GameManager() {
 
           {/* インベントリが開いている時は、最前面（zIndex: 1000）に共通モーダルを描画 */}
           {isInventoryOpen && (
-            <InventoryModal 
-              materials={materials} 
-              brewedPotions={brewedPotions} 
-              onClose={() => setIsInventoryOpen(false)} 
+            <InventoryModal
+              materials={materials}
+              brewedPotions={brewedPotions}
+              onClose={() => setIsInventoryOpen(false)}
             />
           )}
         </div>
