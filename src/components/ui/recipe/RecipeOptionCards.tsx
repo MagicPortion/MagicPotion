@@ -131,7 +131,7 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
               fontSize: "26px",
               fontWeight: "bold",
               color: "white",
-              bg: selectedId ? "#5cb85c" : "#ccc", // 選択中のみ緑色、未選択はグレー
+              bg: selectedId ? "#46a1ea" : "#ccc", // 選択中のみ緑色、未選択はグレー
               border: "none",
               borderRadius: "12px",
               padding: "12px 36px",
