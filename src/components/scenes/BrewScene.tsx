@@ -60,6 +60,7 @@ export default function BrewScene() {
           sellPrice: brewed.sellPrice,
           isNew: i === 0 && brewed.isNew,
           isNewRecipe: i === 0 && brewed.isNewRecipe,
+          isFailed: brewed.isFailed,
         });
       }
     }

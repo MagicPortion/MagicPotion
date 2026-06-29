@@ -16,6 +16,7 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
   const total    = results.reduce((s, r) => s + r.sellPrice, 0);
   const isNew    = results[0]?.isNew === true; // ポーション初回
   const isNewRecipe = results[0]?.isNewRecipe === true; // レシピ初回
+  const isFailed = results[0]?.isFailed === true; // 失敗（微妙なポーション）
   const mountTime = useRef(0);
 
   useEffect(() => {
@@ -57,13 +58,15 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
         {/* スクロール可能なコンテンツ */}
         <div className={css({ flex: 1, overflowY: "auto", width: "100%", p: "56px 64px 0" })}>
           {/* 装飾ライン（上） */}
-          <div className={css({ display: "flex", alignItems: "center", gap: "12px", mb: "20px", width: "100%" })}>
-            <div className={css({ flex: 1, height: "1px", bg: "linear-gradient(90deg, transparent, #c8a84b66)" })} />
-            <span className={css({ fontSize: "28px", color: "#c8a84b", letterSpacing: "0.24em", whiteSpace: "nowrap" })}>
-              POTION COMPLETE
-            </span>
-            <div className={css({ flex: 1, height: "1px", bg: "linear-gradient(270deg, transparent, #c8a84b66)" })} />
-          </div>
+          {!isFailed && (
+            <div className={css({ display: "flex", alignItems: "center", gap: "12px", mb: "20px", width: "100%" })}>
+              <div className={css({ flex: 1, height: "1px", bg: "linear-gradient(90deg, transparent, #c8a84b66)" })} />
+              <span className={css({ fontSize: "28px", color: "#c8a84b", letterSpacing: "0.24em", whiteSpace: "nowrap" })}>
+                POTION COMPLETE
+              </span>
+              <div className={css({ flex: 1, height: "1px", bg: "linear-gradient(270deg, transparent, #c8a84b66)" })} />
+            </div>
+          )}
 
           {/* 新しいレシピ発見バナー */}
           {isNewRecipe && (
@@ -87,25 +90,27 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
           )}
 
           {/* オーブ + スパークル */}
-          <div className={css({ position: "relative", width: "280px", height: "280px", mb: "32px", flexShrink: 0, mx: "auto", overflow: "hidden" })}>
-            {/* スパークル: 放射方向・色・delayが動的のためinline style */}
-            <div style={{ position: "absolute", top: "50%", left: "50%", width: 0, height: 0, zIndex: 1 }}>
-              {ANGLES.map((angle, i) => (
-                <div
-                  key={angle}
-                  style={{ position: "absolute", top: 0, left: 0, transform: `rotate(${angle}deg)`, transformOrigin: "0 0", width: 170, height: 0 }}
-                >
-                  <span style={{
-                    display: "block", position: "absolute", left: 30, top: -7,
-                    width: count > 1 ? 16 : 12, height: count > 1 ? 16 : 12,
-                    borderRadius: "50%",
-                    backgroundColor: `#${potion.colorHex}`,
-                    boxShadow: `0 0 16px #${potion.colorHex}`,
-                    animation: `sparkleFly 0.72s cubic-bezier(0.2,0,0.4,1) ${i * 45}ms both`,
-                  }} />
-                </div>
-              ))}
-            </div>
+          <div className={css({ position: "relative", width: "280px", height: "280px", mb: "32px", flexShrink: 0, mx: "auto" })}>
+            {/* スパークル: 失敗時は非表示 */}
+            {!isFailed && (
+              <div style={{ position: "absolute", top: "50%", left: "50%", width: 0, height: 0, zIndex: 1 }}>
+                {ANGLES.map((angle, i) => (
+                  <div
+                    key={angle}
+                    style={{ position: "absolute", top: 0, left: 0, transform: `rotate(${angle}deg)`, transformOrigin: "0 0", width: 170, height: 0 }}
+                  >
+                    <span style={{
+                      display: "block", position: "absolute", left: 30, top: -7,
+                      width: count > 1 ? 16 : 12, height: count > 1 ? 16 : 12,
+                      borderRadius: "50%",
+                      backgroundColor: `#${potion.colorHex}`,
+                      boxShadow: `0 0 16px #${potion.colorHex}`,
+                      animation: `sparkleFly 0.72s cubic-bezier(0.2,0,0.4,1) ${i * 45}ms both`,
+                    }} />
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* メインオーブ: colorHexが動的のためinline style */}
             <div
@@ -120,15 +125,15 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
               })}
             />
 
-            {/* NEW バッジ */}
-            {isNew && (
+            {/* NEW バッジ: 失敗時は非表示 */}
+            {!isFailed && isNew && (
               <div className={css({ position: "absolute", top: "-12px", left: "-12px", zIndex: 4 })}>
                 <NewBadge />
               </div>
             )}
 
-            {/* ×N バッジ */}
-            {count > 1 && (
+            {/* ×N バッジ: 失敗時は非表示 */}
+            {!isFailed && count > 1 && (
               <div
                 // shelfBadgePop: バッジ出現アニメーションのためinline style
                 style={{ animation: "shelfBadgePop 0.35s cubic-bezier(0.34,1.56,0.64,1) 300ms both" }}
@@ -187,8 +192,10 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
             )}
           </div>
 
-          {/* 装飾ライン（下） */}
-          <div className={css({ width: "100%", height: "1px", bg: "linear-gradient(90deg, transparent, #c8a84b44, transparent)", my: "24px" })} />
+          {/* 装飾ライン（下）: 失敗時は非表示 */}
+          {!isFailed && (
+            <div className={css({ width: "100%", height: "1px", bg: "linear-gradient(90deg, transparent, #c8a84b44, transparent)", my: "24px" })} />
+          )}
         </div>
 
         {/* クローズテキスト（固定） */}

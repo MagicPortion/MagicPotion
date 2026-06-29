@@ -43,7 +43,7 @@ export default function ShopScene() {
   };
 
   const handleRefreshTap = () => {
-    if (selectedItems.length === 0 && money >= currentRefreshCost) {
+    if (selectedItems.length === 0) {
       setShowRefreshModal(true);
     }
   };
@@ -94,6 +94,7 @@ export default function ShopScene() {
         totalCost={totalCost}
         canBuy={canBuy}
         currentRefreshCost={currentRefreshCost}
+        refreshCount={refreshCount}
         handleCardClick={handleCardClick}
         handleRefreshTap={handleRefreshTap}
         setShowBuyModal={setShowBuyModal}

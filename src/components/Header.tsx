@@ -1,19 +1,17 @@
 import { css } from "#styled-system/css";
-import { IconCoin } from "./ui/icons";
+import { IconCoin, IconMorning, IconAfternoon, IconNight } from "./ui/icons";
 
 type HeaderProps = {
-  bg: string;
-  text: string;
   label: string;
   day: number;
   money: number;
 };
 
-export default function Header({ bg, text, label, day, money }: HeaderProps) {
+export default function Header({ label, day, money }: HeaderProps) {
+  const TimeIcon = label === "朝" ? IconMorning : label === "昼" ? IconAfternoon : IconNight;
+
   return (
     <header
-      // bg はシーンごとに異なる動的テーマ色のためinline style
-      style={{ background: bg }}
       className={css({
         position: "absolute",
         top: 0,
@@ -26,30 +24,32 @@ export default function Header({ bg, text, label, day, money }: HeaderProps) {
         px: "24px",
         py: "6px",
         boxShadow: "0 2px 10px rgba(0,0,0,0.12)",
+        bg: "#2c2c2c",
+        color: "white",
+        gap: "16px",
       })}
     >
-      <h1 className={css({ display: "flex", alignItems: "center", m: 0 })}>
+      <h1 className={css({ display: "flex", alignItems: "center", m: 0, minW: "0" })}>
         <img
           src="/MagicPotion/title.png"
           alt="title"
-          className={css({ h: "90px", w: "auto", objectFit: "contain", display: "block" })}
+          className={css({ h: "70px", w: "auto", objectFit: "contain", display: "block" })}
         />
       </h1>
 
-      {/* color: text はシーンごとに異なる動的テーマ色のためinline style */}
       <div
-        style={{ color: text }}
-        className={css({ display: "flex", gap: "10px", fontSize: "24px", alignItems: "center" })}
+        className={css({ display: "flex", gap: "16px", alignItems: "center", color: "white", flex: 1, justifyContent: "flex-end" })}
       >
-        <span className={css({ bg: "rgba(255,255,255,0.45)", borderRadius: "6px", px: "12px", py: "3px" })}>
-          {day}日目
-        </span>
-        <span className={css({ bg: "rgba(255,255,255,0.45)", borderRadius: "16px", px: "12px", py: "3px" })}>
-          {label}
-        </span>
-        <span className={css({ display: "flex", alignItems: "center", gap: "6px", bg: "rgba(255,255,255,0.45)", borderRadius: "16px", px: "12px", py: "3px", fontWeight: "bold" })}>
-          <IconCoin size={20} /> {money}G
-        </span>
+        <div className={css({ display: "flex", alignItems: "center", gap: "8px", bg: "rgba(255,255,255,0.15)", borderRadius: "6px", px: "16px", py: "4px" })}>
+          <span className={css({ fontSize: "28px", fontWeight: "bold" })}>{day}日目</span>
+        </div>
+        <div className={css({ display: "flex", alignItems: "center", gap: "8px", bg: "rgba(255,255,255,0.15)", borderRadius: "6px", px: "14px", py: "4px" })}>
+          <TimeIcon size={24} />
+        </div>
+        <div className={css({ display: "flex", alignItems: "center", gap: "8px", bg: "rgba(255,255,255,0.15)", borderRadius: "6px", px: "16px", py: "4px", fontWeight: "bold" })}>
+          <IconCoin size={24} />
+          <span className={css({ fontSize: "28px" })}>{money}G</span>
+        </div>
       </div>
     </header>
   );

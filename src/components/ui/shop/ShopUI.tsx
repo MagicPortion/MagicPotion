@@ -16,6 +16,7 @@ interface ShopUIProps {
   totalCost: number;
   canBuy: boolean;
   currentRefreshCost: number;
+  refreshCount: number;
   handleCardClick: (instanceId: string) => void;
   handleRefreshTap: () => void;
   setShowBuyModal: (show: boolean) => void;
@@ -33,7 +34,7 @@ interface ShopUIProps {
 
 
 export default function ShopUI({
-  money, shopItems, quantities, soldOutItems, totalCost, canBuy, currentRefreshCost,
+  money, shopItems, quantities, soldOutItems, totalCost, canBuy, currentRefreshCost, refreshCount,
   handleCardClick, handleRefreshTap, setShowBuyModal, setShowExitModal, setQuantities,
   showBuyModal, showExitModal, showRefreshModal, setShowRefreshModal, onPurchase, onRefresh, onExit
 }: ShopUIProps) {
@@ -111,13 +112,27 @@ export default function ShopUI({
       {showRefreshModal && (
         <div className={modalOverlayStyle}>
           <div className={modalContentStyle}>
-            <p className={css({ fontSize: "20px", fontWeight: "bold", mb: "24px", color: "#4a3321", lineHeight: "1.6" })}>
-              1回目、{currentRefreshCost}G減りますが<br />素材アイテムを入れ替えますか？
-            </p>
-            <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
-              <button onClick={() => setShowRefreshModal(false)} className={css({ bg: "#bae7ff", color: "#0050b3", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>戻る</button>
-              <button onClick={onRefresh} className={css({ bg: "#ff7875", color: "white", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>入れ替える -{currentRefreshCost}G</button>
-            </div>
+            {money < currentRefreshCost ? (
+              <>
+                <p className={css({ fontSize: "20px", fontWeight: "bold", mb: "24px", color: "#ff4d4f", lineHeight: "1.6" })}>
+                  所持金が不足しています<br />
+                  <span className={css({ fontSize: "18px", color: "#4a3321" })}>{refreshCount}回目の入れ替えには {currentRefreshCost}G 必要です</span>
+                </p>
+                <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
+                  <button onClick={() => setShowRefreshModal(false)} className={css({ bg: "#bae7ff", color: "#0050b3", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>戻る</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className={css({ fontSize: "20px", fontWeight: "bold", mb: "24px", color: "#4a3321", lineHeight: "1.6" })}>
+                  {refreshCount}回目、{currentRefreshCost}G減りますが<br />素材アイテムを入れ替えますか？
+                </p>
+                <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
+                  <button onClick={() => setShowRefreshModal(false)} className={css({ bg: "#bae7ff", color: "#0050b3", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>戻る</button>
+                  <button onClick={onRefresh} className={css({ bg: "#ff7875", color: "white", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>入れ替える -{currentRefreshCost}G</button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

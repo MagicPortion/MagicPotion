@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { Graphics, Text, TextStyle, type Application } from "pixi.js";
+import { Graphics, Text, TextStyle, Sprite, type Application } from "pixi.js";
 import { usePixiApp } from "../contexts/PixiAppContext";
 
 export interface DrawCommand {
-  type: "rect" | "circle" | "text";
+  type: "rect" | "circle" | "text" | "image";
   x: number;
   y: number;
   width?: number;
@@ -13,6 +13,8 @@ export interface DrawCommand {
   text?: string;
   fontSize?: number;
   textColor?: string;
+  imageSrc?: string;
+  scaleX?: number;
 }
 
 interface PixiCanvasProps {
@@ -56,6 +58,20 @@ function draw(app: Application, commands: DrawCommand[], backgroundColor: number
       t.x = cmd.x;
       t.y = cmd.y;
       app.stage.addChild(t);
+    } else if (cmd.type === "image") {
+      if (cmd.imageSrc) {
+        const sprite = Sprite.from(cmd.imageSrc);
+        sprite.x = cmd.x;
+        sprite.y = cmd.y;
+        if (cmd.width && cmd.height) {
+          sprite.width = cmd.width;
+          sprite.height = cmd.height;
+        }
+        if (cmd.scaleX !== undefined) {
+          sprite.scale.x = cmd.scaleX;
+        }
+        app.stage.addChild(sprite);
+      }
     }
   }
 }
