@@ -52,14 +52,16 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
           ml: "-750px",
         })}
       >
-        <div className={css({ mb: "12px", width: "100%", textAlign: "center" })}>
-          <h2 className={css({ fontSize: "30px", fontWeight: "bold", color: "#6b5b73", m: 0 })}>
-            今日のポーションレシピ
-          </h2>
-          <p className={css({ fontSize: "24px", color: "#544164", m: "4px 0 0" })}>
-            獲得するレシピを1つ選んでね
-          </p>
-        </div>
+    <div className={css({ mb: "12px", width: "100%", textAlign: "center" })}>
+      <div className={css({ position: "relative", width:"400px", mx: "auto", bg: "#46a1ea", color: "white", fontSize: "36px", fontWeight: "bold", pl: "80px", pr: "80px", pt: "12px", pb: "12px", borderRadius: "10px", letterSpacing: "0.2em", boxShadow: "0 6px 16px rgba(0,0,0,0.25)" })}>
+        <span style={{ position: "absolute", left: "24px" }}>◀</span>
+          レシピ
+        <span style={{ position: "absolute", right: "24px" }}>▶</span>
+      </div>
+      <p className={css({ fontSize: "24px", color: "#544164", m: "12px 0 0" })}>
+        獲得するレシピを1つ選んでね
+      </p>
+    </div>
 
         {/* グリッドコンテナ */}
         <div
@@ -121,7 +123,7 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
         </div>
 
         {/* 6. 右下に決定ボタンを配置するエリア */}
-        <div className={css({ display: "flex", justifyContent: "flex-end", width: "100%", mt: "16px" })}>
+        <div className={css({ display: "flex", justifyContent: "flex-end", width: "100%", mt: "2px" })}>
           <button
             onClick={handleConfirm}
             disabled={!selectedId} // 何も選択されていないときは押せない
