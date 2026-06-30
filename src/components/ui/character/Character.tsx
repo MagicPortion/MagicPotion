@@ -23,7 +23,7 @@ const CHARACTER_LABEL: Record<CharacterType, string> = {
 };
 
 const CHARACTER_IMAGE: Partial<Record<CharacterType, string>> = {
-  witch: "/MagicPotion/assets/new-witch.png",
+  witch: "/MagicPotion/assets/witch.png",
   shopkeeper: "/MagicPotion/assets/shopkeeper.png",
 };
 export default function Character({
