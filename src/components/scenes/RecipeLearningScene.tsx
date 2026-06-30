@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { css } from "../../../styled-system/css";
+import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
@@ -19,7 +19,7 @@ export default function RecipeLearningScene() {
     { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
   ], [width, height]);
 
-  const options = dailyRecipeOptions.flatMap((id) => {
+  const options = dailyRecipeOptions.slice(0, 3).flatMap((id) => {
     const recipe = RECIPES.find((r) => r.id === id);
     if (!recipe) return [];
     const potion = getPotion(recipe.potionId);
@@ -49,7 +49,7 @@ export default function RecipeLearningScene() {
         actions={
           <>
             {reloadMsg && (
-              <span style={{ fontSize: 13, color: "#e07070", marginRight: 4 }}>{reloadMsg}</span>
+              <span className={css({ fontSize: "13px", color: "#e07070", mr: "4px" })}>{reloadMsg}</span>
             )}
             <ActionButton
               variant="secondary"
