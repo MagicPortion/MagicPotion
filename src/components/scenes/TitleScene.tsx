@@ -28,7 +28,7 @@ export default function TitleScene() {
       />
 
       <button
-        onClick={() => setScene("conversation")}
+        onClick={() => setScene("introduction")}
         className={css({
           px: "72px",
           py: "22px",

@@ -6,6 +6,7 @@ import { GAME_W, GAME_H } from "../hooks/gameConstants";
 import { PixiAppProvider } from "../contexts/PixiAppContext";
 import Header from "./Header";
 import TitleScene from "./scenes/TitleScene";
+import Introduction from "./scenes/Introduction";
 import ConversationScene from "./scenes/ConversationScene";
 import RecipeLearningScene from "./scenes/RecipeLearningScene";
 import ShopScene from "./scenes/ShopScene";
@@ -17,6 +18,7 @@ import InventoryModal from "./ui/inventory/InventoryModal";
 
 const SCENE_LABEL: Record<Scene, string> = {
   title:                    "",
+  introduction:            "物語",
   conversation:             "朝",
   recipe_learning:          "朝",
   conversation_move:        "朝",
@@ -31,6 +33,7 @@ const SCENE_LABEL: Record<Scene, string> = {
 const renderScene = (scene: Scene) => {
   switch (scene) {
     case "title":                   return <TitleScene />;
+    case "introduction":            return <Introduction />;
     case "conversation":            return <ConversationScene />;
     case "recipe_learning":         return <RecipeLearningScene />;
     case "conversation_move":       return <ConversationScene />;
