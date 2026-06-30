@@ -55,7 +55,7 @@ export default function MaterialPickerPopup({
 
         {/* カード横並び */}
         {ownedItems.length > 0 ? (
-          <div className={css({ display: "flex", flexDirection: "row", gap: "28px", overflowX: "auto" })}>
+          <div className={css({ display: "flex", flexDirection: "row", gap: "28px" })}>
             {ownedItems.map((item) => (
               <MaterialCard
                 key={item.id}

@@ -45,18 +45,13 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
         // brewPopupIn: カード出現アニメーションのためinline style
         style={{ animation: "brewPopupIn 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards" }}
         className={css({
-          width: "920px",
-          maxH: "840px",
-          bg: "linear-gradient(180deg, #0e0a1e 0%, #0a0612 100%)",
-          border: "1.5px solid #c8a84b",
-          borderRadius: "24px",
           display: "flex", flexDirection: "column", alignItems: "center",
-          boxShadow: "0 0 80px rgba(200,168,75,0.18), 0 32px 100px rgba(0,0,0,0.85)",
-          position: "relative", overflow: "hidden",
+          position: "relative", overflow: "visible",
+          p: "40px 64px",
         })}
       >
-        {/* スクロール可能なコンテンツ */}
-        <div className={css({ flex: 1, overflowY: "auto", width: "100%", p: "56px 64px 0" })}>
+        {/* コンテンツ */}
+        <div className={css({ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" })}>
           {/* 装飾ライン（上） */}
           {!isFailed && (
             <div className={css({ display: "flex", alignItems: "center", gap: "12px", mb: "20px", width: "100%" })}>
@@ -154,39 +149,25 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
             {potion.name}
           </h2>
 
-          {/* レベルバッジ */}
-          <div
-            // shelfBadgePop: バッジ出現アニメーションのためinline style
-            style={{ animation: "shelfBadgePop 0.4s cubic-bezier(0.34,1.56,0.64,1) 200ms both" }}
-            className={css({
-              display: "flex", alignItems: "center", gap: "10px",
-              bg: "rgba(200,168,75,0.18)", border: "2px solid #c8a84b",
-              borderRadius: "40px", px: "28px", py: "10px", mb: "24px",
-            })}
-          >
-            <span className={css({ fontSize: "28px", color: "#c8a84b", letterSpacing: "0.06em" })}>LEVEL</span>
-            <span className={css({ fontSize: "52px", fontWeight: "900", color: "#ffd700", lineHeight: 1, letterSpacing: "-0.02em" })}>
-              {potion.level}
-            </span>
-          </div>
-
-          {/* 価格情報 */}
-          <div className={css({
-            bg: "rgba(200,168,75,0.08)", border: "1px solid rgba(200,168,75,0.22)",
-            borderRadius: "14px", px: "44px", py: "20px",
-            textAlign: "center", mb: "8px", minWidth: "300px",
-          })}>
+          {/* ポーション詳細（テキストのみ） */}
+          <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px", mb: "24px" })}>
+            <div className={css({ display: "flex", alignItems: "center", gap: "10px" })}>
+              <span className={css({ fontSize: "28px", color: "#c8a84b", letterSpacing: "0.06em" })}>Lv.</span>
+              <span className={css({ fontSize: "48px", fontWeight: "900", color: "#ffd700", lineHeight: 1, letterSpacing: "-0.02em" })}>
+                {potion.level}
+              </span>
+            </div>
             {count > 1 ? (
               <>
-                <p className={css({ fontSize: "28px", color: "#e8d8b8", m: "0 0 6px", fontWeight: "bold" })}>
-                  1本 {potion.sellPrice}G × {count}本
+                <p className={css({ fontSize: "24px", color: "#e8d8b8", m: "0", fontWeight: "bold" })}>
+                  {potion.sellPrice}G × {count}本
                 </p>
-                <p className={css({ fontSize: "32px", fontWeight: "bold", color: "#c8a84b", m: 0 })}>
+                <p className={css({ fontSize: "28px", fontWeight: "bold", color: "#c8a84b", m: 0 })}>
                   合計 {total}G
                 </p>
               </>
             ) : (
-              <p className={css({ fontSize: "32px", fontWeight: "bold", color: "#c8a84b", m: 0 })}>
+              <p className={css({ fontSize: "28px", fontWeight: "bold", color: "#c8a84b", m: 0 })}>
                 {potion.sellPrice}G
               </p>
             )}
@@ -198,12 +179,12 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
           )}
         </div>
 
-        {/* クローズテキスト（固定） */}
+        {/* クローズテキスト */}
         <p className={css({
-          fontSize: "26px", color: "#c8a84b", letterSpacing: "0.1em", m: 0, fontWeight: "bold",
-          flexShrink: 0, pb: "52px", width: "100%", textAlign: "center",
+          fontSize: "20px", color: "rgba(200,168,75,0.6)", letterSpacing: "0.08em", m: 0, fontWeight: "normal",
+          flexShrink: 0, pt: "24px", width: "100%", textAlign: "center",
         })}>
-          タップして閉じる
+          画面の空白部分をタップして続ける
         </p>
       </div>
     </div>
