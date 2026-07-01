@@ -4,10 +4,13 @@ import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 
 const STORY_PANELS = [
-  "夜の森の奥で、ひとつの願いが揺れていた。\n誰にも知られぬ、失われたレシピの欠片を探すために。",
-  "古びた店先に、黒い袴を着た旅人が現れた。\n彼は、ふしぎな薬を求めて、娘の手を借りた。",
-  "娘は素材を選び、火を起こし、ひと滴ずつ調合していく。\n失敗しても、また試す気持ちだけは消えなかった。",
-  "やがて店の灯りは揺れ、新しい月が昇る。\n今日の冒険は、まだ始まったばかりだ。",
+  "都会の生活に疲れ、\nのどかな町へ引っ越してきた主人公。",
+  "あなたは1人の少女を助けたことをきっかけに、\n魔法薬を扱う不思議な店へ招かれる。",
+  "店を営むのは、少し頼りないけれど一生懸命な魔女。",
+  "どうやら魔法薬作りの才能があったあなたは、\n魔女の店を手伝うことになった。",
+  "店を手伝いながら平穏で暖かな日々を過ごしていたあなたたち。\nしかしある日、店に届いたのは一通の督促状。",
+  "「  魔  女  銀  行  よ  り  滞  納  の  お  知  ら  せ  」",
+  "あなたは期限までに返済金を完遂することができるのだろうか。"
 ] as const;
 
 const FADE_OUT_DURATION = 1200;
@@ -149,45 +152,64 @@ export default function Introduction() {
         >
           <div
             className={css({
-              width: "840px",
-              border: "2px solid rgba(255,255,255,0.9)",
-              borderRadius: "24px",
+              width: "900px",
+              border: "2px solid rgba(255,255,255,0.92)",
+              borderRadius: "28px",
               background: "rgba(255,255,255,0.06)",
-              padding: "48px 44px",
-              boxShadow: "0 0 0 3px rgba(255,255,255,0.04)",
+              padding: "46px 50px",
+              boxShadow: "0 0 0 4px rgba(255,255,255,0.04)",
               display: "flex",
               flexDirection: "column",
-              gap: "28px",
+              gap: "24px",
             })}
           >
             <div
               className={css({
-                fontSize: "42px",
+                fontSize: "44px",
                 fontWeight: "bold",
                 letterSpacing: "0.12em",
                 textAlign: "center",
+                lineHeight: 1.3,
+                paddingBottom: "6px",
               })}
             >
               ゲームの目標
+              <div className={css({ fontSize: "36px", marginTop: "8px", color: "#fff4a3" })}>
+                【目指せ★滞納金完済！】
+              </div>
             </div>
             <div
               className={css({
                 display: "grid",
-                gap: "20px",
-                fontSize: "30px",
+                gap: "14px",
+                fontSize: "28px",
                 lineHeight: 1.7,
+                padding: "6px 8px",
               })}
             >
-              <p>・依頼を受けて、ポーションを調合する</p>
-              <p>・失われたレシピを集めて、店の伝説を紡ぐ</p>
-              <p>・調合の腕を上げて、街一番の薬師を目指す</p>
+              <p>長年の経営不振により、</p>
+              <p>督促状「魔女年金滞納のお知らせ」が届いてしまった！？</p>
+              <p
+                className={css({
+                  fontSize: "34px",
+                  fontWeight: "bold",
+                  color: "#ffe66d",
+                  letterSpacing: "0.1em",
+                  textAlign: "center",
+                  textShadow: "0 0 16px rgba(255,230,109,0.35)",
+                })}
+              >
+                期限は 5 日後、目標金額 100000 G。
+              </p>
+              <p>魔女の店と彼女の運命は主人公に託された！！！</p>
             </div>
             <p
               className={css({
-                fontSize: "26px",
-                opacity: 0.8,
+                fontSize: "24px",
+                opacity: 0.85,
                 textAlign: "right",
                 margin: 0,
+                paddingTop: "4px",
               })}
             >
               クリックでゲームを始めます
