@@ -14,6 +14,7 @@ export const DEFAULT_APPEARANCE: DialogueAppearance = { theme: "dark" };
 
 export type Scene =
   | "title"
+  | "introduction"
   | "conversation"
   | "recipe_learning"
   | "conversation_move"
@@ -24,6 +25,7 @@ export type Scene =
   | "display";
 
 const SCENE_ORDER: Scene[] = [
+  "introduction",
   "conversation",
   "recipe_learning",
   "conversation_move",
