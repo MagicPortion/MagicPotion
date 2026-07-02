@@ -4,12 +4,12 @@ import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 
 const STORY_PANELS = [
-  "都会の生活に疲れ、\nのどかな町へ引っ越してきた主人公。",
+  "都会の生活に疲れ、\nのどかな町へ引っ越してきたあなた。",
   "あなたは1人の少女を助けたことをきっかけに、\n魔法薬を扱う不思議な店へ招かれる。",
   "店を営むのは、少し頼りないけれど一生懸命な魔女。",
   "どうやら魔法薬作りの才能があったあなたは、\n魔女の店を手伝うことになった。",
   "店を手伝いながら平穏で暖かな日々を過ごしていたあなたたち。\nしかしある日、店に届いたのは一通の督促状。",
-  "「  魔  女  銀  行  よ  り  滞  納  の  お  知  ら  せ  」",
+  "「 魔  女  銀  行  よ  り  滞  納  の  お  知  ら  せ 」",
   "あなたは期限までに返済金を完遂することができるのだろうか。"
 ] as const;
 
@@ -153,11 +153,11 @@ export default function Introduction() {
           <div
             className={css({
               width: "900px",
-              border: "2px solid rgba(255,255,255,0.92)",
+              border: "2px solid rgba(255, 227, 125, 0.83)",
               borderRadius: "28px",
-              background: "rgba(255,255,255,0.06)",
+              background: "rgba(217, 0, 255, 0.16)",
               padding: "46px 50px",
-              boxShadow: "0 0 0 4px rgba(255,255,255,0.04)",
+              boxShadow: "0 0 0 4px rgba(255, 0, 195, 0.11)",
               display: "flex",
               flexDirection: "column",
               gap: "24px",
