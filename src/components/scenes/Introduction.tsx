@@ -22,6 +22,7 @@ export default function Introduction() {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [animating, setAnimating] = useState(false);
   const animatingRef = useRef(false);
+  const textCompletedRef = useRef(false);
   const textRef = useRef<HTMLSpanElement>(null);
   const timeoutRefs = useRef<number[]>([]);
 
@@ -43,6 +44,7 @@ export default function Introduction() {
     timeoutRefs.current = [];
     el.innerHTML = "";
 
+    textCompletedRef.current = false;
     setAnimatingState(true);
 
     const chars = currentText.split("");
@@ -51,11 +53,15 @@ export default function Introduction() {
     const tick = () => {
       if (!el) return;
       if (index >= chars.length) {
+        textCompletedRef.current = true;
         setAnimatingState(false);
         return;
       }
 
-      const char = chars[index++];
+      const char = chars[index];
+
+      index++;
+
       if (char === "\n") {
         el.appendChild(document.createElement("br"));
       } else {
@@ -72,7 +78,12 @@ export default function Introduction() {
       if (index < chars.length) {
         timeoutRefs.current.push(window.setTimeout(tick, TYPING_DELAY));
       } else {
-        timeoutRefs.current.push(window.setTimeout(() => setAnimatingState(false), TYPING_DELAY));
+        timeoutRefs.current.push(
+          window.setTimeout(() => {
+            textCompletedRef.current = true;
+            setAnimatingState(false);
+          }, TYPING_DELAY)
+        );
       }
     };
 
@@ -99,6 +110,22 @@ export default function Introduction() {
   const handleAdvance = () => {
     if (isFadingOut) return;
 
+    if (textCompletedRef.current) {
+      if (showGoal) {
+        setIsFadingOut(true);
+        window.setTimeout(() => setScene("conversation"), FADE_OUT_DURATION);
+        return;
+      }
+
+      if (!isLastPage) {
+        setPage((prev) => prev + 1);
+        return;
+      }
+
+      setShowGoal(true);
+      return;
+    }
+
     const isTyping = animatingRef.current || timeoutRefs.current.length > 0;
     if (isTyping) {
       timeoutRefs.current.forEach(window.clearTimeout);
@@ -109,11 +136,12 @@ export default function Introduction() {
         // 既存の span を visible に
         el.querySelectorAll("span").forEach((s) => ((s as HTMLElement).style.opacity = "1"));
 
-        // 残りの文字を一括追加
+        // DOM の子要素数 = 処理済みの文字位置
+        const processedCount = el.children.length;
         const chars = currentText.split("");
-        const existingSpans = el.querySelectorAll("span").length;
 
-        for (let i = existingSpans; i < chars.length; i++) {
+        // processedCount 以降の文字を追加
+        for (let i = processedCount; i < chars.length; i++) {
           const char = chars[i];
           if (char === "\n") {
             el.appendChild(document.createElement("br"));
@@ -126,6 +154,7 @@ export default function Introduction() {
         }
       }
 
+      textCompletedRef.current = true;
       setAnimatingState(false);
       return;
     }
