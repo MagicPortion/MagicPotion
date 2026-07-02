@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { animate, stagger } from "animejs";
 import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 
@@ -9,12 +8,12 @@ const STORY_PANELS = [
   "店を営むのは、少し頼りないけれど一生懸命な魔女。",
   "どうやら魔法薬作りの才能があったあなたは、\n魔女の店を手伝うことになった。",
   "店を手伝いながら平穏で暖かな日々を過ごしていたあなたたち。\nしかしある日、店に届いたのは一通の督促状。",
-  "「 魔  女  銀  行  よ  り  滞  納  の  お  知  ら  せ 」",
+  "「 魔 女 銀 行  よ り  滞 納  の  お 知 ら せ 」",
   "あなたは期限までに返済金を完遂することができるのだろうか。"
 ] as const;
 
 const FADE_OUT_DURATION = 1200;
-const TYPING_DELAY = 54;
+const TYPING_DELAY = 90;
 
 export default function Introduction() {
   const { setScene } = useGameStore();
@@ -22,8 +21,14 @@ export default function Introduction() {
   const [showGoal, setShowGoal] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [animating, setAnimating] = useState(false);
+  const animatingRef = useRef(false);
   const textRef = useRef<HTMLSpanElement>(null);
-  const animRef = useRef<ReturnType<typeof animate> | null>(null);
+  const timeoutRefs = useRef<number[]>([]);
+
+  const setAnimatingState = (value: boolean) => {
+    animatingRef.current = value;
+    setAnimating(value);
+  };
 
   const currentText = STORY_PANELS[page];
   const isLastPage = page === STORY_PANELS.length - 1;
@@ -34,29 +39,49 @@ export default function Introduction() {
     const el = textRef.current;
     if (!el) return;
 
-    animRef.current?.pause();
+    timeoutRefs.current.forEach(window.clearTimeout);
+    timeoutRefs.current = [];
     el.innerHTML = "";
 
-    currentText.split("").forEach((char) => {
-      if (char === "\n") {
-        el.appendChild(document.createElement("br"));
+    setAnimatingState(true);
+
+    const chars = currentText.split("");
+    let index = 0;
+
+    const tick = () => {
+      if (!el) return;
+      if (index >= chars.length) {
+        setAnimatingState(false);
         return;
       }
 
-      const span = document.createElement("span");
-      span.textContent = char;
-      span.style.opacity = "0";
-      el.appendChild(span);
-    });
+      const char = chars[index++];
+      if (char === "\n") {
+        el.appendChild(document.createElement("br"));
+      } else {
+        const span = document.createElement("span");
+        span.textContent = char;
+        span.style.opacity = "0";
+        span.style.transition = "opacity 0.08s linear";
+        el.appendChild(span);
+        requestAnimationFrame(() => {
+          span.style.opacity = "1";
+        });
+      }
 
-    setAnimating(true);
-    animRef.current = animate(el.querySelectorAll("span"), {
-      opacity: [0, 1],
-      delay: stagger(TYPING_DELAY),
-      duration: 1,
-      ease: "linear",
-      onComplete: () => setAnimating(false),
-    });
+      if (index < chars.length) {
+        timeoutRefs.current.push(window.setTimeout(tick, TYPING_DELAY));
+      } else {
+        timeoutRefs.current.push(window.setTimeout(() => setAnimatingState(false), TYPING_DELAY));
+      }
+    };
+
+    tick();
+
+    return () => {
+      timeoutRefs.current.forEach(window.clearTimeout);
+      timeoutRefs.current = [];
+    };
   }, [currentText, showGoal]);
 
   useEffect(() => {
@@ -74,10 +99,34 @@ export default function Introduction() {
   const handleAdvance = () => {
     if (isFadingOut) return;
 
-    if (animating) {
-      animRef.current?.pause();
-      textRef.current?.querySelectorAll("span").forEach((s) => ((s as HTMLElement).style.opacity = "1"));
-      setAnimating(false);
+    const isTyping = animatingRef.current || timeoutRefs.current.length > 0;
+    if (isTyping) {
+      timeoutRefs.current.forEach(window.clearTimeout);
+      timeoutRefs.current = [];
+
+      const el = textRef.current;
+      if (el) {
+        // 既存の span を visible に
+        el.querySelectorAll("span").forEach((s) => ((s as HTMLElement).style.opacity = "1"));
+
+        // 残りの文字を一括追加
+        const chars = currentText.split("");
+        const existingSpans = el.querySelectorAll("span").length;
+
+        for (let i = existingSpans; i < chars.length; i++) {
+          const char = chars[i];
+          if (char === "\n") {
+            el.appendChild(document.createElement("br"));
+          } else {
+            const span = document.createElement("span");
+            span.textContent = char;
+            span.style.opacity = "1";
+            el.appendChild(span);
+          }
+        }
+      }
+
+      setAnimatingState(false);
       return;
     }
 
@@ -136,7 +185,16 @@ export default function Introduction() {
             })}
           >
             <span ref={textRef} />
-            {!animating && !isFadingOut ? <span className={css({ opacity: 0.8 })}>▍</span> : null}
+            <span
+              className={css({
+                display: "inline-block",
+                width: "1ch",
+                opacity: isFadingOut ? 0 : 0.9,
+                color: "#ffffff",
+              })}
+            >
+              ▍
+            </span>
           </p>
         </div>
       ) : (
