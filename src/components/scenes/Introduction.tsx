@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { css } from "../../../styled-system/css";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 
 const STORY_PANELS = [
@@ -15,12 +15,16 @@ const STORY_PANELS = [
 const FADE_OUT_DURATION = 1200;
 const TYPING_DELAY = 90;
 
+const typingCharClass = css({
+  opacity: 0,
+  transition: "opacity 0.08s linear",
+});
+
 export default function Introduction() {
   const { setScene } = useGameStore();
   const [page, setPage] = useState(0);
   const [showGoal, setShowGoal] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
-  const [animating, setAnimating] = useState(false);
   const animatingRef = useRef(false);
   const textCompletedRef = useRef(false);
   const textRef = useRef<HTMLSpanElement>(null);
@@ -28,11 +32,73 @@ export default function Introduction() {
 
   const setAnimatingState = (value: boolean) => {
     animatingRef.current = value;
-    setAnimating(value);
   };
 
   const currentText = STORY_PANELS[page];
   const isLastPage = page === STORY_PANELS.length - 1;
+
+  const handleAdvance = useCallback(() => {
+    if (isFadingOut) return;
+
+    if (textCompletedRef.current) {
+      if (showGoal) {
+        setIsFadingOut(true);
+        window.setTimeout(() => setScene("conversation"), FADE_OUT_DURATION);
+        return;
+      }
+
+      if (!isLastPage) {
+        setPage((prev) => prev + 1);
+        return;
+      }
+
+      setShowGoal(true);
+      return;
+    }
+
+    const isTyping = animatingRef.current || timeoutRefs.current.length > 0;
+    if (isTyping) {
+      timeoutRefs.current.forEach(window.clearTimeout);
+      timeoutRefs.current = [];
+
+      const el = textRef.current;
+      if (el) {
+        el.querySelectorAll("span").forEach((s) => ((s as HTMLElement).style.opacity = "1"));
+
+        const processedCount = el.children.length;
+        const chars = currentText.split("");
+
+        for (let i = processedCount; i < chars.length; i++) {
+          const char = chars[i];
+          if (char === "\n") {
+            el.appendChild(document.createElement("br"));
+          } else {
+            const span = document.createElement("span");
+            span.textContent = char;
+            span.style.opacity = "1";
+            el.appendChild(span);
+          }
+        }
+      }
+
+      textCompletedRef.current = true;
+      setAnimatingState(false);
+      return;
+    }
+
+    if (showGoal) {
+      setIsFadingOut(true);
+      window.setTimeout(() => setScene("conversation"), FADE_OUT_DURATION);
+      return;
+    }
+
+    if (!isLastPage) {
+      setPage((prev) => prev + 1);
+      return;
+    }
+
+    setShowGoal(true);
+  }, [isFadingOut, showGoal, isLastPage, setScene, currentText]);
 
   useEffect(() => {
     if (showGoal) return;
@@ -59,7 +125,6 @@ export default function Introduction() {
       }
 
       const char = chars[index];
-
       index++;
 
       if (char === "\n") {
@@ -67,8 +132,7 @@ export default function Introduction() {
       } else {
         const span = document.createElement("span");
         span.textContent = char;
-        span.style.opacity = "0";
-        span.style.transition = "opacity 0.08s linear";
+        span.className = typingCharClass;
         el.appendChild(span);
         requestAnimationFrame(() => {
           span.style.opacity = "1";
@@ -105,73 +169,7 @@ export default function Introduction() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [animating, isFadingOut, page, showGoal]);
-
-  const handleAdvance = () => {
-    if (isFadingOut) return;
-
-    if (textCompletedRef.current) {
-      if (showGoal) {
-        setIsFadingOut(true);
-        window.setTimeout(() => setScene("conversation"), FADE_OUT_DURATION);
-        return;
-      }
-
-      if (!isLastPage) {
-        setPage((prev) => prev + 1);
-        return;
-      }
-
-      setShowGoal(true);
-      return;
-    }
-
-    const isTyping = animatingRef.current || timeoutRefs.current.length > 0;
-    if (isTyping) {
-      timeoutRefs.current.forEach(window.clearTimeout);
-      timeoutRefs.current = [];
-
-      const el = textRef.current;
-      if (el) {
-        // 既存の span を visible に
-        el.querySelectorAll("span").forEach((s) => ((s as HTMLElement).style.opacity = "1"));
-
-        // DOM の子要素数 = 処理済みの文字位置
-        const processedCount = el.children.length;
-        const chars = currentText.split("");
-
-        // processedCount 以降の文字を追加
-        for (let i = processedCount; i < chars.length; i++) {
-          const char = chars[i];
-          if (char === "\n") {
-            el.appendChild(document.createElement("br"));
-          } else {
-            const span = document.createElement("span");
-            span.textContent = char;
-            span.style.opacity = "1";
-            el.appendChild(span);
-          }
-        }
-      }
-
-      textCompletedRef.current = true;
-      setAnimatingState(false);
-      return;
-    }
-
-    if (showGoal) {
-      setIsFadingOut(true);
-      window.setTimeout(() => setScene("conversation"), FADE_OUT_DURATION);
-      return;
-    }
-
-    if (!isLastPage) {
-      setPage((prev) => prev + 1);
-      return;
-    }
-
-    setShowGoal(true);
-  };
+  }, [handleAdvance]);
 
   return (
     <div
