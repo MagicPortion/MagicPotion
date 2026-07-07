@@ -22,7 +22,8 @@ export type Scene =
   | "shop"
   | "conversation_brew"
   | "brew"
-  | "display";
+  | "display"
+  | "game_end";
 
 const SCENE_ORDER: Scene[] = [
   "introduction",
@@ -78,7 +79,8 @@ export interface GameState {
   learnRecipe: (recipeId: string) => void;
   reloadDailyOptions: () => boolean;
   confirmDisplay: (potions: BrewedPotion[]) => void;
-  advanceScene: () => void;
+  beginNextDayTransition: () => boolean;
+  advanceScene: (shouldEnd?: boolean) => void;
   sellAll: () => void;
 }
 
@@ -183,30 +185,54 @@ export const useGameStore = create<GameState>((set, get) => ({
     });
   },
 
-  advanceScene: () => {
+  beginNextDayTransition: () => {
     const s = get();
+    if (s.scene !== "display") return false;
+    if (s.day >= 5) return true;
+    set({ day: s.day + 1 });
+    return false;
+  },
+
+  advanceScene: (shouldEnd = false) => {
+    const s = get();
+
+    if (s.scene === "display") {
+      const potionsToSell = s.displayedPotions.length > 0 ? s.displayedPotions : s.brewedPotions;
+      const saleResult: SaleRecord[] = potionsToSell.map((p) => ({
+        name: getPotion(p.potionId)?.name ?? "ポーション",
+        price: p.sellPrice,
+      }));
+      const earned = saleResult.reduce((sum, r) => sum + r.price, 0);
+      const nextMoney = s.money + earned;
+
+      if (shouldEnd) {
+        set({
+          money: nextMoney,
+          displayedPotions: [],
+          brewedPotions: [],
+          lastSaleResult: saleResult,
+          scene: "game_end",
+        });
+        return;
+      }
+
+      set({
+        money: nextMoney,
+        displayedPotions: [],
+        brewedPotions: [],
+        lastSaleResult: saleResult,
+        scene: "conversation",
+        dailyRecipeOptions: pickDailyOptions(),
+      });
+      return;
+    }
+
     const idx = SCENE_ORDER.indexOf(s.scene);
     if (idx === -1 || idx < SCENE_ORDER.length - 1) {
       const next = SCENE_ORDER[idx + 1] ?? "conversation";
       set({ scene: next });
       return;
     }
-    // display → next morning: auto-sell
-    const potionsToSell = s.displayedPotions.length > 0 ? s.displayedPotions : s.brewedPotions;
-    const saleResult: SaleRecord[] = potionsToSell.map((p) => ({
-      name: getPotion(p.potionId)?.name ?? "ポーション",
-      price: p.sellPrice,
-    }));
-    const earned = saleResult.reduce((sum, r) => sum + r.price, 0);
-    set({
-      day: s.day + 1,
-      money: s.money + earned,
-      displayedPotions: [],
-      brewedPotions: [],
-      lastSaleResult: saleResult,
-      scene: "conversation",
-      dailyRecipeOptions: pickDailyOptions(),
-    });
   },
 
   sellAll: () => {

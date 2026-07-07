@@ -13,6 +13,7 @@ import ShopScene from "./scenes/ShopScene";
 import BrewScene from "./scenes/BrewScene";
 import DisplayScene from "./scenes/DisplayScene";
 import ConversationShopkeeperScene from "./scenes/ConversationShopkeeperScene";
+import GameEndScene from "./scenes/GameEndScene";
 import InventoryModal from "./ui/inventory/InventoryModal";
 
 
@@ -27,6 +28,7 @@ const SCENE_LABEL: Record<Scene, string> = {
   conversation_brew:        "夜",
   brew:                     "夜",
   display:                  "夜",
+  game_end:                 "",
 };
 
 
@@ -42,6 +44,7 @@ const renderScene = (scene: Scene) => {
     case "conversation_brew":       return <ConversationScene />;
     case "brew":                    return <BrewScene />;
     case "display":                 return <DisplayScene />;
+    case "game_end":                return <GameEndScene />;
   }
 };
 
@@ -69,8 +72,8 @@ export default function GameManager() {
             </div>
           </PixiAppProvider>
 
-          {/* ヘッダー：タイトル画面では非表示 */}
-          {scene !== "title" && (
+          {/* ヘッダー：タイトル画面・エンド画面では非表示 */}
+          {scene !== "title" && scene !== "game_end" && (
             <Header
               label={SCENE_LABEL[scene]}
               day={day}

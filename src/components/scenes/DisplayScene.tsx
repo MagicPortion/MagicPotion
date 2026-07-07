@@ -34,7 +34,7 @@ function buildSlots(potions: BrewedPotion[]): AnimationSlot[] {
 }
 
 export default function DisplayScene() {
-  const { brewedPotions, day, advanceScene } = useGameStore();
+  const { brewedPotions, day, advanceScene, beginNextDayTransition } = useGameStore();
 
   const [snapshotPotions] = useState<BrewedPotion[]>(() => [...brewedPotions]);
   const [slots] = useState<AnimationSlot[]>(() => buildSlots(brewedPotions));
@@ -57,9 +57,18 @@ export default function DisplayScene() {
 
   useEffect(() => {
     if (phase !== "blackout") return;
-    const t = setTimeout(() => advanceScene(), 600 + 2500 + 200);
+    const shouldEnd = beginNextDayTransition();
+    const t = setTimeout(() => advanceScene(shouldEnd), 600 + 2500 + 200);
     return () => clearTimeout(t);
-  }, [phase, advanceScene]);
+  }, [phase, advanceScene, beginNextDayTransition]);
+
+  const handleSummaryClose = () => {
+    if (day >= 5) {
+      advanceScene(true);
+      return;
+    }
+    setPhase("blackout");
+  };
 
   return (
     <div
@@ -71,9 +80,13 @@ export default function DisplayScene() {
         <PotionSaleAnimation slots={slots} launched={launched} />
       )}
       {phase === "summary" && (
-        <SaleResultPopup potions={snapshotPotions} onClose={() => setPhase("blackout")} />
+        <SaleResultPopup
+          potions={snapshotPotions}
+          onClose={handleSummaryClose}
+          buttonLabel={day >= 5 ? "結果へ" : "翌朝へ →"}
+        />
       )}
-      {phase === "blackout" && <BlackoutDay day={day + 1} />}
+      {phase === "blackout" && <BlackoutDay day={day} />}
     </div>
   );
 }
