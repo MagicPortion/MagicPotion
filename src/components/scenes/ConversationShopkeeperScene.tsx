@@ -4,22 +4,30 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import DialogueBox, { type DialogueBoxHandle } from "../ui/dialogue/DialogueBox";
 import Character from "../ui/character/Character";
-import { firstDayShopDialogue, shopDialogues } from "../../data/conversations";
+import {
+  firstDayShopDialogue,
+  shopDialogues,
+  shopAfterPurchaseDialogue,
+} from "../../data/conversations";
 
 export default function ConversationShopkeeperScene() {
-  const { day, advanceScene, setIsInventoryOpen } = useGameStore();
+  const { day, advanceScene, setIsInventoryOpen, pendingPostPurchaseScene } = useGameStore();
   const { width, height } = useWindowSize();
+
+const isPostPurchase = pendingPostPurchaseScene !== null;
 
 const dialogues = useMemo(() => {
   if (day === 1) {
-    return firstDayShopDialogue;
+    return isPostPurchase ? shopAfterPurchaseDialogue : firstDayShopDialogue;
   }
-  const randomSet =
-    shopDialogues[
-      Math.floor(Math.random() * shopDialogues.length)
-    ];
+
+  if (isPostPurchase) {
+    return [...shopAfterPurchaseDialogue];
+  }
+
+  const randomSet = shopDialogues[Math.floor(Math.random() * shopDialogues.length)];
   return [...randomSet];
-}, [day]);
+}, [day, isPostPurchase]);
 
   const [index, setIndex] = useState(0);
   const dialogueRef = useRef<DialogueBoxHandle>(null);

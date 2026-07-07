@@ -7,7 +7,15 @@ import DialogueBox from "../ui/dialogue/DialogueBox";
 import ShopUI from "../ui/shop/ShopUI";
 
 export default function ShopScene() {
-  const { money, shopLevel, buyMaterial, advanceScene, setIsInventoryOpen } = useGameStore();
+  const {
+    money,
+    shopLevel,
+    buyMaterial,
+    advanceScene,
+    setIsInventoryOpen,
+    setScene,
+    setPendingPostPurchaseScene,
+  } = useGameStore();
   const shopSlots = Math.max(5, SHOP_SLOTS_BY_LEVEL[shopLevel] ?? 5);
 
   // ランダムに5枚の素材を被らない一意のIDで生成
@@ -81,6 +89,8 @@ export default function ShopScene() {
     setSoldOutItems(newSoldOut);
     setQuantities({});
     setShowBuyModal(false);
+    setPendingPostPurchaseScene("conversation_brew");
+    setScene("conversation_shopkeeper");
   };
 
   return (
