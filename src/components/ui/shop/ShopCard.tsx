@@ -52,7 +52,7 @@ export default function ShopCard({ item, isSelected, isSoldOut, onClick }: ShopC
         >
           {item.category === "base" ? "Base" : "Accent"}
         </span>
-        <span className={css({ fontSize: "28px", fontWeight: "bold", color: "white" })}>-{item.price}G</span>
+        <span className={css({ fontSize: "28px", fontWeight: "bold", color: "white" })}>{item.price}G</span>
       </div>
 
       {isSelected && !isSoldOut && (

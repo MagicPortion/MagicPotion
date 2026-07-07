@@ -59,8 +59,6 @@ export default function ShopScene() {
   };
 
   const handleExecuteRefresh = () => {
-    if (money < currentRefreshCost) return;
-
     buyMaterial("refresh_fee", currentRefreshCost);
 
     const newItems = sampleWeightedChoices(MATERIALS, shopSlots).map((item, i) => ({

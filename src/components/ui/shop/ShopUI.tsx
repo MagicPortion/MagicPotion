@@ -129,7 +129,7 @@ export default function ShopUI({
                 </p>
                 <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
                   <button onClick={() => setShowRefreshModal(false)} className={css({ bg: "#bae7ff", color: "#0050b3", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>戻る</button>
-                  <button onClick={onRefresh} className={css({ bg: "#ff7875", color: "white", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>入れ替える -{currentRefreshCost}G</button>
+                  <button onClick={onRefresh} className={css({ bg: "#ff7875", color: "white", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>入れ替える {currentRefreshCost}G</button>
                 </div>
               </>
             )}
@@ -153,8 +153,7 @@ export default function ShopUI({
                     {selectedBaseItems.map(item => (
                       <div key={item.instanceId} className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", py: "4px" })}>
                         <span className={css({ fontSize: "15px", fontWeight: "bold", color: "#222" })}>{item.name}</span>
-                        {/* 【修正】テンプレートリテラルで安全に文字列結合しました */}
-                        <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`-${item.price} G`}</span>
+                        <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`${item.price} G`}</span>
                       </div>
                     ))}
                   </div>
@@ -169,8 +168,7 @@ export default function ShopUI({
                     {selectedAccentItems.map(item => (
                       <div key={item.instanceId} className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", py: "4px" })}>
                         <span className={css({ fontSize: "15px", fontWeight: "bold", color: "#222" })}>{item.name}</span>
-                        {/* 【修正】こちらも同様に修正完了 */}
-                        <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`-${item.price} G`}</span>
+                        <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`${item.price} G`}</span>
                       </div>
                     ))}
                   </div>
@@ -182,7 +180,7 @@ export default function ShopUI({
             <div className={css({ borderTop: "2px dashed #e8e8e8", pt: "16px", mb: "24px", textAlign: "left", px: "8px" })}>
               <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", mb: "6px" })}>
                 <span className={css({ fontWeight: "bold", color: "#555", fontSize: "14px" })}>合計金額</span>
-                <span className={css({ fontWeight: "900", color: "#ff4d4f", fontSize: "22px" })}>{`-${totalCost} G`}</span>
+                <span className={css({ fontWeight: "900", color: "#ff4d4f", fontSize: "22px" })}>{`${totalCost} G`}</span>
               </div>
               <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center" })}>
                 <span className={css({ color: "#777", fontSize: "14px", fontWeight: "bold" })}>現在の お財布 (所持金)</span>
