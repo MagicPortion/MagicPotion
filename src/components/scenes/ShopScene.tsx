@@ -13,7 +13,6 @@ export default function ShopScene() {
     buyMaterial,
     advanceScene,
     setIsInventoryOpen,
-    setScene,
     setPendingPostPurchaseScene,
   } = useGameStore();
   const shopSlots = Math.max(5, SHOP_SLOTS_BY_LEVEL[shopLevel] ?? 5);
@@ -90,7 +89,6 @@ export default function ShopScene() {
     setQuantities({});
     setShowBuyModal(false);
     setPendingPostPurchaseScene("conversation_brew");
-    setScene("conversation_shopkeeper");
   };
 
   return (

@@ -271,6 +271,11 @@ export const useGameStore = create<GameState>((set, get) => ({
   advanceScene: (shouldEnd = false) => {
     const s = get();
 
+    if (s.scene === "shop" && s.pendingPostPurchaseScene) {
+      set({ scene: "conversation_shopkeeper", pendingPostPurchaseScene: s.pendingPostPurchaseScene });
+      return;
+    }
+
     if (s.scene === "conversation_shopkeeper" && s.pendingPostPurchaseScene) {
       set({ scene: s.pendingPostPurchaseScene, pendingPostPurchaseScene: null });
       return;
