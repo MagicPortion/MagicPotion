@@ -30,8 +30,11 @@ export default function ShopScene() {
   const totalCost = useMemo(() => selectedItems.reduce((sum, item) => sum + item.price, 0), [selectedItems]);
   const canBuy = selectedItems.length > 0 && totalCost <= money;
 
+  const REFRESH_COSTS = [10, 20, 40, 70, 100, 140, 180, 220, 260, 300];
+
   const currentRefreshCost = useMemo(() => {
-    return 10 * Math.pow(2, refreshCount - 1);
+    const index = Math.min(refreshCount - 1, REFRESH_COSTS.length - 1);
+    return REFRESH_COSTS[index];
   }, [refreshCount]);
 
   const handleCardClick = (instanceId: string) => {
