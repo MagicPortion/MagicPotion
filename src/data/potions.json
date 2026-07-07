@@ -1,11 +1,18 @@
 [
-  { "id": "heal",     "name": "回復薬",   "colorHex": "ff69b4", "basePrice": 200 },
-  { "id": "mana",     "name": "マナ薬",   "colorHex": "7b68ee", "basePrice": 220 },
-  { "id": "strength", "name": "力の薬",   "colorHex": "ff4500", "basePrice": 250 },
-  { "id": "speed",    "name": "速さの薬", "colorHex": "00ced1", "basePrice": 230 },
-  { "id": "shield",   "name": "守りの薬", "colorHex": "4682b4", "basePrice": 240 },
-  { "id": "luck",     "name": "幸運の薬", "colorHex": "ffd700", "basePrice": 260 },
-  { "id": "sleep",    "name": "睡眠薬",   "colorHex": "9370db", "basePrice": 180 },
-  { "id": "antidote", "name": "解毒薬",   "colorHex": "3cb371", "basePrice": 190 },
-  { "id": "mystery",  "name": "謎の薬",   "colorHex": "808080", "basePrice": 150 }
+  { "id": "premium_potion",   "name": "高級なポーション",   "colorHex": "d4af37", "basePrice": 300 },
+  { "id": "antidote_potion", "name": "解毒ポーション",     "colorHex": "3cb371", "basePrice": 190 },
+  { "id": "cold_potion",      "name": "冷たいポーション",   "colorHex": "87cefa", "basePrice": 160 },
+  { "id": "sweet_potion",     "name": "甘いポーション",     "colorHex": "ffb6c1", "basePrice": 170 },
+  { "id": "bitter_potion",    "name": "苦いポーション",     "colorHex": "8b4513", "basePrice": 170 },
+  { "id": "hot_potion",       "name": "熱いポーション",     "colorHex": "ff6347", "basePrice": 170 },
+  { "id": "meh_potion",       "name": "微妙なポーション",   "colorHex": "a9a9a9", "basePrice": 130 },
+  { "id": "lucky_potion",     "name": "幸運の薬",         "colorHex": "ffd700", "basePrice": 260 },
+  { "id": "heal_potion",      "name": "回復",               "colorHex": "ff69b4", "basePrice": 200 },
+  { "id": "strength_potion", "name": "力の薬",             "colorHex": "ff4500", "basePrice": 250 },
+  { "id": "ward_potion",      "name": "魔除けポーション",   "colorHex": "8a2be2", "basePrice": 220 },
+  { "id": "poison_potion",    "name": "毒薬",               "colorHex": "556b2f", "basePrice": 210 },
+  { "id": "paralysis_potion", "name": "しびれ薬",           "colorHex": "6a5acd", "basePrice": 230 },
+  { "id": "salve",           "name": "軟膏",               "colorHex": "deb887", "basePrice": 180 },
+  { "id": "speed_potion",     "name": "速さの薬",           "colorHex": "00ced1", "basePrice": 230 },
+  { "id": "sleep_potion",     "name": "眠り薬",             "colorHex": "9370db", "basePrice": 180 }
 ]

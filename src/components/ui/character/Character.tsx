@@ -28,7 +28,6 @@ const CHARACTER_IMAGE: Partial<Record<CharacterType, string>> = {
 };
 export default function Character({
   character,
-  expression = "normal",
   direction = "right",
   animate = true,
   imageSrc,

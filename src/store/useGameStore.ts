@@ -6,13 +6,14 @@ import {
   RECIPES,
   shuffleArray,
 } from "../data/gameData";
-import type { BrewedPotion, SaleRecord } from "../data/types";
+import type { BrewedPotion, RecipeDef, SaleRecord } from "../data/types";
 
 export type DialogueTheme = "dark" | "parchment" | "semi";
 export interface DialogueAppearance { theme: DialogueTheme; }
 export const DEFAULT_APPEARANCE: DialogueAppearance = { theme: "dark" };
 
 export type Scene =
+  | "title"
   | "conversation"
   | "recipe_learning"
   | "conversation_move"
@@ -36,8 +37,18 @@ const SCENE_ORDER: Scene[] = [
 let instanceCounter = 0;
 
 function pickDailyOptions(): string[] {
-  const nonMystery = RECIPES.filter((r) => r.potionId !== "mystery");
-  return shuffleArray(nonMystery.map((r) => r.id)).slice(0, 5);
+  const recipeGroups = RECIPES.reduce<Record<string, RecipeDef[]>>((acc, recipe) => {
+    if (recipe.potionId === "mystery") return acc;
+    const list = acc[recipe.potionId] ?? [];
+    return { ...acc, [recipe.potionId]: [...list, recipe] };
+  }, {});
+
+  const uniquePotionRecipes = Object.values(recipeGroups).map((group) => {
+    const shuffledGroup = shuffleArray(group);
+    return shuffledGroup[0];
+  });
+
+  return shuffleArray(uniquePotionRecipes).slice(0, 5).map((recipe) => recipe.id);
 }
 
 export interface GameState {
@@ -51,6 +62,10 @@ export interface GameState {
   recipeLevel: Record<string, number>;
   dailyRecipeOptions: string[];
   lastSaleResult: SaleRecord[];
+  knownPotionIds: string[];
+
+  isInventoryOpen: boolean;
+  setIsInventoryOpen: (open: boolean) => void;
 
   dialogueAppearance: DialogueAppearance;
   setDialogueAppearance: (a: DialogueAppearance) => void;
@@ -62,6 +77,7 @@ export interface GameState {
   reloadDailyOptions: () => boolean;
   confirmDisplay: (potions: BrewedPotion[]) => void;
   advanceScene: () => void;
+  sellAll: () => void;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -75,6 +91,9 @@ export const useGameStore = create<GameState>((set, get) => ({
   recipeLevel: {},
   dailyRecipeOptions: pickDailyOptions(),
   lastSaleResult: [],
+  knownPotionIds: [],
+  isInventoryOpen: false,
+  setIsInventoryOpen: (open) => set({ isInventoryOpen: open }),
   dialogueAppearance: DEFAULT_APPEARANCE,
   setDialogueAppearance: (a) => set({ dialogueAppearance: a }),
 
@@ -105,12 +124,19 @@ export const useGameStore = create<GameState>((set, get) => ({
         ? { ...s.recipeLevel, [recipe.id]: 1 }
         : s.recipeLevel;
 
+    // isNew はポーション単位で判定（同じポーションの別レシピでもNEWにしない）
+    const isNewPotion = !s.knownPotionIds.includes(recipe.potionId);
+    // isNewRecipe はレシピ単位で判定（未習得のレシピ）
+    const isNewRecipe = currentLevel === 0;
+
     const brewed: BrewedPotion = {
       instanceId: `p_${++instanceCounter}`,
       potionId: recipe.potionId,
       recipeId: recipe.id,
       level,
       sellPrice: calcSellPrice(potionDef.basePrice, level),
+      isNew: isNewPotion,
+      isNewRecipe,
     };
 
     set({
@@ -121,6 +147,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       },
       brewedPotions: [...s.brewedPotions, brewed],
       recipeLevel: updatedLevels,
+      knownPotionIds: isNewPotion
+        ? [...s.knownPotionIds, recipe.potionId]
+        : s.knownPotionIds,
     });
     return brewed;
   },
@@ -167,6 +196,24 @@ export const useGameStore = create<GameState>((set, get) => ({
       displayedPotions: [],
       lastSaleResult: saleResult,
       scene: "conversation",
+      dailyRecipeOptions: pickDailyOptions(),
+    });
+  },
+
+  sellAll: () => {
+    const s = get();
+    const allPotions = [...s.brewedPotions];
+    const saleResult: SaleRecord[] = allPotions.map((p) => ({
+      name: getPotion(p.potionId)?.name ?? "ポーション",
+      price: p.sellPrice,
+    }));
+    const earned = saleResult.reduce((sum, r) => sum + r.price, 0);
+    set({
+      money: s.money + earned,
+      day: s.day + 1,
+      brewedPotions: [],
+      displayedPotions: [],
+      lastSaleResult: saleResult,
       dailyRecipeOptions: pickDailyOptions(),
     });
   },

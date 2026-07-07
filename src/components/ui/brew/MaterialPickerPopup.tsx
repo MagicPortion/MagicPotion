@@ -159,7 +159,7 @@ export default function MaterialPickerPopup({
                       {suggestedRecipe.potionName}
                     </div>
 
-                    {/* レベル推移 */}
+                    {/* 現在レベル */}
                     <div
                       className={css({
                         fontSize: "24px",
@@ -168,11 +168,9 @@ export default function MaterialPickerPopup({
                       })}
                     >
                       Lv.{suggestedRecipe.currentLevel}
-                      {" → "}
-                      Lv.{suggestedRecipe.nextLevel}
                     </div>
 
-                    {/* 売値推移 */}
+                    {/* 現在価格 */}
                     <div
                       className={css({
                         fontSize: "24px",
@@ -181,20 +179,6 @@ export default function MaterialPickerPopup({
                       })}
                     >
                       {suggestedRecipe.currentPrice}G
-                      {" → "}
-                      {suggestedRecipe.nextPrice}G
-                    </div>
-
-                    {/* 増加量 */}
-                    <div
-                      className={css({
-                        fontSize: "22px",
-                        fontWeight: "bold",
-                        color: "#8AD8FF",
-                        mt: "4px",
-                      })}
-                    >
-                      +{suggestedRecipe.nextPrice - suggestedRecipe.currentPrice}G
                     </div>
                   </div>
                 )}

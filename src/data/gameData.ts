@@ -31,6 +31,30 @@ export function findRecipeByIngredients(baseId: string, accentId: string): Recip
   return RECIPES.find((r) => r.baseId === baseId && r.accentId === accentId);
 }
 
+export function weightedChoice<T extends { spawnWeight: number }>(items: T[]): T | undefined {
+  if (items.length === 0) return undefined;
+
+  const totalWeight = items.reduce((sum, item) => sum + item.spawnWeight, 0);
+  const target = Math.random() * totalWeight;
+  let cumulative = 0;
+
+  for (const item of items) {
+    cumulative += item.spawnWeight;
+    if (target < cumulative) return item;
+  }
+
+  return items[items.length - 1];
+}
+
+export function sampleWeightedChoices<T extends { spawnWeight: number }>(items: T[], count: number): T[] {
+  const result: T[] = [];
+  for (let i = 0; i < count; i++) {
+    const choice = weightedChoice(items);
+    if (choice) result.push(choice);
+  }
+  return result;
+}
+
 export function calcSellPrice(basePrice: number, level: number): number {
   return Math.floor(basePrice * (1 + 0.3 * (level - 1)));
 }

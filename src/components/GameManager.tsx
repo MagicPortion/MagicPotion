@@ -12,6 +12,7 @@ import ShopScene from "./scenes/ShopScene";
 import BrewScene from "./scenes/BrewScene";
 import DisplayScene from "./scenes/DisplayScene";
 import ConversationShopkeeperScene from "./scenes/ConversationShopkeeperScene";
+import InventoryModal from "./ui/inventory/InventoryModal";
 
 const SCENE_LABEL: Record<Scene, string> = {
   title:                    "",
@@ -52,7 +53,7 @@ const renderScene = (scene: Scene) => {
 };
 
 export default function GameManager() {
-  const { scene, day, money } = useGameStore();
+  const { scene, day, money, materials, brewedPotions, isInventoryOpen, setIsInventoryOpen } = useGameStore();
   const scale = useGameScale();
   const { bg, text } = SCENE_COLOR[scene];
 
@@ -84,6 +85,15 @@ export default function GameManager() {
               label={SCENE_LABEL[scene]}
               day={day}
               money={money}
+            />
+          )}
+
+          {/* インベントリが開いている時は、最前面（zIndex: 1000）に共通モーダルを描画 */}
+          {isInventoryOpen && (
+            <InventoryModal 
+              materials={materials} 
+              brewedPotions={brewedPotions} 
+              onClose={() => setIsInventoryOpen(false)} 
             />
           )}
         </div>

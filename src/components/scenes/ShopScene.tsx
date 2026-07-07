@@ -2,25 +2,20 @@ import { useMemo, useState } from "react";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
-import { MATERIALS, SHOP_SLOTS_BY_LEVEL } from "../../data/gameData";
+import { MATERIALS, SHOP_SLOTS_BY_LEVEL, sampleWeightedChoices } from "../../data/gameData";
 import DialogueBox from "../ui/dialogue/DialogueBox";
 import ShopUI from "../ui/shop/ShopUI";
 
 export default function ShopScene() {
-  const { money, shopLevel, buyMaterial, advanceScene } = useGameStore();
+  const { money, shopLevel, buyMaterial, advanceScene, setIsInventoryOpen } = useGameStore();
   const shopSlots = Math.max(5, SHOP_SLOTS_BY_LEVEL[shopLevel] ?? 5);
 
   // ランダムに5枚の素材を被らない一意のIDで生成
   const [shopItems, setShopItems] = useState(() => {
-    const items = [];
-    for (let i = 0; i < shopSlots; i++) {
-      const randomIndex = Math.floor(Math.random() * MATERIALS.length);
-      items.push({
-        ...MATERIALS[randomIndex],
-        instanceId: `shop-item-${i}-${MATERIALS[randomIndex].id}`,
-      });
-    }
-    return items;
+    return sampleWeightedChoices(MATERIALS, shopSlots).map((item, i) => ({
+      ...item,
+      instanceId: `shop-item-${i}-${item.id}`,
+    }));
   });
 
   const [quantities, setQuantities] = useState<Record<string, number>>({});
@@ -58,14 +53,10 @@ export default function ShopScene() {
 
     buyMaterial("refresh_fee", currentRefreshCost);
 
-    const newItems = [];
-    for (let i = 0; i < shopSlots; i++) {
-      const randomIndex = Math.floor(Math.random() * MATERIALS.length);
-      newItems.push({
-        ...MATERIALS[randomIndex],
-        instanceId: `${MATERIALS[randomIndex].id}-${Date.now()}-${i}`,
-      });
-    }
+    const newItems = sampleWeightedChoices(MATERIALS, shopSlots).map((item, i) => ({
+      ...item,
+      instanceId: `${item.id}-${Date.now()}-${i}`,
+    }));
     setShopItems(newItems);
     setQuantities({});
     setSoldOutItems({});
@@ -116,7 +107,7 @@ export default function ShopScene() {
         onRefresh={handleExecuteRefresh}
         onExit={advanceScene}
       />
-      <DialogueBox />
+      <DialogueBox onInventory={() => setIsInventoryOpen(true)} />
     </div>
   );
 }
