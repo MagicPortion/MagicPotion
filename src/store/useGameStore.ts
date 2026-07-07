@@ -23,6 +23,7 @@ export type Scene =
   | "conversation_brew"
   | "brew"
   | "display"
+  | "conversation_end"
   | "game_end";
 
 const SCENE_ORDER: Scene[] = [
@@ -211,7 +212,7 @@ export const useGameStore = create<GameState>((set, get) => ({
           displayedPotions: [],
           brewedPotions: [],
           lastSaleResult: saleResult,
-          scene: "game_end",
+          scene: "conversation_end",
         });
         return;
       }
@@ -224,6 +225,11 @@ export const useGameStore = create<GameState>((set, get) => ({
         scene: "conversation",
         dailyRecipeOptions: pickDailyOptions(),
       });
+      return;
+    }
+
+    if (s.scene === "conversation_end") {
+      set({ scene: "game_end" });
       return;
     }
 

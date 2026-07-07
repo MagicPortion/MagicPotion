@@ -28,6 +28,7 @@ const SCENE_LABEL: Record<Scene, string> = {
   conversation_brew:        "夜",
   brew:                     "夜",
   display:                  "夜",
+  conversation_end:         "結果",
   game_end:                 "",
 };
 
@@ -44,6 +45,7 @@ const renderScene = (scene: Scene) => {
     case "conversation_brew":       return <ConversationScene />;
     case "brew":                    return <BrewScene />;
     case "display":                 return <DisplayScene />;
+    case "conversation_end":        return <ConversationScene />;
     case "game_end":                return <GameEndScene />;
   }
 };

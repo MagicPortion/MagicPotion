@@ -4,7 +4,7 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import DialogueBox, { type DialogueBoxHandle } from "../ui/dialogue/DialogueBox";
 import Character from "../ui/character/Character";
-import { firstDayMorningDialogue,firstDayMoveDialogue,firstDayBrewDialogue,morningDialogues,moveDialogues,brewDialogues} from "../../data/conversations";
+import { firstDayMorningDialogue,firstDayMoveDialogue,firstDayBrewDialogue,morningDialogues,moveDialogues,brewDialogues,endingDialogues} from "../../data/conversations";
 
 export default function ConversationScene() {
   const { day, lastSaleResult, advanceScene, scene, setIsInventoryOpen } = useGameStore();
@@ -36,6 +36,10 @@ export default function ConversationScene() {
           Math.floor(Math.random() * brewDialogues.length)
         ];
       return [...randomSet];
+    }
+
+    if (scene === "conversation_end") {
+      return endingDialogues;
     }
 
     //魔女-朝レシピ選択の会話
