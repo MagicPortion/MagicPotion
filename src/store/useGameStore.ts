@@ -24,6 +24,7 @@ export type Scene =
   | "brew"
   | "display"
   | "conversation_end"
+  | "ending_transition"
   | "game_end";
 
 const SCENE_ORDER: Scene[] = [
@@ -229,6 +230,11 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
 
     if (s.scene === "conversation_end") {
+      set({ scene: "ending_transition" });
+      return;
+    }
+
+    if (s.scene === "ending_transition") {
       set({ scene: "game_end" });
       return;
     }

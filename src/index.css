@@ -131,3 +131,15 @@ body, html {
   0%, 100% { transform: translateY(0); opacity: 0.6; }
   50%      { transform: translateY(8px); opacity: 1; }
 }
+
+/* エンディングテキスト上からフェードイン */
+@keyframes endingLinesFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
