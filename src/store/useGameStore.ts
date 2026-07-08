@@ -43,8 +43,8 @@ const SCENE_ORDER: Scene[] = [
 let instanceCounter = 0;
 
 // クリア判定の条件定義
-export const END_DAY = 2;
-export const CLEAR_MONEY_THRESHOLD = 1000;
+export const END_DAY = 5;
+export const CLEAR_MONEY_THRESHOLD = 10000;
 
 const shouldTriggerGameEnd = (day: number) => day >= END_DAY;
 
