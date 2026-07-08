@@ -1,9 +1,9 @@
 import { css } from "#styled-system/css";
-import { useGameStore } from "../../store/useGameStore";
+import { CLEAR_MONEY_THRESHOLD, useGameStore } from "../../store/useGameStore";
 
 export default function GameEndScene() {
   const { money } = useGameStore();
-  const isClear = money >= 10000;
+  const isClear = money >= CLEAR_MONEY_THRESHOLD;
 
   return (
     <div

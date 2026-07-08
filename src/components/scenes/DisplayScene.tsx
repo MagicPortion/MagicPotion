@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { css } from "#styled-system/css";
-import { useGameStore } from "../../store/useGameStore";
+import { END_DAY, useGameStore } from "../../store/useGameStore";
 import { getPotion } from "../../data/gameData";
 import type { BrewedPotion } from "../../data/types";
 import PotionSaleAnimation, { type AnimationSlot, ANIM } from "../ui/display/PotionSaleAnimation";
@@ -63,7 +63,7 @@ export default function DisplayScene() {
   }, [phase, advanceScene, beginNextDayTransition]);
 
   const handleSummaryClose = () => {
-    if (day >= 5) {
+    if (day >= END_DAY) {
       advanceScene(true);
       return;
     }
@@ -83,7 +83,7 @@ export default function DisplayScene() {
         <SaleResultPopup
           potions={snapshotPotions}
           onClose={handleSummaryClose}
-          buttonLabel={day >= 5 ? "結果へ" : "翌朝へ →"}
+          buttonLabel={day >= END_DAY ? "結果へ" : "翌朝へ →"}
         />
       )}
       {phase === "blackout" && <BlackoutDay day={day} />}

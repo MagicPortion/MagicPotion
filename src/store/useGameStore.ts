@@ -41,6 +41,12 @@ const SCENE_ORDER: Scene[] = [
 
 let instanceCounter = 0;
 
+// クリア判定の条件定義
+export const END_DAY = 2;
+export const CLEAR_MONEY_THRESHOLD = 10000;
+
+const shouldTriggerGameEnd = (day: number) => day >= END_DAY;
+
 function pickDailyOptions(): string[] {
   const recipeGroups = RECIPES.reduce<Record<string, RecipeDef[]>>((acc, recipe) => {
     if (recipe.potionId === "mystery") return acc;
@@ -190,7 +196,9 @@ export const useGameStore = create<GameState>((set, get) => ({
   beginNextDayTransition: () => {
     const s = get();
     if (s.scene !== "display") return false;
-    if (s.day >= 5) return true;
+
+    if (shouldTriggerGameEnd(s.day)) return true;
+
     set({ day: s.day + 1 });
     return false;
   },
