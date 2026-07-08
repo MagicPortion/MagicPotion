@@ -2,32 +2,130 @@ import { css } from "#styled-system/css";
 import { CLEAR_MONEY_THRESHOLD, useGameStore } from "../../store/useGameStore";
 
 export default function GameEndScene() {
-  const { money } = useGameStore();
+  const { money, setScene } = useGameStore();
   const isClear = money >= CLEAR_MONEY_THRESHOLD;
+  const endingNumber = isClear ? "END 01 : 返済完了 ~賑わいの店~" : "END 02 : 返済失敗 ~空き地~";
+  const endingText = isClear
+    // 成功END1 の文章
+    ? "あれから無事に返済を完了した魔女とあなたは、\n今日も不思議な店を営んでいる。\nお店は賑わい、ポーションの調合も順調だ。\nこれからもあなたは魔女と共にこの町で歩んでいくのだろう。"
+    // 失敗END2 の文章
+    : "間に合わなかったあぁぁ......(T^T)\nお店もなくなり立派な空き地です";
 
   return (
     <div
       className={css({
         width: "100%",
         height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "rgba(0, 0, 0, 0.9)",
+        position: "relative",
+        overflow: "hidden",
+        background: "#000000",
+        color: "#ffffff",
       })}
     >
       <div
         className={css({
-          color: "#f5e7b5",
-          fontSize: "72px",
-          fontWeight: "900",
-          letterSpacing: "0.2em",
-          textAlign: "center",
-          textShadow: "0 0 20px rgba(255,255,255,0.35)",
+          position: "absolute",
+          top: "96px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "980px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "44px",
         })}
       >
-        {isClear ? "ゲームクリア" : "ゲームオーバー"}
+        <div
+          className={css({
+            width: "840px",
+            height: "472px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            background: "rgba(255,255,255,0.03)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+          })}
+        >
+          <span
+            className={css({
+              color: "rgba(255,255,255,0.42)",
+              fontSize: "26px",
+              letterSpacing: "0.12em",
+            })}
+          >
+            END ILLUSTRATION
+          </span>
+        </div>
+
+        <div
+          className={css({
+            width: "1200px",
+            minHeight: "188px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "24px 48px",
+          })}
+        >
+          <p
+            className={css({
+              margin: 0,
+              fontSize: "30px",
+              lineHeight: 1.85,
+              fontFamily: "monospace",
+              letterSpacing: "0.08em",
+              textAlign: "center",
+              whiteSpace: "pre-wrap",
+              textShadow: "0 0 12px rgba(255,255,255,0.18)",
+            })}
+          >
+            {endingText}
+          </p>
+        </div>
       </div>
+
+      <div
+        className={css({
+          position: "absolute",
+          left: "72px",
+          bottom: "56px",
+          fontSize: "34px",
+          fontWeight: "700",
+          letterSpacing: "0.18em",
+          color: "#f5e7b5",
+          textShadow: "0 0 12px rgba(245,231,181,0.35)",
+        })}
+      >
+        {endingNumber}
+      </div>
+
+      <button
+        type="button"
+        onClick={() => setScene("title")}
+        className={css({
+          position: "absolute",
+          right: "72px",
+          bottom: "48px",
+          minWidth: "260px",
+          height: "72px",
+          border: "1px solid rgba(245,231,181,0.72)",
+          background: "rgba(0,0,0,0.72)",
+          color: "#f5e7b5",
+          cursor: "pointer",
+          fontSize: "28px",
+          fontWeight: "700",
+          letterSpacing: "0.1em",
+          textAlign: "center",
+          transition: "all 0.16s ease",
+          _hover: {
+            background: "rgba(245,231,181,0.16)",
+            transform: "translateY(-2px)",
+          },
+        })}
+      >
+        ホームへ戻る
+      </button>
     </div>
   );
 }

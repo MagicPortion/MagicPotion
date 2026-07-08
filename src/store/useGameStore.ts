@@ -43,7 +43,7 @@ let instanceCounter = 0;
 
 // クリア判定の条件定義
 export const END_DAY = 2;
-export const CLEAR_MONEY_THRESHOLD = 10000;
+export const CLEAR_MONEY_THRESHOLD = 1000;
 
 const shouldTriggerGameEnd = (day: number) => day >= END_DAY;
 
