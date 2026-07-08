@@ -12,7 +12,7 @@ export default function EndingTransitionScene() {
   const { setScene } = useGameStore();
 
   const handleAdvance = useCallback(() => {
-    setScene("game_end");
+    setScene("financial_report");
   }, [setScene]);
 
   useEffect(() => {
