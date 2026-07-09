@@ -146,6 +146,7 @@ export const endingDialogues = [
 ];
 
 //店主-初日
+//店主-初日（入店前）
 export const firstDayShopDialogue = [
     "いらっしゃ......て、薬屋の嬢ちゃんと 例の新入り かい。",
     "それで、今日はどんな素材が入用なんだ。\n適当に並んでるものから選んでくれ。",
@@ -153,7 +154,7 @@ export const firstDayShopDialogue = [
     "冷やかしなら帰ってくれよ。",
 ];
 
-//店主-２日目以降ランダム
+//店主-２日目以降ランダム（入店前）
 export const shopDialogues = [
     [
         "いらっしゃい。\n適当に見ていきな。",
@@ -184,4 +185,9 @@ export const shopDialogues = [
         "いらっしゃい。",
         "冷やかしなら帰ってくれよ。"
     ],
+];
+
+//店主-退店後（固定）
+export const shopAfterPurchaseDialogue = [
+    "毎度あり。",
 ];

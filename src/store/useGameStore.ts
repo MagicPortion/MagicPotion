@@ -124,6 +124,9 @@ export interface GameState {
   dialogueAppearance: DialogueAppearance;
   setDialogueAppearance: (a: DialogueAppearance) => void;
 
+  pendingPostPurchaseScene: Scene | null;
+  setPendingPostPurchaseScene: (scene: Scene | null) => void;
+
   setScene: (scene: Scene) => void;
   buyMaterial: (id: string, price: number) => boolean;
   brew: (baseId: string, accentId: string) => BrewedPotion | null;
@@ -152,6 +155,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   setIsInventoryOpen: (open) => set({ isInventoryOpen: open }),
   dialogueAppearance: DEFAULT_APPEARANCE,
   setDialogueAppearance: (a) => set({ dialogueAppearance: a }),
+  pendingPostPurchaseScene: null,
+  setPendingPostPurchaseScene: (scene) => set({ pendingPostPurchaseScene: scene }),
 
   setScene: (scene) => set({ scene }),
 
@@ -265,6 +270,16 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   advanceScene: (shouldEnd = false) => {
     const s = get();
+
+    if (s.scene === "shop" && s.pendingPostPurchaseScene) {
+      set({ scene: "conversation_shopkeeper", pendingPostPurchaseScene: s.pendingPostPurchaseScene });
+      return;
+    }
+
+    if (s.scene === "conversation_shopkeeper" && s.pendingPostPurchaseScene) {
+      set({ scene: s.pendingPostPurchaseScene, pendingPostPurchaseScene: null });
+      return;
+    }
 
     if (s.scene === "display") {
       const potionsToSell = s.displayedPotions.length > 0 ? s.displayedPotions : s.brewedPotions;
