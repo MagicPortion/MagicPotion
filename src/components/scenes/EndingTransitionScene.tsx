@@ -3,8 +3,8 @@ import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 
 const ENDING_LINES = [
-  "あなたは5日間のポーションの調合を終え、\n遂に返済日を迎えることになった。",
-  "1人の少女を助けたことから、\n魔法薬を扱う不思議な店へ招かれたあなた。",
+  "あなたは5日間の魔法薬の調合を終え、\n遂に返済日を迎えることになった。",
+  "1人の少女を助けたことから不思議な店へ招かれたあなた。",
   "その結末を、魔女と共に見届けることになる。",
 ] as const;
 
