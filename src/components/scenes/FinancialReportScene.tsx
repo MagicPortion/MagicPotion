@@ -58,7 +58,7 @@ export default function FinancialReportScene() {
               textShadow: "0 0 14px rgba(245,231,181,0.26)",
             })}
           >
-            終始報告書
+            収支報告書
           </h1>
         </header>
 
