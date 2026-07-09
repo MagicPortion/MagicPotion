@@ -2,7 +2,7 @@ import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 
 export default function TitleScene() {
-  const { setScene } = useGameStore();
+  const { startNewGame } = useGameStore();
 
   return (
     <div
@@ -28,7 +28,7 @@ export default function TitleScene() {
       />
 
       <button
-        onClick={() => setScene("introduction")}
+        onClick={startNewGame}
         className={css({
           px: "72px",
           py: "22px",

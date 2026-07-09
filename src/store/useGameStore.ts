@@ -128,6 +128,7 @@ export interface GameState {
   setPendingPostPurchaseScene: (scene: Scene | null) => void;
 
   setScene: (scene: Scene) => void;
+  startNewGame: () => void;
   buyMaterial: (id: string, price: number) => boolean;
   brew: (baseId: string, accentId: string) => BrewedPotion | null;
   learnRecipe: (recipeId: string) => void;
@@ -138,27 +139,55 @@ export interface GameState {
   sellAll: () => void;
 }
 
+type GameProgressState = Pick<
+  GameState,
+  | "money"
+  | "day"
+  | "scene"
+  | "shopLevel"
+  | "materials"
+  | "brewedPotions"
+  | "displayedPotions"
+  | "recipeLevel"
+  | "dailyRecipeOptions"
+  | "lastSaleResult"
+  | "dailyFinanceReports"
+  | "knownPotionIds"
+  | "isInventoryOpen"
+  | "pendingPostPurchaseScene"
+>;
+
+function createInitialGameProgress(scene: Scene): GameProgressState {
+  return {
+    money: 1000,
+    day: 1,
+    scene,
+    shopLevel: 1,
+    materials: {},
+    brewedPotions: [],
+    displayedPotions: [],
+    recipeLevel: {},
+    dailyRecipeOptions: pickDailyOptions(),
+    lastSaleResult: [],
+    dailyFinanceReports: [],
+    knownPotionIds: [],
+    isInventoryOpen: false,
+    pendingPostPurchaseScene: null,
+  };
+}
+
 export const useGameStore = create<GameState>((set, get) => ({
-  money: 1000,
-  day: 1,
-  scene: "title",
-  shopLevel: 1,
-  materials: {},
-  brewedPotions: [],
-  displayedPotions: [],
-  recipeLevel: {},
-  dailyRecipeOptions: pickDailyOptions(),
-  lastSaleResult: [],
-  dailyFinanceReports: [],
-  knownPotionIds: [],
-  isInventoryOpen: false,
+  ...createInitialGameProgress("title"),
   setIsInventoryOpen: (open) => set({ isInventoryOpen: open }),
   dialogueAppearance: DEFAULT_APPEARANCE,
   setDialogueAppearance: (a) => set({ dialogueAppearance: a }),
-  pendingPostPurchaseScene: null,
   setPendingPostPurchaseScene: (scene) => set({ pendingPostPurchaseScene: scene }),
 
   setScene: (scene) => set({ scene }),
+  startNewGame: () => {
+    instanceCounter = 0;
+    set(createInitialGameProgress("introduction"));
+  },
 
   buyMaterial: (id, price) => {
     const s = get();
