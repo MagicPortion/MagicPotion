@@ -7,6 +7,7 @@ import NewBadge from "../common/NewBadge";
 interface SaleResultPopupProps {
   potions: BrewedPotion[];
   onClose: () => void;
+  buttonLabel?: string;
 }
 
 interface PotionGroup {
@@ -47,7 +48,7 @@ function groupPotions(potions: BrewedPotion[]): PotionGroup[] {
   return Array.from(map.values());
 }
 
-export default function SaleResultPopup({ potions, onClose }: SaleResultPopupProps) {
+export default function SaleResultPopup({ potions, onClose, buttonLabel = "翌朝へ →" }: SaleResultPopupProps) {
   const groups = groupPotions(potions);
   const grandTotal = potions.reduce((sum, p) => sum + p.sellPrice, 0);
 
@@ -186,7 +187,7 @@ export default function SaleResultPopup({ potions, onClose }: SaleResultPopupPro
               _hover: { transform: "scale(1.04)", filter: "brightness(1.08)" },
             })}
           >
-            翌朝へ &rarr;
+            {buttonLabel}
           </button>
         </div>
       </div>

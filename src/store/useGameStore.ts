@@ -22,7 +22,11 @@ export type Scene =
   | "shop"
   | "conversation_brew"
   | "brew"
-  | "display";
+  | "display"
+  | "conversation_end"
+  | "ending_transition"
+  | "financial_report"
+  | "game_end";
 
 const SCENE_ORDER: Scene[] = [
   "introduction",
@@ -37,6 +41,53 @@ const SCENE_ORDER: Scene[] = [
 ];
 
 let instanceCounter = 0;
+
+// クリア判定の条件定義
+export const END_DAY = 5;
+export const CLEAR_MONEY_THRESHOLD = 10000;
+
+const shouldTriggerGameEnd = (day: number) => day >= END_DAY;
+
+export interface DailyFinanceReport {
+  day: number;
+  expense: number;
+  income: number;
+}
+
+function addDailyFinance(
+  reports: DailyFinanceReport[],
+  day: number,
+  changes: Partial<Pick<DailyFinanceReport, "expense" | "income">>,
+): DailyFinanceReport[] {
+  const index = reports.findIndex((report) => report.day === day);
+  if (index === -1) {
+    return [
+      ...reports,
+      {
+        day,
+        expense: changes.expense ?? 0,
+        income: changes.income ?? 0,
+      },
+    ].sort((a, b) => a.day - b.day);
+  }
+
+  return reports.map((report, i) =>
+    i === index
+      ? {
+          ...report,
+          expense: report.expense + (changes.expense ?? 0),
+          income: report.income + (changes.income ?? 0),
+        }
+      : report,
+  );
+}
+
+function buildSaleResult(potions: BrewedPotion[]): SaleRecord[] {
+  return potions.map((p) => ({
+    name: getPotion(p.potionId)?.name ?? "ポーション",
+    price: p.sellPrice,
+  }));
+}
 
 function pickDailyOptions(): string[] {
   const recipeGroups = RECIPES.reduce<Record<string, RecipeDef[]>>((acc, recipe) => {
@@ -64,6 +115,7 @@ export interface GameState {
   recipeLevel: Record<string, number>;
   dailyRecipeOptions: string[];
   lastSaleResult: SaleRecord[];
+  dailyFinanceReports: DailyFinanceReport[];
   knownPotionIds: string[];
 
   isInventoryOpen: boolean;
@@ -78,7 +130,8 @@ export interface GameState {
   learnRecipe: (recipeId: string) => void;
   reloadDailyOptions: () => boolean;
   confirmDisplay: (potions: BrewedPotion[]) => void;
-  advanceScene: () => void;
+  beginNextDayTransition: () => boolean;
+  advanceScene: (shouldEnd?: boolean) => void;
   sellAll: () => void;
 }
 
@@ -93,6 +146,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   recipeLevel: {},
   dailyRecipeOptions: pickDailyOptions(),
   lastSaleResult: [],
+  dailyFinanceReports: [],
   knownPotionIds: [],
   isInventoryOpen: false,
   setIsInventoryOpen: (open) => set({ isInventoryOpen: open }),
@@ -107,6 +161,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({
       money: s.money - price,
       materials: { ...s.materials, [id]: (s.materials[id] ?? 0) + 1 },
+      dailyFinanceReports: addDailyFinance(s.dailyFinanceReports, s.day, { expense: price }),
     });
     return true;
   },
@@ -170,7 +225,11 @@ export const useGameStore = create<GameState>((set, get) => ({
   reloadDailyOptions: () => {
     const s = get();
     if (s.money < 10) return false;
-    set({ money: s.money - 10, dailyRecipeOptions: pickDailyOptions() });
+    set({
+      money: s.money - 10,
+      dailyRecipeOptions: pickDailyOptions(),
+      dailyFinanceReports: addDailyFinance(s.dailyFinanceReports, s.day, { expense: 10 }),
+    });
     return true;
   },
 
@@ -183,30 +242,89 @@ export const useGameStore = create<GameState>((set, get) => ({
     });
   },
 
-  advanceScene: () => {
+  beginNextDayTransition: () => {
     const s = get();
+    if (s.scene !== "display") return false;
+
+    if (shouldTriggerGameEnd(s.day)) return true;
+
+    const potionsToSell = s.displayedPotions.length > 0 ? s.displayedPotions : s.brewedPotions;
+    const saleResult = buildSaleResult(potionsToSell);
+    const earned = saleResult.reduce((sum, r) => sum + r.price, 0);
+
+    set({
+      money: s.money + earned,
+      day: s.day + 1,
+      displayedPotions: [],
+      brewedPotions: [],
+      lastSaleResult: saleResult,
+      dailyFinanceReports: addDailyFinance(s.dailyFinanceReports, s.day, { income: earned }),
+    });
+    return false;
+  },
+
+  advanceScene: (shouldEnd = false) => {
+    const s = get();
+
+    if (s.scene === "display") {
+      const potionsToSell = s.displayedPotions.length > 0 ? s.displayedPotions : s.brewedPotions;
+      const saleResult = buildSaleResult(potionsToSell);
+      const earned = saleResult.reduce((sum, r) => sum + r.price, 0);
+      const nextMoney = s.money + earned;
+
+      if (potionsToSell.length === 0 && !shouldEnd) {
+        set({
+          scene: "conversation",
+          dailyRecipeOptions: pickDailyOptions(),
+        });
+        return;
+      }
+
+      if (shouldEnd) {
+        set({
+          money: nextMoney,
+          displayedPotions: [],
+          brewedPotions: [],
+          lastSaleResult: saleResult,
+          dailyFinanceReports: addDailyFinance(s.dailyFinanceReports, s.day, { income: earned }),
+          scene: "conversation_end",
+        });
+        return;
+      }
+
+      set({
+        money: nextMoney,
+        displayedPotions: [],
+        brewedPotions: [],
+        lastSaleResult: saleResult,
+        dailyFinanceReports: addDailyFinance(s.dailyFinanceReports, s.day, { income: earned }),
+        scene: "conversation",
+        dailyRecipeOptions: pickDailyOptions(),
+      });
+      return;
+    }
+
+    if (s.scene === "conversation_end") {
+      set({ scene: "ending_transition" });
+      return;
+    }
+
+    if (s.scene === "ending_transition") {
+      set({ scene: "financial_report" });
+      return;
+    }
+
+    if (s.scene === "financial_report") {
+      set({ scene: "game_end" });
+      return;
+    }
+
     const idx = SCENE_ORDER.indexOf(s.scene);
     if (idx === -1 || idx < SCENE_ORDER.length - 1) {
       const next = SCENE_ORDER[idx + 1] ?? "conversation";
       set({ scene: next });
       return;
     }
-    // display → next morning: auto-sell
-    const potionsToSell = s.displayedPotions.length > 0 ? s.displayedPotions : s.brewedPotions;
-    const saleResult: SaleRecord[] = potionsToSell.map((p) => ({
-      name: getPotion(p.potionId)?.name ?? "ポーション",
-      price: p.sellPrice,
-    }));
-    const earned = saleResult.reduce((sum, r) => sum + r.price, 0);
-    set({
-      day: s.day + 1,
-      money: s.money + earned,
-      displayedPotions: [],
-      brewedPotions: [],
-      lastSaleResult: saleResult,
-      scene: "conversation",
-      dailyRecipeOptions: pickDailyOptions(),
-    });
   },
 
   sellAll: () => {
@@ -223,6 +341,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       brewedPotions: [],
       displayedPotions: [],
       lastSaleResult: saleResult,
+      dailyFinanceReports: addDailyFinance(s.dailyFinanceReports, s.day, { income: earned }),
       dailyRecipeOptions: pickDailyOptions(),
     });
   },

@@ -138,6 +138,13 @@ export const brewDialogues = [
     ],
 ];
 
+//魔女-エンディング
+export const endingDialogues = [
+    "5日間のポーションの調合、お疲れさま。",
+    "明日はいよいよ返済の期日をむかえるね......。\nでも、きっと大丈夫なはず！",
+    "今日はもう休んで、明日に備えよう！",
+];
+
 //店主-初日
 export const firstDayShopDialogue = [
     "いらっしゃ......て、薬屋の嬢ちゃんと 例の新入り かい。",
