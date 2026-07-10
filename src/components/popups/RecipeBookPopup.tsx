@@ -37,7 +37,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
         onClick={(e) => e.stopPropagation()}
         className={css({
           position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-          zIndex: 301, w: "1800px", maxH: "960px", overflowY: "auto",
+          zIndex: 301, w: "1800px", maxH: "760px", overflowY: "auto",
           background: "rgba(12,8,3,0.98)", border: "2px solid #8B6914",
           borderRadius: "12px", p: "42px 48px", boxShadow: "0 20px 96px rgba(0,0,0,0.78)",
         })}
@@ -60,7 +60,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
             調合するか、朝のレシピ習得で覚えよう！
           </p>
         ) : (
-          <div className={css({ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" })}>
+          <div className={css({ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px" })}>
             {Object.entries(grouped).map(([potionId, recipes]) => {
               const potion = getPotion(potionId);
 
@@ -74,7 +74,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                   })}
                 >
                   {/* 左：ポーション情報 */}
-                  <div className={css({
+                    <div className={css({
                     display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
                     gap: "10px", w: "170px", flexShrink: 0, p: "20px 16px",
                     borderRight: "1px solid #4a3810", alignSelf: "stretch",
@@ -110,69 +110,49 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                           style={{ cursor: onSelectRecipe && canBrew ? "pointer" : "default" }}
                           onClick={() => { if (onSelectRecipe && canBrew) { onSelectRecipe(recipe.baseId, recipe.accentId); onClose(); } }}
                           className={css({
-                            display: "flex", alignItems: "center", gap: "10px",
-                            bg: "rgba(255,255,255,0.04)", borderRadius: "8px", p: "10px 12px",
+                            display: "flex", flexDirection: "column", gap: "8px",
+                            bg: "rgba(255,255,255,0.04)", borderRadius: "8px", p: "14px 16px",
                             transition: "background 0.12s",
                             _hover: onSelectRecipe && canBrew
                               ? { bg: "rgba(200,168,75,0.08)" }
                               : {},
                           })}
                         >
-                          {/* ベース */}
-                          <Dot colorHex={base?.colorHex ?? "aaaaaa"} size={20} />
-                          <span className={css({ fontSize: "26px", color: "#e8d8b8", minW: "80px" })}>{base?.name}</span>
+                          <div className={css({ display: "flex", alignItems: "center", gap: "10px", width: "100%", flexWrap: "wrap" })}>
+                            <span className={css({ background: "#1a0e06", border: "1px solid #8B6914", borderRadius: "20px", px: "10px", py: "3px", fontSize: "26px", color: "#c8a84b", whiteSpace: "nowrap" })}>
+                              Lv.{level}
+                            </span>
+                            <span className={css({ fontSize: "26px", fontWeight: "bold", color: "#c8a84b", whiteSpace: "nowrap" })}>
+                              {price}G
+                            </span>
+                          </div>
 
-                          <span className={css({ fontSize: "26px", color: "#4a3810", flexShrink: 0 })}>＋</span>
-
-                          {/* アクセント */}
-                          <Dot colorHex={accent?.colorHex ?? "aaaaaa"} size={20} />
-                          <span className={css({ fontSize: "26px", color: "#e8d8b8", minW: "80px" })}>{accent?.name}</span>
-
-                          {/* 画像（存在すれば表示） */}
-                          <img
-                            src={`/MagicPotion/assets/materials/${recipe.baseId}.png`}
-                            alt=""
-                            className={css({ w: "48px", h: "36px", objectFit: "contain", flexShrink: 0 })}
-                            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                          />
-                          <img
-                            src={`/MagicPotion/assets/materials/${recipe.accentId}.png`}
-                            alt=""
-                            className={css({ w: "48px", h: "36px", objectFit: "contain", flexShrink: 0 })}
-                            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                          />
-
-                          {/* Lv・価格 */}
-                          <span className={css({
-                            ml: "auto", flexShrink: 0,
-                            background: "#1a0e06", border: "1px solid #8B6914",
-                            borderRadius: "20px", px: "10px", py: "3px",
-                            fontSize: "26px", color: "#c8a84b", whiteSpace: "nowrap",
-                          })}>
-                            Lv.{level}
-                          </span>
-                          <span className={css({ fontSize: "26px", fontWeight: "bold", color: "#c8a84b", whiteSpace: "nowrap", flexShrink: 0 })}>
-                            {price}G
-                          </span>
-
-                          {/* セットボタン */}
-                          {onSelectRecipe && (
-                            <button
-                              onClick={(e) => { e.stopPropagation(); onSelectRecipe(recipe.baseId, recipe.accentId); onClose(); }}
-                              disabled={!canBrew}
-                              className={css({
-                                bg: canBrew ? "pastel.mint" : "transparent",
-                                border: "1px solid", borderColor: canBrew ? "pastel.sage" : "#4a3810",
-                                borderRadius: "6px", p: "4px 12px", flexShrink: 0,
-                                cursor: canBrew ? "pointer" : "not-allowed",
-                                fontSize: "26px", color: canBrew ? "#4a3f55" : "#4a3810",
-                                whiteSpace: "nowrap", opacity: canBrew ? "1" : "0.5",
-                                _hover: { bg: canBrew ? "pastel.sage" : "transparent" },
-                              })}
-                            >
-                              セット
-                            </button>
-                          )}
+                          <div className={css({ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", width: "100%", flexWrap: "wrap" })}>
+                            <div className={css({ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" })}>
+                              <Dot colorHex={base?.colorHex ?? "aaaaaa"} size={20} />
+                              <span className={css({ fontSize: "26px", color: "#e8d8b8", minW: "80px", wordBreak: "break-word" })}>{base?.name}</span>
+                              <span className={css({ fontSize: "26px", color: "#4a3810", flexShrink: 0 })}>＋</span>
+                              <Dot colorHex={accent?.colorHex ?? "aaaaaa"} size={20} />
+                              <span className={css({ fontSize: "26px", color: "#e8d8b8", minW: "80px", wordBreak: "break-word" })}>{accent?.name}</span>
+                            </div>
+                            {onSelectRecipe && (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); onSelectRecipe(recipe.baseId, recipe.accentId); onClose(); }}
+                                disabled={!canBrew}
+                                className={css({
+                                  bg: canBrew ? "pastel.mint" : "transparent",
+                                  border: "1px solid", borderColor: canBrew ? "pastel.sage" : "#4a3810",
+                                  borderRadius: "6px", p: "4px 12px", flexShrink: 0,
+                                  cursor: canBrew ? "pointer" : "not-allowed",
+                                  fontSize: "26px", color: canBrew ? "#4a3f55" : "#4a3810",
+                                  whiteSpace: "nowrap", opacity: canBrew ? "1" : "0.5",
+                                  _hover: { bg: canBrew ? "pastel.sage" : "transparent" },
+                                })}
+                              >
+                                セット
+                              </button>
+                            )}
+                          </div>
                         </div>
                       );
                     })}
