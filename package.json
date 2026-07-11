@@ -14,26 +14,26 @@
     "panda": "panda"
   },
   "dependencies": {
-    "animejs": "^4.3.6",
-    "pixi.js": "^8.18.1",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "zustand": "^5.0.12"
+    "animejs": "^4.5.0",
+    "pixi.js": "^8.19.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.4",
-    "@pandacss/dev": "^1.10.0",
-    "@types/node": "^24.12.2",
-    "@types/react": "^19.2.14",
+    "@eslint/js": "^9.39.5",
+    "@pandacss/dev": "^1.11.4",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
-    "eslint": "^9.39.4",
+    "@vitejs/plugin-react": "^6.0.3",
+    "eslint": "^9.39.5",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
-    "globals": "^17.5.0",
-    "postcss": "^8.5.10",
-    "typescript": "~6.0.2",
-    "typescript-eslint": "^8.58.2",
-    "vite": "^8.0.9"
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.7.0",
+    "postcss": "^8.5.16",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.63.0",
+    "vite": "^8.1.4"
   }
 }
