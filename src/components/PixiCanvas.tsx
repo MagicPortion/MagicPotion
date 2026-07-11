@@ -61,6 +61,10 @@ function draw(app: Application, commands: DrawCommand[], backgroundColor: number
     } else if (cmd.type === "image") {
       if (cmd.imageSrc) {
         const sprite = Sprite.from(cmd.imageSrc);
+        // テクスチャの読み込み失敗を握りつぶさず surface する。
+        sprite.texture.source.once("error", (error: Error) => {
+          console.error(`Failed to load texture for image "${cmd.imageSrc}"`, error);
+        });
         sprite.x = cmd.x;
         sprite.y = cmd.y;
         if (cmd.width && cmd.height) {

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { css } from "#styled-system/css";
 
 export type CharacterType = "witch" | "shopkeeper";
@@ -34,7 +35,9 @@ export default function Character({
 }: CharacterProps) {
   const color = PLACEHOLDER_COLOR[character];
   const label = CHARACTER_LABEL[character];
-  const src = imageSrc ?? CHARACTER_IMAGE[character];
+  const [imageFailed, setImageFailed] = useState(false);
+  const resolvedSrc = imageSrc ?? CHARACTER_IMAGE[character];
+  const src = imageFailed ? undefined : resolvedSrc;
 
   return (
     <div style={{ position: "absolute", right: "-3%", bottom: "-910px", zIndex: 10 }}> {/* Dialog背後に配置 */}
@@ -52,7 +55,14 @@ export default function Character({
         }}
       >
         {src ? (
-          <img src={src} width={1070} />
+          <img
+            src={src}
+            width={1070}
+            onError={() => {
+              console.error(`Failed to load character image "${src}", falling back to placeholder`);
+              setImageFailed(true);
+            }}
+          />
         ) : (
           <svg
             width="750"
