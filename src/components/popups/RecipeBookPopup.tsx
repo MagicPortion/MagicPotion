@@ -2,6 +2,7 @@ import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { getMaterial, getPotion, getRecipe, calcSellPrice } from "../../data/gameData";
 import { IconRecipe, IconClose } from "../ui/icons";
+import ModalOverlay from "../ui/common/ModalOverlay";
 
 interface RecipeBookPopupProps {
   isOpen: boolean;
@@ -28,11 +29,12 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
   );
 
   return (
-    <>
-      <div
-        onClick={(e) => { e.stopPropagation(); onClose(); }}
-        className={css({ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 })}
-      />
+    <ModalOverlay
+      backdrop="rgba(0,0,0,0.6)"
+      zIndex={300}
+      center={false}
+      onBackdropClick={(e) => { e.stopPropagation(); onClose(); }}
+    >
       <div
         onClick={(e) => e.stopPropagation()}
         className={css({
@@ -163,7 +165,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
           </div>
         )}
       </div>
-    </>
+    </ModalOverlay>
   );
 }
 

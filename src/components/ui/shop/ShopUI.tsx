@@ -3,6 +3,8 @@ import ShopCard from './ShopCard';
 import ShopActionBar from './ShopActionBar';
 import type { MaterialDef } from '../../../data/types';
 import { css } from "#styled-system/css";
+import ArrowBanner from '../common/ArrowBanner';
+import ModalOverlay from '../common/ModalOverlay';
 
 interface ShopMaterialItem extends MaterialDef {
   instanceId: string;
@@ -45,16 +47,6 @@ export default function ShopUI({
   const selectedBaseItems = shopItems.filter(item => quantities[item.instanceId] === 1 && item.category === "base");
   const selectedAccentItems = shopItems.filter(item => quantities[item.instanceId] === 1 && item.category === "accent");
 
-  const modalOverlayStyle = css({
-    position: "absolute",
-    inset: 0,
-    bg: "rgba(0, 0, 0, 0.6)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 100
-  });
-
   const modalContentStyle = css({
     bg: "white",
     borderRadius: "24px",
@@ -67,10 +59,8 @@ export default function ShopUI({
 
   return (
     <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "absolute", inset: 0, pb: "35px" })}>
-      <div className={css({ position: "relative", bg: "#46a1ea", color: "white", fontSize: "42px", fontWeight: "bold", pl: "160px", pr: "160px", pt: "14px", pb: "14px", borderRadius: "10px", mb: "20px", letterSpacing: "0.2em", boxShadow: "0 6px 16px rgba(0,0,0,0.25)" })}>
-        <span style={{ position: "absolute", left: "40px", color: "white" }}>◀</span>
-        素材 ショップ
-        <span style={{ position: "absolute", right: "40px", color: "white" }}>▶</span>
+      <div className={css({ mb: "20px" })}>
+        <ArrowBanner>素材 ショップ</ArrowBanner>
       </div>
       <div className={css({ position: "relative", bg: "#f3be9f", border: "6px solid #e2a581", borderRadius: "24px", w: "95%", maxW: "1020px", h: "650px", p: "45px 35px 30px 35px", boxShadow: "0 22px 45px rgba(0,0,0,0.35)", display: "flex", flexDirection: "column", justifyContent: "space-between" })}>
         <button 
@@ -110,7 +100,7 @@ export default function ShopUI({
 
       {/* 品揃え更新モーダル */}
       {showRefreshModal && (
-        <div className={modalOverlayStyle}>
+        <ModalOverlay backdrop="rgba(0, 0, 0, 0.6)" zIndex={100}>
           <div className={modalContentStyle}>
             {money < currentRefreshCost ? (
               <>
@@ -134,12 +124,12 @@ export default function ShopUI({
               </>
             )}
           </div>
-        </div>
+        </ModalOverlay>
       )}
 
       {/* 購入確認リストモーダル */}
       {showBuyModal && (
-        <div className={modalOverlayStyle}>
+        <ModalOverlay backdrop="rgba(0, 0, 0, 0.6)" zIndex={100}>
           <div className={modalContentStyle}>
             <p className={css({ fontSize: "24px", fontWeight: "900", mb: "20px", color: "#4a3321", letterSpacing: "0.05em" })}>. 購入確認リスト .</p>
             
@@ -196,12 +186,12 @@ export default function ShopUI({
               <button onClick={onPurchase} className={css({ bg: "#52c41a", color: "white", border: "none", px: "36px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>購入する</button>
             </div>
           </div>
-        </div>
+        </ModalOverlay>
       )}
 
       {/* 退店確認モーダル */}
       {showExitModal && (
-        <div className={modalOverlayStyle}>
+        <ModalOverlay backdrop="rgba(0, 0, 0, 0.6)" zIndex={100}>
           <div className={modalContentStyle}>
             <p className={css({ fontSize: "20px", fontWeight: "bold", mb: "24px", color: "#4a3321" })}>ショップを退店しますか？</p>
             <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
@@ -209,7 +199,7 @@ export default function ShopUI({
               <button onClick={onExit} className={css({ bg: "#ff4d4f", color: "white", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>退店する</button>
             </div>
           </div>
-        </div>
+        </ModalOverlay>
       )}
     </div>
   );

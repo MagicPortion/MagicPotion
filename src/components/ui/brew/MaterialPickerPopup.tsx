@@ -1,6 +1,7 @@
 import { css } from "#styled-system/css";
 import type { MaterialDef } from "../../../data/types";
 import MaterialCard from "./MaterialCard";
+import ModalOverlay from "../common/ModalOverlay";
 
 interface MaterialPickerPopupProps {
   title: string;
@@ -23,17 +24,7 @@ export default function MaterialPickerPopup({
 
   return (
     // 暗くぼかしたフルスクリーンオーバーレイ。カード外クリックで閉じる
-    <div
-      onClick={onClose}
-      style={{
-        position: "absolute",
-        inset: 0,
-        zIndex: 55,
-        backgroundColor: "rgba(6, 4, 12, 0.8)",
-        backdropFilter: "blur(12px)",
-      }}
-      className={css({ display: "flex", alignItems: "center", justifyContent: "center" })}
-    >
+    <ModalOverlay onBackdropClick={onClose} backdrop="rgba(6, 4, 12, 0.8)" zIndex={55} blur={12}>
       {/* スクロール可能なカードエリア。クリック伝播を止めて閉じないようにする */}
       <div
         onClick={(e) => e.stopPropagation()}
@@ -76,6 +67,6 @@ export default function MaterialPickerPopup({
           </p>
         )}
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

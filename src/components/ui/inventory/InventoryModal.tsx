@@ -1,6 +1,7 @@
 import { css } from "#styled-system/css";
 import { MATERIALS } from "../../../data/gameData";
 import ColorOrb from "../common/ColorOrb";
+import ModalOverlay from "../common/ModalOverlay";
 
 // 開発ルール：絵文字禁止のため枠を閉じる用のSVG
 const IconClose = () => (
@@ -28,15 +29,7 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
   const accentItems = ownedItems.filter((item) => item.category === "accent");
 
   return (
-    <div className={css({
-      position: "absolute",
-      inset: 0,
-      backgroundColor: "rgba(0, 0, 0, 0.75)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      zIndex: 1000,
-    })}>
+    <ModalOverlay backdrop="rgba(0, 0, 0, 0.75)" zIndex={1000}>
       <div className={css({
         width: "1400px",
         height: "850px",
@@ -173,7 +166,7 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
 
         </div>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }
 

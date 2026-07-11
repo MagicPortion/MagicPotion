@@ -1,5 +1,6 @@
 import type { DialogueAppearance, DialogueTheme } from "../../store/useGameStore";
 import { IconSettings, IconClose } from "../ui/icons";
+import ModalOverlay from "../ui/common/ModalOverlay";
 
 interface SettingsPopupProps {
   isOpen: boolean;
@@ -18,11 +19,12 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
   if (!isOpen) return null;
 
   return (
-    <>
-      <div
-        onClick={(e) => { e.stopPropagation(); onClose(); }}
-        style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 }}
-      />
+    <ModalOverlay
+      backdrop="rgba(0,0,0,0.6)"
+      zIndex={300}
+      center={false}
+      onBackdropClick={(e) => { e.stopPropagation(); onClose(); }}
+    >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
@@ -73,6 +75,6 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
           ─ 変更は即時反映されます ─
         </p>
       </div>
-    </>
+    </ModalOverlay>
   );
 }

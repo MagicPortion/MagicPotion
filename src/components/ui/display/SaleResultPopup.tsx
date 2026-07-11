@@ -3,6 +3,7 @@ import type { BrewedPotion } from "../../../data/types";
 import { getPotion } from "../../../data/gameData";
 import ColorOrb from "../common/ColorOrb";
 import NewBadge from "../common/NewBadge";
+import ModalOverlay from "../common/ModalOverlay";
 
 interface SaleResultPopupProps {
   potions: BrewedPotion[];
@@ -53,13 +54,7 @@ export default function SaleResultPopup({ potions, onClose, buttonLabel = "ç¿Œæœ
   const grandTotal = potions.reduce((sum, p) => sum + p.sellPrice, 0);
 
   return (
-    <div
-      className={css({
-        position: "absolute", inset: 0, zIndex: 100,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        bg: "rgba(0,0,0,0.85)",
-      })}
-    >
+    <ModalOverlay backdrop="rgba(0,0,0,0.85)" zIndex={100}>
       <div
         className={css({
           bg: "rgba(18,18,36,0.97)",
@@ -191,6 +186,6 @@ export default function SaleResultPopup({ potions, onClose, buttonLabel = "ç¿Œæœ
           </button>
         </div>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

@@ -1,4 +1,5 @@
 import { IconHint, IconClose, IconDiamond } from "../ui/icons";
+import ModalOverlay from "../ui/common/ModalOverlay";
 
 const DEFAULT_HINTS = [
   "画面のどこかをクリックするとセリフが進む",
@@ -18,11 +19,12 @@ export default function HintPopup({ isOpen, onClose }: HintPopupProps) {
   if (!isOpen) return null;
 
   return (
-    <>
-      <div
-        onClick={(e) => { e.stopPropagation(); onClose(); }}
-        style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 }}
-      />
+    <ModalOverlay
+      backdrop="rgba(0,0,0,0.6)"
+      zIndex={300}
+      center={false}
+      onBackdropClick={(e) => { e.stopPropagation(); onClose(); }}
+    >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
@@ -52,6 +54,6 @@ export default function HintPopup({ isOpen, onClose }: HintPopupProps) {
           ))}
         </ul>
       </div>
-    </>
+    </ModalOverlay>
   );
 }

@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import { css } from "#styled-system/css";
 import type { BrewResult } from "./BrewPanel";
 import NewBadge from "../common/NewBadge";
+import ModalOverlay from "../common/ModalOverlay";
 
 interface BrewResultPopupProps {
   results: BrewResult[];
@@ -29,17 +30,12 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
   };
 
   return (
-    <div
-      onClick={handleClose}
-      style={{
-        position: "absolute", inset: 0, zIndex: 60,
-        // brewOverlayIn: オーバーレイフェードインのためinline style
-        animation: "brewOverlayIn 0.18s ease forwards",
-      }}
-      className={css({
-        bg: "rgba(2,1,10,0.88)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-      })}
+    <ModalOverlay
+      onBackdropClick={handleClose}
+      backdrop="rgba(2,1,10,0.88)"
+      zIndex={60}
+      // brewOverlayIn: オーバーレイフェードインのためinline style
+      style={{ animation: "brewOverlayIn 0.18s ease forwards" }}
     >
       <div
         // brewPopupIn: カード出現アニメーションのためinline style
@@ -187,6 +183,6 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
           画面の空白部分をタップして続ける
         </p>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

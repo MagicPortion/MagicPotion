@@ -1,6 +1,8 @@
 import { useState } from "react"; // 1. useState をインポート
 import { css } from "#styled-system/css";
 import type { PotionDef } from "../../../data/types";
+import ArrowBanner from "../common/ArrowBanner";
+import ModalOverlay from "../common/ModalOverlay";
 
 export interface RecipeOption {
   id: string;
@@ -27,17 +29,7 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
   };
 
   return (
-    <div
-      className={css({
-        position: "absolute",
-        inset: 0,
-        zIndex: 10,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        
-      })}
-    >
+    <ModalOverlay backdrop="transparent" zIndex={10}>
       <div
         className={css({
           background: "rgba(243, 190, 159, 0.70)",
@@ -53,11 +45,7 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
         })}
       >
     <div className={css({ mb: "12px", width: "100%", textAlign: "center" })}>
-      <div className={css({ position: "relative", width:"400px", mx: "auto", bg: "#46a1ea", color: "white", fontSize: "36px", fontWeight: "bold", pl: "80px", pr: "80px", pt: "12px", pb: "12px", borderRadius: "10px", letterSpacing: "0.2em", boxShadow: "0 6px 16px rgba(0,0,0,0.25)" })}>
-        <span style={{ position: "absolute", left: "24px" }}>◀</span>
-          レシピ
-        <span style={{ position: "absolute", right: "24px" }}>▶</span>
-      </div>
+      <ArrowBanner fontSize="36px" width="400px" paddingX="80px" paddingY="12px" arrowInset="24px">レシピ</ArrowBanner>
       <p className={css({ fontSize: "24px", color: "#544164", m: "12px 0 0" })}>
         獲得するレシピを1つ選んでね
       </p>
@@ -152,6 +140,6 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
         </div>
 
       </div>
-    </div>  
+    </ModalOverlay>
   );
 }
