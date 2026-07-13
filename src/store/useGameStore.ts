@@ -14,6 +14,7 @@ export const DEFAULT_APPEARANCE: DialogueAppearance = { theme: "dark" };
 
 export type Scene =
   | "title"
+  | "introduction"
   | "conversation"
   | "recipe_learning"
   | "conversation_move"
@@ -24,6 +25,7 @@ export type Scene =
   | "display";
 
 const SCENE_ORDER: Scene[] = [
+  "introduction",
   "conversation",
   "recipe_learning",
   "conversation_move",
@@ -117,17 +119,21 @@ export const useGameStore = create<GameState>((set, get) => ({
     const potionDef = getPotion(recipe.potionId);
     if (!potionDef) return null;
 
+    // isFailed は微妙なポーションかどうか
+    const isFailed = recipe.potionId === "meh_potion";
+
     const currentLevel = s.recipeLevel[recipe.id] ?? 0;
     const level = currentLevel === 0 ? 1 : currentLevel;
+    // 失敗の場合はレシピレベルを更新しない
     const updatedLevels =
-      currentLevel === 0
+      !isFailed && currentLevel === 0
         ? { ...s.recipeLevel, [recipe.id]: 1 }
         : s.recipeLevel;
 
     // isNew はポーション単位で判定（同じポーションの別レシピでもNEWにしない）
     const isNewPotion = !s.knownPotionIds.includes(recipe.potionId);
-    // isNewRecipe はレシピ単位で判定（未習得のレシピ）
-    const isNewRecipe = currentLevel === 0;
+    // isNewRecipe はレシピ単位で判定（未習得のレシピ、かつ失敗でない場合）
+    const isNewRecipe = currentLevel === 0 && !isFailed;
 
     const brewed: BrewedPotion = {
       instanceId: `p_${++instanceCounter}`,
@@ -137,6 +143,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       sellPrice: calcSellPrice(potionDef.basePrice, level),
       isNew: isNewPotion,
       isNewRecipe,
+      isFailed,
     };
 
     set({
@@ -185,7 +192,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       return;
     }
     // display → next morning: auto-sell
-    const saleResult: SaleRecord[] = s.displayedPotions.map((p) => ({
+    const potionsToSell = s.displayedPotions.length > 0 ? s.displayedPotions : s.brewedPotions;
+    const saleResult: SaleRecord[] = potionsToSell.map((p) => ({
       name: getPotion(p.potionId)?.name ?? "ポーション",
       price: p.sellPrice,
     }));
@@ -194,6 +202,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       day: s.day + 1,
       money: s.money + earned,
       displayedPotions: [],
+      brewedPotions: [],
       lastSaleResult: saleResult,
       scene: "conversation",
       dailyRecipeOptions: pickDailyOptions(),

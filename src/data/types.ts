@@ -31,6 +31,7 @@ export interface BrewedPotion {
   sellPrice: number;
   isNew: boolean; // ポーション初回（未発見のポーション）
   isNewRecipe: boolean; // レシピ初回（未習得のレシピ）
+  isFailed: boolean; // 失敗（微妙なポーション）
 }
 
 export interface SaleRecord {

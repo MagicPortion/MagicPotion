@@ -37,7 +37,7 @@ export default function Character({
   const src = imageSrc ?? CHARACTER_IMAGE[character];
 
   return (
-    <div style={{ position: "absolute", right: "-3%", bottom: "-910px" }}> {/* 位置調整 */}
+    <div style={{ position: "absolute", right: "-3%", bottom: "-910px", zIndex: 10 }}> {/* Dialog背後に配置 */}
       <div
         className={css({
           display: "flex",
@@ -52,7 +52,7 @@ export default function Character({
         }}
       >
         {src ? (
-          <img src={src} width={1070} /> 
+          <img src={src} width={1070} />
         ) : (
           <svg
             width="750"

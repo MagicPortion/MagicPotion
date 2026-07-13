@@ -9,6 +9,7 @@ export interface BrewResult {
   sellPrice: number;
   isNew: boolean;
   isNewRecipe: boolean;
+  isFailed: boolean;
 }
 
 interface BrewPanelProps {

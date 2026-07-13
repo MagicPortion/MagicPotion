@@ -125,3 +125,9 @@ body, html {
   60%  { transform: rotate(6deg) scale(1.18); opacity: 1; }
   100% { transform: rotate(-4deg) scale(1); opacity: 1; }
 }
+
+/* スクロール下矢印 */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50%      { transform: translateY(8px); opacity: 1; }
+}

@@ -17,6 +17,7 @@ interface PotionGroup {
   count: number;
   total: number;
   hasNew: boolean;
+  isFailed: boolean;
 }
 
 function groupPotions(potions: BrewedPotion[]): PotionGroup[] {
@@ -39,6 +40,7 @@ function groupPotions(potions: BrewedPotion[]): PotionGroup[] {
         count: 1,
         total: p.sellPrice,
         hasNew: p.isNew,
+        isFailed: p.isFailed,
       });
     }
   }
@@ -85,7 +87,13 @@ export default function SaleResultPopup({ potions, onClose }: SaleResultPopupPro
         </h2>
 
         {/* ポーション一覧（スクロール可能） */}
-        <div className={css({ flex: 1, overflowY: "auto", px: "64px", py: "0" })}>
+        <div
+          className={css({ flex: 1, overflowY: "auto", px: "64px", pt: "20px", pb: "0" })}
+          style={{
+            scrollbarColor: "rgba(200,168,75,0.5) transparent",
+            scrollbarWidth: "thin",
+          }}
+        >
           {potions.length === 0 ? (
             <p className={css({ textAlign: "center", color: "rgba(255,255,255,0.6)", m: "40px 0", fontSize: "32px" })}>
               今日は何も作りませんでした
@@ -98,7 +106,7 @@ export default function SaleResultPopup({ potions, onClose }: SaleResultPopupPro
                   className={css({
                     display: "flex", alignItems: "center", gap: "20px",
                     bg: "rgba(255,255,255,0.05)", borderRadius: "14px",
-                    p: "16px 24px", position: "relative", overflow: "hidden",
+                    p: "16px 24px", position: "relative",
                   })}
                 >
                   <ColorOrb colorHex={g.colorHex} size={64} />
@@ -128,7 +136,7 @@ export default function SaleResultPopup({ potions, onClose }: SaleResultPopupPro
                     +{g.total}G
                   </span>
 
-                  {g.hasNew && (
+                  {!g.isFailed && g.hasNew && (
                     <div className={css({ position: "absolute", top: "-14px", right: "16px" })}>
                       <NewBadge />
                     </div>
@@ -138,6 +146,21 @@ export default function SaleResultPopup({ potions, onClose }: SaleResultPopupPro
             </div>
           )}
         </div>
+
+        {/* スクロール下矢印指標 */}
+        {potions.length > 0 && (
+          <div className={css({
+            flexShrink: 0, height: "50px",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            bg: "linear-gradient(to bottom, rgba(12,8,3,0), rgba(12,8,3,0.4))",
+            color: "rgba(200,168,75,0.6)",
+            borderBottomLeftRadius: "12px", borderBottomRightRadius: "12px",
+          })}>
+            <span className={css({ fontSize: "24px", animation: "bounce 1.5s ease-in-out infinite" })}>
+              ↓
+            </span>
+          </div>
+        )}
 
         {/* 合計とボタン（固定） */}
         <div className={css({ flexShrink: 0, px: "64px", py: "32px", display: "flex", flexDirection: "column", gap: "24px", borderTop: "1px solid rgba(255,255,255,0.15)" })}>

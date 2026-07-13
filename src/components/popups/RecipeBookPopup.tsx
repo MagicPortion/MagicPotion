@@ -60,7 +60,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
             調合するか、朝のレシピ習得で覚えよう！
           </p>
         ) : (
-          <div className={css({ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(810px, 1fr))", gap: "20px" })}>
+          <div className={css({ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" })}>
             {Object.entries(grouped).map(([potionId, recipes]) => {
               const potion = getPotion(potionId);
 
