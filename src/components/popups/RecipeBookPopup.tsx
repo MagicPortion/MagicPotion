@@ -31,6 +31,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
   return (
     <>
       <div
+        data-sound="cancel"
         onClick={(e) => { e.stopPropagation(); onClose(); }}
         className={css({ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 })}
       />
@@ -48,6 +49,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
             <IconRecipe size={28} /> レシピ帳
           </h2>
           <button
+            data-sound="cancel"
             onClick={onClose}
             className={css({ display: "flex", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "#8B6914" })}
           >

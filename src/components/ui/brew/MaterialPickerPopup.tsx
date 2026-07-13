@@ -24,6 +24,7 @@ export default function MaterialPickerPopup({
   return (
     // 暗くぼかしたフルスクリーンオーバーレイ。カード外クリックで閉じる
     <div
+      data-sound="cancel"
       onClick={onClose}
       style={{
         position: "absolute",
