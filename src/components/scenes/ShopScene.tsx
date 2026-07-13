@@ -7,7 +7,14 @@ import DialogueBox from "../ui/dialogue/DialogueBox";
 import ShopUI from "../ui/shop/ShopUI";
 
 export default function ShopScene() {
-  const { money, shopLevel, buyMaterial, advanceScene, setIsInventoryOpen } = useGameStore();
+  const {
+    money,
+    shopLevel,
+    buyMaterial,
+    advanceScene,
+    setIsInventoryOpen,
+    setPendingPostPurchaseScene,
+  } = useGameStore();
   const shopSlots = Math.max(5, SHOP_SLOTS_BY_LEVEL[shopLevel] ?? 5);
 
   // ランダムに5枚の素材を被らない一意のIDで生成
@@ -30,8 +37,11 @@ export default function ShopScene() {
   const totalCost = useMemo(() => selectedItems.reduce((sum, item) => sum + item.price, 0), [selectedItems]);
   const canBuy = selectedItems.length > 0 && totalCost <= money;
 
+  const REFRESH_COSTS = [10, 20, 40, 70, 100, 140, 180, 220, 260, 300];
+
   const currentRefreshCost = useMemo(() => {
-    return 10 * Math.pow(2, refreshCount - 1);
+    const index = Math.min(refreshCount - 1, REFRESH_COSTS.length - 1);
+    return REFRESH_COSTS[index];
   }, [refreshCount]);
 
   const handleCardClick = (instanceId: string) => {
@@ -81,6 +91,7 @@ export default function ShopScene() {
     setSoldOutItems(newSoldOut);
     setQuantities({});
     setShowBuyModal(false);
+    setPendingPostPurchaseScene("conversation_brew");
   };
 
   return (

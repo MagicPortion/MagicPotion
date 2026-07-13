@@ -308,7 +308,7 @@ export default function BrewScene() {
 
       {pickerOpen === "base" && !isBrewing && (
         <MaterialPickerPopup
-          title="ベース材料"
+          title="Base 素材"
           items={allBases}
           counts={materials}
           selectedId={selectedBase}
@@ -320,7 +320,7 @@ export default function BrewScene() {
       )}
       {pickerOpen === "accent" && !isBrewing && (
         <MaterialPickerPopup
-          title="アクセント材料"
+          title="Accent 素材"
           items={allAccents}
           counts={materials}
           selectedId={selectedAccent}
@@ -341,7 +341,7 @@ export default function BrewScene() {
           onRecipeSelect={handleSelectRecipe}
           actions={
             <ActionButton variant="secondary" onClick={advanceScene}>
-              陳列へ →
+              販売へ →
             </ActionButton>
           }
         />

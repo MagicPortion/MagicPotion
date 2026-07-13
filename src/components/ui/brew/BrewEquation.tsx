@@ -16,9 +16,9 @@ export default function BrewEquation({
 }: BrewEquationProps) {
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 28 }}>
-      <SlotBtn item={baseMaterial} placeholder="ベース" label="ベース材料を選ぶ" onClick={onClickBase} />
+      <SlotBtn item={baseMaterial} placeholder="Base" label="Base素材を選ぶ" onClick={onClickBase} />
       <Sym>＋</Sym>
-      <SlotBtn item={accentMaterial} placeholder="アクセント" label="アクセント材料を選ぶ" onClick={onClickAccent} />
+      <SlotBtn item={accentMaterial} placeholder="Accent" label="Accent素材を選ぶ" onClick={onClickAccent} />
       <Sym>＝</Sym>
       <ResultSlot result={result} />
     </div>
