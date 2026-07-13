@@ -47,15 +47,27 @@ export default function GameEndScene() {
             overflow: "hidden",
           })}
         >
-          <span
-            className={css({
-              color: "rgba(255,255,255,0.42)",
-              fontSize: "26px",
-              letterSpacing: "0.12em",
-            })}
-          >
-            END ILLUSTRATION
-          </span>
+          {isClear ? (
+            <span
+              className={css({
+                color: "rgba(255,255,255,0.42)",
+                fontSize: "26px",
+                letterSpacing: "0.12em",
+              })}
+            >
+              END ILLUSTRATION
+            </span>
+          ) : (
+            <img
+              src="/MagicPotion/ED2.png"
+              alt="返済失敗後の空き地"
+              className={css({
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              })}
+            />
+          )}
         </div>
 
         <div
