@@ -4,7 +4,7 @@ import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import { RECIPES, getPotion, calcSellPrice } from "../../data/gameData";
-import DialogueBox, { ActionButton } from "../ui/dialogue/DialogueBox";
+import DialogueBox from "../ui/dialogue/DialogueBox";
 import RecipeOptionCards from "../ui/recipe/RecipeOptionCards";
 import { IconRefresh } from "../ui/icons";
 import Character from "../ui/character/Character";
@@ -41,11 +41,6 @@ export default function RecipeLearningScene() {
       <RecipeOptionCards options={options} onLearn={handleLearn} />
       <DialogueBox
         onInventory={() => setIsInventoryOpen(true)}
-        actions={     
-            <ActionButton variant="secondary" onClick={advanceScene}>
-              スキップ →
-            </ActionButton>         
-        }
       />
     </div>
   );
