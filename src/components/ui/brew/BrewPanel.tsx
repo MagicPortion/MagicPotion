@@ -59,6 +59,8 @@ export default function BrewPanel({
       <BrewEquation
         baseMaterial={baseMaterial}
         accentMaterial={accentMaterial}
+        selectedBase={selectedBase}
+        selectedAccent={selectedAccent}
         result={result}
         onClickBase={onPickBase}
         onClickAccent={onPickAccent}

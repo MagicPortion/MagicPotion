@@ -1,26 +1,38 @@
 import { css } from "#styled-system/css";
 import type { MaterialDef } from "../../../data/types";
 import type { BrewResult } from "./BrewPanel";
+import { findRecipeByIngredients, getPotion } from "../../../data/gameData";
 
 interface BrewEquationProps {
   baseMaterial: MaterialDef | null;
   accentMaterial: MaterialDef | null;
+  selectedBase: string | null;
+  selectedAccent: string | null;
   result: BrewResult | null;
   onClickBase: () => void;
   onClickAccent: () => void;
 }
 
 export default function BrewEquation({
-  baseMaterial, accentMaterial, result,
+  baseMaterial, accentMaterial, selectedBase, selectedAccent, result,
   onClickBase, onClickAccent,
 }: BrewEquationProps) {
+  // selectedBase と selectedAccent からレシピを検索
+  const previewPotion = selectedBase && selectedAccent
+    ? (() => {
+        const recipe = findRecipeByIngredients(selectedBase, selectedAccent);
+        if (!recipe) return null;
+        const potionDef = getPotion(recipe.potionId);
+        return potionDef;
+      })()
+    : null;
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 28 }}>
       <SlotBtn item={baseMaterial} placeholder="Base" label="Base素材を選ぶ" onClick={onClickBase} />
       <Sym>＋</Sym>
       <SlotBtn item={accentMaterial} placeholder="Accent" label="Accent素材を選ぶ" onClick={onClickAccent} />
       <Sym>＝</Sym>
-      <ResultSlot result={result} />
+      <ResultSlot result={result} previewPotion={previewPotion} />
     </div>
   );
 }
@@ -79,8 +91,31 @@ function SlotBtn({
   );
 }
 
-function ResultSlot({ result }: { result: BrewResult | null }) {
+function ResultSlot({ result, previewPotion }: { result: BrewResult | null; previewPotion?: { name: string; colorHex: string } | null }) {
   if (!result) {
+    // previewPotion があればうっすら表示
+    if (previewPotion) {
+      return (
+        <div style={{
+          width: 220, height: 250, borderRadius: 20,
+          border: "2.5px dashed rgba(200,168,75,0.3)",
+          background: "rgba(8,5,20,0.92)",
+          display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center", gap: 10,
+          padding: "16px 8px 12px",
+          opacity: 0.4,
+        }}>
+          <span style={{
+            display: "block", width: 100, height: 100, borderRadius: "50%",
+            backgroundColor: `#${previewPotion.colorHex}`,
+            boxShadow: `0 2px 28px #${previewPotion.colorHex}`,
+            flexShrink: 0,
+          }} />
+          <span className={css({ fontSize: "32px", color: "#ffffff", fontWeight: "bold", textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" })}>{previewPotion.name}</span>
+        </div>
+      );
+    }
+
     return (
       // width・heightはSlotBtnとのレイアウト対称性維持のためinline style
       <div style={{
