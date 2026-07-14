@@ -13,7 +13,7 @@ export default function RecipeLearningScene() {
   const { dailyRecipeOptions, recipeLevel, learnRecipe, reloadDailyOptions, money, advanceScene, setIsInventoryOpen } =
     useGameStore();
   const { width, height } = useWindowSize();
-  const [reloadMsg, setReloadMsg] = useState<string | null>(null);
+  
 
   const commands = useMemo<DrawCommand[]>(() => [
     { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
@@ -34,11 +34,6 @@ export default function RecipeLearningScene() {
     advanceScene();
   };
 
-  const handleReload = () => {
-    const ok = reloadDailyOptions();
-    setReloadMsg(ok ? null : "お金が足りません…");
-  };
-
   return (
     <div style={{ width, height }} className={css({ position: "relative", overflow: "hidden" })}>
       <PixiCanvas commands={commands} backgroundColor={0xfde8f0} />
@@ -46,22 +41,10 @@ export default function RecipeLearningScene() {
       <RecipeOptionCards options={options} onLearn={handleLearn} />
       <DialogueBox
         onInventory={() => setIsInventoryOpen(true)}
-        actions={
-          <>
-            {reloadMsg && (
-              <span className={css({ fontSize: "13px", color: "#e07070", mr: "4px" })}>{reloadMsg}</span>
-            )}
-            <ActionButton
-              variant="secondary"
-              onClick={handleReload}
-              disabled={money < 10}
-            >
-              <IconRefresh size={14} /> 10Gで引き直す
-            </ActionButton>
+        actions={     
             <ActionButton variant="secondary" onClick={advanceScene}>
               スキップ →
-            </ActionButton>
-          </>
+            </ActionButton>         
         }
       />
     </div>
