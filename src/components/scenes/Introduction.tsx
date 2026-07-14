@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
+import { playSelectSound } from "../../utils/sound";
 
 const STORY_PANELS = [
   "都会の生活に疲れ、\nのどかな町へ引っ越してきたあなた。",
@@ -36,6 +37,7 @@ export default function Introduction() {
 
   const currentText = STORY_PANELS[page];
   const isLastPage = page === STORY_PANELS.length - 1;
+  const isSkippingText = () => !textCompletedRef.current && (animatingRef.current || timeoutRefs.current.length > 0);
 
   const handleAdvance = useCallback(() => {
     if (isFadingOut) return;
@@ -99,6 +101,14 @@ export default function Introduction() {
 
     setShowGoal(true);
   }, [isFadingOut, showGoal, isLastPage, setScene, currentText]);
+
+  const handleClick = () => {
+    if (!isFadingOut && !isSkippingText()) {
+      playSelectSound();
+    }
+
+    handleAdvance();
+  };
 
   useEffect(() => {
     if (showGoal) return;
@@ -173,7 +183,8 @@ export default function Introduction() {
 
   return (
     <div
-      onClick={handleAdvance}
+      data-sound="none"
+      onClick={handleClick}
       className={css({
         width: "100%",
         height: "100%",

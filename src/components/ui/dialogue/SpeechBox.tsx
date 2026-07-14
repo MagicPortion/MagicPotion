@@ -3,7 +3,7 @@ import { animate, stagger } from "animejs";
 import { useGameStore } from "../../../store/useGameStore";
 import { THEMES, type ThemeTokens } from "./dialogueThemes";
 import { css } from "#styled-system/css";
-import { playVoiceSound } from "../../../utils/sound";
+import { startVoiceLoop, stopVoiceLoop } from "../../../utils/sound";
 
 export interface SpeechBoxHandle {
   click: () => void;
@@ -31,14 +31,13 @@ const SpeechBox = forwardRef<SpeechBoxHandle, SpeechBoxProps>(function SpeechBox
 
   const textRef = useRef<HTMLSpanElement>(null);
   const animRef = useRef<ReturnType<typeof animate> | null>(null);
-  const voiceTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
     const el = textRef.current;
     if (!el) return;
     animRef.current?.pause();
-    if (voiceTimerRef.current) clearInterval(voiceTimerRef.current);
+    stopVoiceLoop();
     el.innerHTML = "";
     text.split("").forEach((char) => {
       if (char === "\n") {
@@ -52,27 +51,20 @@ const SpeechBox = forwardRef<SpeechBoxHandle, SpeechBoxProps>(function SpeechBox
       el.appendChild(span);
     });
     setAnimating(true);
-    playVoiceSound();
-    voiceTimerRef.current = setInterval(playVoiceSound, 70);
+    startVoiceLoop();
     animRef.current = animate(el.querySelectorAll("span"), {
       opacity: [0, 1],
       delay: stagger(28),
       duration: 1,
       ease: "linear",
       onComplete: () => {
-        if (voiceTimerRef.current) {
-          clearInterval(voiceTimerRef.current);
-          voiceTimerRef.current = null;
-        }
+        stopVoiceLoop();
         setAnimating(false);
       },
     });
 
     return () => {
-      if (voiceTimerRef.current) {
-        clearInterval(voiceTimerRef.current);
-        voiceTimerRef.current = null;
-      }
+      stopVoiceLoop();
     };
   }, [text]);
 
@@ -82,10 +74,7 @@ const SpeechBox = forwardRef<SpeechBoxHandle, SpeechBoxProps>(function SpeechBox
     if (showChoices) return;
     if (animating) {
       animRef.current?.pause();
-      if (voiceTimerRef.current) {
-        clearInterval(voiceTimerRef.current);
-        voiceTimerRef.current = null;
-      }
+      stopVoiceLoop();
       textRef.current
         ?.querySelectorAll("span")
         .forEach((s) => ((s as HTMLElement).style.opacity = "1"));

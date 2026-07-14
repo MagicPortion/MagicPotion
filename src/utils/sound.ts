@@ -12,12 +12,8 @@ const VOLUMES: Record<UiSound, number> = {
   voice: 0.24,
 };
 
-const MIN_INTERVAL_MS: Partial<Record<UiSound, number>> = {
-  voice: 55,
-};
-
 const audioCache = new Map<UiSound, HTMLAudioElement>();
-const lastPlayedAt = new Map<UiSound, number>();
+let loopingVoiceAudio: HTMLAudioElement | null = null;
 
 function soundPath(sound: UiSound) {
   return `${import.meta.env.BASE_URL}assets/se/${SOUND_FILES[sound]}`;
@@ -35,12 +31,6 @@ function getTemplate(sound: UiSound) {
 
 export function playSound(sound: UiSound) {
   if (typeof window === "undefined") return;
-
-  const now = Date.now();
-  const minInterval = MIN_INTERVAL_MS[sound] ?? 0;
-  const last = lastPlayedAt.get(sound) ?? 0;
-  if (now - last < minInterval) return;
-  lastPlayedAt.set(sound, now);
 
   const audio = getTemplate(sound).cloneNode(true) as HTMLAudioElement;
   audio.volume = VOLUMES[sound];
@@ -62,6 +52,30 @@ export function playVoiceSound() {
   playSound("voice");
 }
 
+export function startVoiceLoop() {
+  if (typeof window === "undefined") return;
+
+  if (!loopingVoiceAudio) {
+    loopingVoiceAudio = new Audio(soundPath("voice"));
+    loopingVoiceAudio.preload = "auto";
+    loopingVoiceAudio.loop = true;
+    loopingVoiceAudio.volume = VOLUMES.voice;
+  }
+
+  if (!loopingVoiceAudio.paused) return;
+
+  loopingVoiceAudio.currentTime = 0;
+  void loopingVoiceAudio.play().catch(() => {
+    // Browser audio may be blocked until the first user gesture.
+  });
+}
+
+export function stopVoiceLoop() {
+  if (!loopingVoiceAudio) return;
+  loopingVoiceAudio.pause();
+  loopingVoiceAudio.currentTime = 0;
+}
+
 export function isCancelSoundTarget(target: EventTarget | null) {
   if (!(target instanceof Element)) return false;
   return target.closest("[data-sound]")?.getAttribute("data-sound") === "cancel";
@@ -69,6 +83,8 @@ export function isCancelSoundTarget(target: EventTarget | null) {
 
 export function isSelectSoundTarget(target: EventTarget | null) {
   if (!(target instanceof Element)) return false;
-  if (target.closest("[data-sound]")?.getAttribute("data-sound") === "none") return false;
+  const sound = target.closest("[data-sound]")?.getAttribute("data-sound");
+  if (sound === "none") return false;
+  if (sound === "select") return true;
   return target.closest("button") !== null || target.closest('[role="button"]') !== null;
 }

@@ -18,6 +18,7 @@ export default function ShopCard({ item, isSelected, isSoldOut, onClick }: ShopC
 
   return (
     <div
+      data-sound={isSoldOut ? "none" : "select"}
       onClick={onClick}
       // cursor は動的な状態値のためinline style
       style={{ cursor: isSoldOut ? "not-allowed" : "pointer" }}
