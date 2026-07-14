@@ -305,6 +305,7 @@ export default function BrewScene() {
             brewCount={brewCount}
             maxBrew={maxBrew}
             onBrewCountChange={setBrewCount}
+            recipeLevel={recipeLevel}
           />
         </>
       )}

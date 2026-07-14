@@ -22,6 +22,7 @@ interface BrewPanelProps {
   brewCount: number;
   maxBrew: number;
   onBrewCountChange: (n: number) => void;
+  recipeLevel?: Record<string, number>;
 }
 
 export default function BrewPanel({
@@ -29,6 +30,7 @@ export default function BrewPanel({
   onPickBase, onPickAccent,
   result, onBrew,
   brewCount, maxBrew, onBrewCountChange,
+  recipeLevel = {},
 }: BrewPanelProps) {
   const baseMaterial   = selectedBase   ? (MATERIALS.find((m) => m.id === selectedBase)   ?? null) : null;
   const accentMaterial = selectedAccent ? (MATERIALS.find((m) => m.id === selectedAccent) ?? null) : null;
@@ -64,6 +66,7 @@ export default function BrewPanel({
         result={result}
         onClickBase={onPickBase}
         onClickAccent={onPickAccent}
+        recipeLevel={recipeLevel}
       />
 
       {/* 個数ステッパー (maxBrew > 1 のとき表示) */}

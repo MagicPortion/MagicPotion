@@ -11,17 +11,21 @@ interface BrewEquationProps {
   result: BrewResult | null;
   onClickBase: () => void;
   onClickAccent: () => void;
+  recipeLevel?: Record<string, number>;
 }
 
 export default function BrewEquation({
   baseMaterial, accentMaterial, selectedBase, selectedAccent, result,
   onClickBase, onClickAccent,
+  recipeLevel = {},
 }: BrewEquationProps) {
-  // selectedBase と selectedAccent からレシピを検索
+  // selectedBase と selectedAccent からレシピを検索（習得済みのみ）
   const previewPotion = selectedBase && selectedAccent
     ? (() => {
         const recipe = findRecipeByIngredients(selectedBase, selectedAccent);
         if (!recipe) return null;
+        // 習得済みのレシピのみ表示
+        if ((recipeLevel[recipe.id] ?? 0) <= 0) return null;
         const potionDef = getPotion(recipe.potionId);
         return potionDef;
       })()
