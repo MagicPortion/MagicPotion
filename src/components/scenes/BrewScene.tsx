@@ -11,7 +11,7 @@ import PotionShelf from "../ui/brew/PotionShelf";
 import { css } from "#styled-system/css";
 
 export default function BrewScene() {
-  const { materials, brew, advanceScene, setIsInventoryOpen } = useGameStore();
+  const { materials, brew, advanceScene, recipeLevel, setIsInventoryOpen } = useGameStore();
   const [selectedBase, setSelectedBase] = useState<string | null>(null);
   const [selectedAccent, setSelectedAccent] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState<"base" | "accent" | null>(null);
@@ -90,11 +90,14 @@ export default function BrewScene() {
       return;
     }
 
+    const results = pendingResults.results;
+    const targetColorHex = pendingResults.targetColorHex;
+
     // 2秒（2000ms）で自動的に調合ポップアップ表示へ遷移
     const timeout = setTimeout(() => {
       setIsBrewing(false);
-      setCauldronColorHex(pendingResults.targetColorHex);
-      setBrewResults(pendingResults.results);
+      setCauldronColorHex(targetColorHex);
+      setBrewResults(results);
       setPendingResults(null);
       setBubbles([]);
     }, 2000);
@@ -117,10 +120,10 @@ export default function BrewScene() {
         if (Math.random() < 0.2) { // 60fps用の出現率調整
           const angle = Math.random() * Math.PI * 2;
           const dist = Math.random() * 120; // 釜の半径（148）内に収まるように配置
-          
+
           // 泡の色：現在の色、完成する薬の色、ゴールドのいずれかをランダムにブレンド
           const r = Math.random();
-          const bubbleColor = r < 0.4 ? pendingResults.targetColorHex : (r < 0.8 ? "c8a84b" : "3d3d5c");
+          const bubbleColor = r < 0.4 ? targetColorHex : (r < 0.8 ? "c8a84b" : "3d3d5c");
 
           next.push({
             x: width / 2 + Math.cos(angle) * dist,
@@ -136,7 +139,7 @@ export default function BrewScene() {
       if (frame % 15 === 0) { // 60fps用の点滅頻度調整 (約250msごと)
         setCauldronColorHex(() => {
           const r = Math.random();
-          return r < 0.33 ? "3d3d5c" : (r < 0.66 ? pendingResults.targetColorHex : "c8a84b");
+          return r < 0.33 ? "3d3d5c" : (r < 0.66 ? targetColorHex : "c8a84b");
         });
       }
     }, 16); // 16ms (60 FPS) でぬるぬる動作
@@ -206,6 +209,7 @@ export default function BrewScene() {
             brewCount={brewCount}
             maxBrew={maxBrew}
             onBrewCountChange={setBrewCount}
+            recipeLevel={recipeLevel}
           />
         </>
       )}
@@ -238,8 +242,8 @@ export default function BrewScene() {
       {/* 演出中（isBrewing === true）はダイアログボックス（ツールバー含む）を隠す */}
       {!isBrewing && (
         <DialogueBox
-          onInventory={() => setIsInventoryOpen(true)}
           onRecipeSelect={handleSelectRecipe}
+          onInventory={() => setIsInventoryOpen(true)}
           actions={
             <ActionButton variant="secondary" onClick={advanceScene}>
               販売へ →

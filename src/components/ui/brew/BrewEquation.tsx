@@ -1,26 +1,42 @@
 import { css } from "#styled-system/css";
 import type { MaterialDef } from "../../../data/types";
 import type { BrewResult } from "./BrewPanel";
+import { findRecipeByIngredients, getPotion } from "../../../data/gameData";
 
 interface BrewEquationProps {
   baseMaterial: MaterialDef | null;
   accentMaterial: MaterialDef | null;
+  selectedBase: string | null;
+  selectedAccent: string | null;
   result: BrewResult | null;
   onClickBase: () => void;
   onClickAccent: () => void;
+  recipeLevel?: Record<string, number>;
 }
 
 export default function BrewEquation({
-  baseMaterial, accentMaterial, result,
+  baseMaterial, accentMaterial, selectedBase, selectedAccent, result,
   onClickBase, onClickAccent,
+  recipeLevel = {},
 }: BrewEquationProps) {
+  // selectedBase と selectedAccent からレシピを検索（習得済みのみ）
+  const previewPotion = selectedBase && selectedAccent
+    ? (() => {
+        const recipe = findRecipeByIngredients(selectedBase, selectedAccent);
+        if (!recipe) return null;
+        // 習得済みのレシピのみ表示
+        if ((recipeLevel[recipe.id] ?? 0) <= 0) return null;
+        const potionDef = getPotion(recipe.potionId);
+        return potionDef;
+      })()
+    : null;
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 28 }}>
       <SlotBtn item={baseMaterial} placeholder="Base" label="Base素材を選ぶ" onClick={onClickBase} />
       <Sym>＋</Sym>
       <SlotBtn item={accentMaterial} placeholder="Accent" label="Accent素材を選ぶ" onClick={onClickAccent} />
       <Sym>＝</Sym>
-      <ResultSlot result={result} />
+      <ResultSlot result={result} previewPotion={previewPotion} />
     </div>
   );
 }
@@ -39,7 +55,7 @@ function SlotBtn({
       aria-label={label}
       // width・height・border・backgroundは状態依存かつテーマと調和するためinline styleを使用
       style={{
-        width: 330, height: 230,
+        width: 260, height: 260,
         borderRadius: 20,
         border: item
           ? "2.5px solid rgba(200,168,75,0.85)"
@@ -63,11 +79,11 @@ function SlotBtn({
         <>
           {/* カラーオーブ。colorHexが動的のためinline style */}
           <span style={{
-            display: "block", width: 100, height: 100, borderRadius: "50%",
+            display: "block", width: 120, height: 120, borderRadius: "50%",
             backgroundColor: `#${item.colorHex}`,
             boxShadow: `0 2px 24px #${item.colorHex}aa`,
           }} />
-          <span className={css({ fontSize: "26px", color: "#ffffff", fontWeight: "bold", textAlign: "center", px: "8px" })}>{item.name}</span>
+          <span className={css({ fontSize: "32px", color: "#ffffff", fontWeight: "bold", textAlign: "center", px: "8px" })}>{item.name}</span>
         </>
       ) : (
         <span className={css({ fontSize: "32px", color: "rgba(255,255,255,0.75)", letterSpacing: "0.06em", textAlign: "center", lineHeight: 1.3 })}>
@@ -79,12 +95,35 @@ function SlotBtn({
   );
 }
 
-function ResultSlot({ result }: { result: BrewResult | null }) {
+function ResultSlot({ result, previewPotion }: { result: BrewResult | null; previewPotion?: { name: string; colorHex: string } | null }) {
   if (!result) {
+    // previewPotion があればうっすら表示
+    if (previewPotion) {
+      return (
+        <div style={{
+          width: 260, height: 290, borderRadius: 20,
+          border: "2.5px dashed rgba(200,168,75,0.3)",
+          background: "rgba(8,5,20,0.92)",
+          display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center", gap: 10,
+          padding: "16px 8px 12px",
+          opacity: 0.4,
+        }}>
+          <span style={{
+            display: "block", width: 120, height: 120, borderRadius: "50%",
+            backgroundColor: `#${previewPotion.colorHex}`,
+            boxShadow: `0 2px 28px #${previewPotion.colorHex}`,
+            flexShrink: 0,
+          }} />
+          <span className={css({ fontSize: "32px", color: "#ffffff", fontWeight: "bold", textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" })}>{previewPotion.name}</span>
+        </div>
+      );
+    }
+
     return (
       // width・heightはSlotBtnとのレイアウト対称性維持のためinline style
       <div style={{
-        width: 330, height: 230, borderRadius: 20,
+        width: 260, height: 290, borderRadius: 20,
         border: "2.5px dashed rgba(200,168,75,0.3)",
         background: "rgba(8,5,20,0.92)",
         display: "flex", flexDirection: "column",
@@ -97,23 +136,23 @@ function ResultSlot({ result }: { result: BrewResult | null }) {
   return (
     // width・heightは他スロットとの一貫性維持のためinline style
     <div style={{
-      width: 330, height: 230, borderRadius: 20,
+      width: 260, height: 290, borderRadius: 20,
       border: "2.5px solid rgba(200,168,75,0.95)",
       background: "rgba(8,5,20,0.95)",
       display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center", gap: 6,
+      alignItems: "center", justifyContent: "center", gap: 10,
       animation: "resultPop 0.25s ease",
-      padding: "10px 8px",
+      padding: "16px 8px 12px",
     }}>
       {/* カラーオーブ。colorHexが動的のためinline style */}
       <span style={{
-        display: "block", width: 80, height: 80, borderRadius: "50%",
+        display: "block", width: 120, height: 120, borderRadius: "50%",
         backgroundColor: `#${result.colorHex}`,
         boxShadow: `0 2px 28px #${result.colorHex}`,
         flexShrink: 0,
       }} />
-      <span className={css({ fontSize: "20px", color: "#ffffff", fontWeight: "bold", textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" })}>{result.name}</span>
-      <span className={css({ fontSize: "16px", color: "#c8a84b", fontWeight: "bold", whiteSpace: "nowrap" })}>Lv.{result.level} / {result.sellPrice}G</span>
+      <span className={css({ fontSize: "32px", color: "#ffffff", fontWeight: "bold", textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" })}>{result.name}</span>
+      <span className={css({ fontSize: "26px", color: "#c8a84b", fontWeight: "bold", whiteSpace: "nowrap" })}>Lv.{result.level} / {result.sellPrice}G</span>
     </div>
   );
 }
