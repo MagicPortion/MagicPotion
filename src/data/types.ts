@@ -5,6 +5,7 @@ export interface MaterialDef {
   name: string;
   category: MaterialCategory;
   colorHex: string;
+  imagePath: string;
   price: number;
   spawnWeight: number;
 }

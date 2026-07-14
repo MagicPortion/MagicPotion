@@ -1,6 +1,6 @@
 import { css } from "#styled-system/css";
 import type { MaterialDef } from "../../../data/types";
-import ColorOrb from "../common/ColorOrb";
+import MaterialImage from "../common/MaterialImage";
 
 interface MaterialCardProps {
   item: MaterialDef;
@@ -55,7 +55,7 @@ export default function MaterialCard({
           </span>
         )}
 
-        <ColorOrb colorHex={item.colorHex} size={isPicker ? 208 : 64} />
+        <MaterialImage src={item.imagePath} alt={item.name} size={isPicker ? 208 : 96} />
 
         {isPicker && (
           <span className={css({ fontSize: "30px", fontWeight: "bold", color: "#ffffff", letterSpacing: "0.05em", textAlign: "center" })}>
