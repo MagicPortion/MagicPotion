@@ -1,5 +1,6 @@
 import { css } from "#styled-system/css";
 import type { MaterialDef } from "../../../data/types";
+import MaterialImage from "../common/MaterialImage";
 
 interface MaterialCardGridProps {
   title: string;
@@ -54,14 +55,7 @@ export default function MaterialCardGrid({ title, items, counts, selectedId, onS
                 >
                   ×{count}
                 </span>
-                <span
-                  style={{
-                    display: "block", width: 82, height: 82, borderRadius: "50%",
-                    backgroundColor: `#${item.colorHex}`,
-                    boxShadow: `0 4px 22px #${item.colorHex}66`,
-                    flexShrink: 0,
-                  }}
-                />
+                <MaterialImage src={item.imagePath} alt={item.name} size={92} />
                 <span style={{ fontSize: 16, color: isSelected ? "#c8a84b" : "#e8d8b8", fontWeight: isSelected ? "bold" : "normal" }}>
                   {item.name}
                 </span>

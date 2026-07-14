@@ -2,6 +2,7 @@ import { css } from "#styled-system/css";
 import type { MaterialDef } from "../../../data/types";
 import type { BrewResult } from "./BrewPanel";
 import { findRecipeByIngredients, getPotion } from "../../../data/gameData";
+import MaterialImage from "../common/MaterialImage";
 
 interface BrewEquationProps {
   baseMaterial: MaterialDef | null;
@@ -77,12 +78,7 @@ function SlotBtn({
     >
       {item ? (
         <>
-          {/* カラーオーブ。colorHexが動的のためinline style */}
-          <span style={{
-            display: "block", width: 120, height: 120, borderRadius: "50%",
-            backgroundColor: `#${item.colorHex}`,
-            boxShadow: `0 2px 24px #${item.colorHex}aa`,
-          }} />
+          <MaterialImage src={item.imagePath} alt={item.name} size={150} />
           <span className={css({ fontSize: "32px", color: "#ffffff", fontWeight: "bold", textAlign: "center", px: "8px" })}>{item.name}</span>
         </>
       ) : (
