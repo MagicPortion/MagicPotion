@@ -55,7 +55,7 @@ function SlotBtn({
       aria-label={label}
       // width・height・border・backgroundは状態依存かつテーマと調和するためinline styleを使用
       style={{
-        width: 220, height: 220,
+        width: 260, height: 260,
         borderRadius: 20,
         border: item
           ? "2.5px solid rgba(200,168,75,0.85)"
@@ -79,7 +79,7 @@ function SlotBtn({
         <>
           {/* カラーオーブ。colorHexが動的のためinline style */}
           <span style={{
-            display: "block", width: 100, height: 100, borderRadius: "50%",
+            display: "block", width: 120, height: 120, borderRadius: "50%",
             backgroundColor: `#${item.colorHex}`,
             boxShadow: `0 2px 24px #${item.colorHex}aa`,
           }} />
@@ -101,7 +101,7 @@ function ResultSlot({ result, previewPotion }: { result: BrewResult | null; prev
     if (previewPotion) {
       return (
         <div style={{
-          width: 220, height: 250, borderRadius: 20,
+          width: 260, height: 290, borderRadius: 20,
           border: "2.5px dashed rgba(200,168,75,0.3)",
           background: "rgba(8,5,20,0.92)",
           display: "flex", flexDirection: "column",
@@ -110,7 +110,7 @@ function ResultSlot({ result, previewPotion }: { result: BrewResult | null; prev
           opacity: 0.4,
         }}>
           <span style={{
-            display: "block", width: 100, height: 100, borderRadius: "50%",
+            display: "block", width: 120, height: 120, borderRadius: "50%",
             backgroundColor: `#${previewPotion.colorHex}`,
             boxShadow: `0 2px 28px #${previewPotion.colorHex}`,
             flexShrink: 0,
@@ -123,7 +123,7 @@ function ResultSlot({ result, previewPotion }: { result: BrewResult | null; prev
     return (
       // width・heightはSlotBtnとのレイアウト対称性維持のためinline style
       <div style={{
-        width: 220, height: 250, borderRadius: 20,
+        width: 260, height: 290, borderRadius: 20,
         border: "2.5px dashed rgba(200,168,75,0.3)",
         background: "rgba(8,5,20,0.92)",
         display: "flex", flexDirection: "column",
@@ -136,7 +136,7 @@ function ResultSlot({ result, previewPotion }: { result: BrewResult | null; prev
   return (
     // width・heightは他スロットとの一貫性維持のためinline style
     <div style={{
-      width: 220, height: 250, borderRadius: 20,
+      width: 260, height: 290, borderRadius: 20,
       border: "2.5px solid rgba(200,168,75,0.95)",
       background: "rgba(8,5,20,0.95)",
       display: "flex", flexDirection: "column",
@@ -146,7 +146,7 @@ function ResultSlot({ result, previewPotion }: { result: BrewResult | null; prev
     }}>
       {/* カラーオーブ。colorHexが動的のためinline style */}
       <span style={{
-        display: "block", width: 100, height: 100, borderRadius: "50%",
+        display: "block", width: 120, height: 120, borderRadius: "50%",
         backgroundColor: `#${result.colorHex}`,
         boxShadow: `0 2px 28px #${result.colorHex}`,
         flexShrink: 0,

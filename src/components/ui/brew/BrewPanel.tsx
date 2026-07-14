@@ -43,7 +43,7 @@ export default function BrewPanel({
         top: "50%", left: "50%",
         transform: "translate(-50%, -50%)",
         zIndex: 10,
-        width: 800,
+        width: 920,
       }}
       className={css({
         bg: "rgba(8,6,18,0.93)",
