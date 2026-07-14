@@ -72,7 +72,7 @@ export default function ShopUI({
         素材 ショップ
         <span style={{ position: "absolute", right: "40px", color: "white" }}>▶</span>
       </div>
-      <div className={css({ position: "relative", bg: "#f3be9f", border: "6px solid #e2a581", borderRadius: "24px", w: "95%", maxW: "1020px", h: "650px", p: "45px 35px 30px 35px", boxShadow: "0 22px 45px rgba(0,0,0,0.35)", display: "flex", flexDirection: "column", justifyContent: "space-between" })}>
+      <div className={css({ position: "relative", bg: "#7a4a2e", border: "6px solid #e2a581", borderRadius: "24px", w: "95%", maxW: "1020px", h: "650px", p: "45px 35px 30px 35px", boxShadow: "0 22px 45px rgba(0,0,0,0.35)", display: "flex", flexDirection: "column", justifyContent: "space-between" })}>
         <button 
           onClick={handleRefreshTap}
           disabled={hasSelectedItems}

@@ -57,7 +57,7 @@ const renderScene = (scene: Scene) => {
 };
 
 export default function GameManager() {
-  const { scene, day, money, materials, brewedPotions, isInventoryOpen, setIsInventoryOpen } = useGameStore();
+  const { scene, day, money, materials, isInventoryOpen, setIsInventoryOpen } = useGameStore();
   const scale = useGameScale();
 
   const scaledW = Math.floor(GAME_W * scale);
@@ -93,7 +93,6 @@ export default function GameManager() {
           {isInventoryOpen && (
             <InventoryModal
               materials={materials}
-              brewedPotions={brewedPotions}
               onClose={() => setIsInventoryOpen(false)}
             />
           )}

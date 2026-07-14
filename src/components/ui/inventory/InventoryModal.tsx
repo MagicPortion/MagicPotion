@@ -1,6 +1,11 @@
 import { css } from "#styled-system/css";
 import { MATERIALS } from "../../../data/gameData";
 import ColorOrb from "../common/ColorOrb";
+import type { MaterialDef } from "../../../data/types";
+
+interface OwnedMaterial extends MaterialDef {
+  count: number;
+}
 
 // 開発ルール：絵文字禁止のため枠を閉じる用のSVG
 const IconClose = () => (
@@ -12,44 +17,50 @@ const IconClose = () => (
 
 interface InventoryModalProps {
   materials: Record<string, number>;
-  brewedPotions: any[]; 
   onClose: () => void;
 }
 
 export default function InventoryModal({ materials, onClose }: InventoryModalProps) {
-  const ownedItems = Object.entries(materials)
+  const ownedItems: OwnedMaterial[] = Object.entries(materials)
     .filter(([, count]) => count > 0)
     .map(([id, count]) => {
       const def = MATERIALS.find((m) => m.id === id);
-      return { ...def, count, id };
-    });
+      return def ? { ...def, count } : null;
+    })
+    .filter((item): item is OwnedMaterial => item !== null);
 
   const baseItems = ownedItems.filter((item) => item.category === "base");
   const accentItems = ownedItems.filter((item) => item.category === "accent");
 
   return (
-    <div className={css({
-      position: "absolute",
-      inset: 0,
-      backgroundColor: "rgba(0, 0, 0, 0.75)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      zIndex: 1000,
-    })}>
-      <div className={css({
-        width: "1400px",
-        height: "850px",
-        backgroundColor: "#f4f4f4", 
-        border: "8px solid #5bc0f8",
-        borderRadius: "32px",
+    <div
+      onClick={onClose}
+      className={css({
+        position: "absolute",
+        inset: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.75)",
         display: "flex",
-        flexDirection: "column",
-        position: "relative",
-        boxShadow: "0 24px 48px rgba(0, 0, 0, 0.4)",
-        padding: "40px",
-        gap: "30px",
-      })}>
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+      })}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className={css({
+          width: "1400px",
+          height: "850px",
+          backgroundColor: "#f4f4f4",
+          border: "8px solid #5bc0f8",
+          borderRadius: "32px",
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          boxShadow: "0 24px 48px rgba(0, 0, 0, 0.4)",
+          padding: "40px",
+          gap: "30px",
+        })}
+      >
 
         {/* 大きな持ち物一覧の看板リボン */}
         <div className={css({
@@ -177,53 +188,15 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
   );
 }
 
-// 個別カードコンポーネント（カードサイズ拡大を維持）
-function InventoryCard({ item }: { item: any }) {
+// 素材画像とテキストのみ（カード枠なし。ShopCardと同じ考え方）
+function InventoryCard({ item }: { item: OwnedMaterial }) {
   return (
-    <div className={css({
-      backgroundColor: "#9bcfe7", 
-      borderRadius: "24px",
-      padding: "24px", 
-      position: "relative",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "16px",
-      boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
-      width: "280px", 
-    })}>
-      
-      <button 
-        onClick={() => alert(`${item.name}: 素材の詳細情報`)}
-        className={css({
-          position: "absolute",
-          top: "14px",
-          right: "14px",
-          background: "none",
-          border: "2px solid #002766",
-          color: "#002766",
-          borderRadius: "50%",
-          width: "32px",
-          height: "32px",
-          fontSize: "22px",
-          fontWeight: "bold",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          padding: 0,
-          transition: "opacity 0.1s",
-          _hover: { opacity: 0.7 },
-        })}
-      >
-        ?
-      </button>
-
+    <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", width: "180px" })}>
       <div className={css({
         position: "relative",
         backgroundColor: "white",
         borderRadius: "16px",
-        width: "100%",
+        width: "180px",
         height: "180px",
         display: "flex",
         alignItems: "center",
@@ -250,20 +223,14 @@ function InventoryCard({ item }: { item: any }) {
         </span>
       </div>
 
-      {/* 素材名。長い名前でも見切れず2行まで折り返し、カード高さは常に一定 */}
+      {/* 素材名（カード外）。1行で表示し、見切れさせない */}
       <div className={css({
         fontSize: "26px",
         fontWeight: "bold",
-        color: "#002766",
-        width: "100%",
-        height: "68px",
-        lineHeight: "1.3",
-        overflow: "hidden",
-        wordBreak: "break-all",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        px: "4px",
+        color: "#4a3321",
+        mt: "10px",
+        whiteSpace: "nowrap",
+        textAlign: "center",
       })}>
         {item.name}
       </div>
