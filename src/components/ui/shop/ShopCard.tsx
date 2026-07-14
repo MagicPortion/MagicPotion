@@ -36,12 +36,25 @@ export default function ShopCard({ item, isSelected, isSoldOut, onClick }: ShopC
         _hover: { transform: "scale(1.04)" },
       })}
     >
-      <div className={css({ fontSize: "30px", color: "#002766", fontWeight: "bold", mb: "8px", overflow: "hidden", whiteSpace: "nowrap" })}>
-        {item.name}
-      </div>
-
       <div className={css({ bg: "white", borderRadius: "12px", h: "115px", display: "flex", alignItems: "center", justifyContent: "center" })}>
         <ColorOrb colorHex={item.colorHex} size={72} />
+      </div>
+
+      {/* 素材名。長い名前でも見切れず2行まで折り返し、カード高さは常に一定 */}
+      <div className={css({
+        fontSize: "24px",
+        color: "#002766",
+        fontWeight: "bold",
+        mt: "10px",
+        height: "62px",
+        lineHeight: "1.3",
+        overflow: "hidden",
+        wordBreak: "break-all",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      })}>
+        {item.name}
       </div>
 
       <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", mt: "8px", px: "4px" })}>

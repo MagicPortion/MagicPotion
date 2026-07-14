@@ -220,6 +220,7 @@ function InventoryCard({ item }: { item: any }) {
       </button>
 
       <div className={css({
+        position: "relative",
         backgroundColor: "white",
         borderRadius: "16px",
         width: "100%",
@@ -230,28 +231,12 @@ function InventoryCard({ item }: { item: any }) {
         boxShadow: "inset 0 2px 6px rgba(0,0,0,0.05)",
       })}>
         <ColorOrb colorHex={item.colorHex} size={96} />
-      </div>
 
-      <div className={css({
-        display: "flex",
-        width: "100%",
-        justifyContent: "space-between",
-        alignItems: "center",
-        px: "4px",
-      })}>
+        {/* 個数バッジ。素材画像に重ねて表示 */}
         <span className={css({
-          fontSize: "30px",
-          fontWeight: "bold",
-          color: "#002766",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-          maxWidth: "150px",
-        })}>
-          {item.name}
-        </span>
-        
-        <span className={css({
+          position: "absolute",
+          bottom: "10px",
+          right: "10px",
           backgroundColor: "#5bc0f8",
           color: "#002766",
           border: "2px solid #002766",
@@ -263,6 +248,24 @@ function InventoryCard({ item }: { item: any }) {
         })}>
           {`×${item.count}`}
         </span>
+      </div>
+
+      {/* 素材名。長い名前でも見切れず2行まで折り返し、カード高さは常に一定 */}
+      <div className={css({
+        fontSize: "26px",
+        fontWeight: "bold",
+        color: "#002766",
+        width: "100%",
+        height: "68px",
+        lineHeight: "1.3",
+        overflow: "hidden",
+        wordBreak: "break-all",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        px: "4px",
+      })}>
+        {item.name}
       </div>
     </div>
   );
