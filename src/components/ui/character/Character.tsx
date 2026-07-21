@@ -1,4 +1,6 @@
 import { css } from "#styled-system/css";
+import witchImage from "../../../assets/characters/witch.png";
+import shopkeeperImage from "../../../assets/characters/shopkeeper.png";
 
 export type CharacterType = "witch" | "shopkeeper";
 export type Expression = "normal" | "happy" | "sad" | "surprised";
@@ -23,8 +25,8 @@ const CHARACTER_LABEL: Record<CharacterType, string> = {
 };
 
 const CHARACTER_IMAGE: Partial<Record<CharacterType, string>> = {
-  witch: `${import.meta.env.BASE_URL}assets/witch.png`,
-  shopkeeper: `${import.meta.env.BASE_URL}assets/shopkeeper.png`,
+  witch: witchImage,
+  shopkeeper: shopkeeperImage,
 };
 export default function Character({
   character,
