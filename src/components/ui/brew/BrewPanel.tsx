@@ -143,6 +143,7 @@ export default function BrewPanel({
         <button
           onClick={onBrew}
           disabled={!canBrew}
+          data-sound="none"
           // background・border・color・opacityがcanBrewの状態によって動的に変わるためinline styleを使用
           style={{
             background: canBrew ? "#8B6914" : "rgba(30,20,8,0.4)",
