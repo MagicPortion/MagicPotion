@@ -19,7 +19,7 @@ export default function RecipeLearningScene() {
     { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
   ], [width, height]);
 
-  const options = dailyRecipeOptions.slice(0, 3).flatMap((id) => {
+  const options = dailyRecipeOptions.flatMap((id) => {
     const recipe = RECIPES.find((r) => r.id === id);
     if (!recipe) return [];
     const potion = getPotion(recipe.potionId);

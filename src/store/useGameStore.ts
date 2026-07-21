@@ -92,6 +92,7 @@ function buildSaleResult(potions: BrewedPotion[]): SaleRecord[] {
 function pickDailyOptions(): string[] {
   const recipeGroups = RECIPES.reduce<Record<string, RecipeDef[]>>((acc, recipe) => {
     if (recipe.potionId === "mystery") return acc;
+    if (recipe.potionId === "meh_potion") return acc;
     const list = acc[recipe.potionId] ?? [];
     return { ...acc, [recipe.potionId]: [...list, recipe] };
   }, {});
@@ -100,8 +101,8 @@ function pickDailyOptions(): string[] {
     const shuffledGroup = shuffleArray(group);
     return shuffledGroup[0];
   });
+  return shuffleArray(uniquePotionRecipes).slice(0, 3).map((recipe) => recipe.id);
 
-  return shuffleArray(uniquePotionRecipes).slice(0, 5).map((recipe) => recipe.id);
 }
 
 export interface GameState {
