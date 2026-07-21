@@ -18,7 +18,7 @@ export default function TitleScene() {
       })}
     >
       <img
-        src="/MagicPotion/logo.png"
+        src={`${import.meta.env.BASE_URL}logo.png`}
         alt="Magic Potion"
         className={css({
           width: "700px",

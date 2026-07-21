@@ -59,7 +59,7 @@ export default function GameEndScene() {
             </span>
           ) : (
             <img
-              src="/MagicPotion/ED2.png"
+              src={`${import.meta.env.BASE_URL}ED2.png`}
               alt="返済失敗後の空き地"
               className={css({
                 width: "100%",

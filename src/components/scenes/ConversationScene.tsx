@@ -76,9 +76,9 @@ export default function ConversationScene() {
         character="witch"
         imageSrc={
           scene === "conversation_end"
-            ? "/MagicPotion/assets/witch-end.png"
+            ? `${import.meta.env.BASE_URL}assets/witch-end.png`
             : scene === "conversation_brew"
-            ? "/MagicPotion/assets/witch-coat.png"
+            ? `${import.meta.env.BASE_URL}assets/witch-coat.png`
             : undefined
         }
       />

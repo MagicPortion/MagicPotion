@@ -31,7 +31,7 @@ export default function Header({ label, day, money }: HeaderProps) {
     >
       <h1 className={css({ display: "flex", alignItems: "center", m: 0, minW: "0" })}>
         <img
-          src="/MagicPotion/title.png"
+          src={`${import.meta.env.BASE_URL}title.png`}
           alt="title"
           className={css({ h: "70px", w: "auto", objectFit: "contain", display: "block" })}
         />
