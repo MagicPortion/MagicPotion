@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo} from "react";
 import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
@@ -6,11 +6,10 @@ import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import { RECIPES, getPotion, calcSellPrice } from "../../data/gameData";
 import DialogueBox from "../ui/dialogue/DialogueBox";
 import RecipeOptionCards from "../ui/recipe/RecipeOptionCards";
-import { IconRefresh } from "../ui/icons";
 import Character from "../ui/character/Character";
 
 export default function RecipeLearningScene() {
-  const { dailyRecipeOptions, recipeLevel, learnRecipe, reloadDailyOptions, money, advanceScene, setIsInventoryOpen } =
+  const { dailyRecipeOptions, recipeLevel, learnRecipe, advanceScene, setIsInventoryOpen } =
     useGameStore();
   const { width, height } = useWindowSize();
   
