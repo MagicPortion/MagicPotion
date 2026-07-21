@@ -1,6 +1,6 @@
 import { css } from "#styled-system/css";
-import witchImage from "../../../assets/characters/witch.png";
-import shopkeeperImage from "../../../assets/characters/shopkeeper.png";
+import witchImage from "#assets/characters/witch.png";
+import shopkeeperImage from "#assets/characters/shopkeeper.png";
 
 export type CharacterType = "witch" | "shopkeeper";
 export type Expression = "normal" | "happy" | "sad" | "surprised";

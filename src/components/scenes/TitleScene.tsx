@@ -1,7 +1,7 @@
 import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
-import logoImage from "../../assets/images/logo.png";
-import { CHARACTER_PORTRAITS, ITEM_IMAGES } from "../../assets/preload";
+import logoImage from "#assets/images/logo.png";
+import { CHARACTER_PORTRAITS, ITEM_IMAGES } from "#assets/preload";
 import { preloadImages } from "../../utils/preloadImages";
 
 export default function TitleScene() {

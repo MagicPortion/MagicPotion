@@ -1,6 +1,6 @@
 import { css } from "#styled-system/css";
 import { CLEAR_MONEY_THRESHOLD, useGameStore } from "../../store/useGameStore";
-import ed2Image from "../../assets/images/ED2.png";
+import ed2Image from "#assets/images/ED2.png";
 
 export default function GameEndScene() {
   const { money, setScene } = useGameStore();

@@ -1,6 +1,6 @@
 import { css } from "#styled-system/css";
 import { IconCoin, IconMorning, IconAfternoon, IconNight } from "./ui/icons";
-import titleImage from "../assets/images/title.png";
+import titleImage from "#assets/images/title.png";
 
 type HeaderProps = {
   label: string;

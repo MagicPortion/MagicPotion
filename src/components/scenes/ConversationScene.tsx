@@ -5,8 +5,8 @@ import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import DialogueBox, { type DialogueBoxHandle } from "../ui/dialogue/DialogueBox";
 import Character from "../ui/character/Character";
 import { firstDayMorningDialogue,firstDayMoveDialogue,firstDayBrewDialogue,morningDialogues,moveDialogues,brewDialogues,endingDialogues} from "../../data/conversations";
-import witchEndImage from "../../assets/characters/witch-end.png";
-import witchCoatImage from "../../assets/characters/witch-coat.png";
+import witchEndImage from "#assets/characters/witch-end.png";
+import witchCoatImage from "#assets/characters/witch-coat.png";
 
 export default function ConversationScene() {
   const { day, lastSaleResult, advanceScene, scene, setIsInventoryOpen } = useGameStore();

@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "imports": {
-    "#styled-system/*": "./styled-system/*"
+    "#styled-system/*": "./styled-system/*",
+    "#assets/*": "./src/assets/*"
   },
   "scripts": {
     "dev": "bun run panda codegen && bun run vite",

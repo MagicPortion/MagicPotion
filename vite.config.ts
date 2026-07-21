@@ -17,6 +17,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '#styled-system': fileURLToPath(new URL('./styled-system', import.meta.url)),
+      '#assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
     },
   },
   base: "/MagicPotion/",
