@@ -1,10 +1,10 @@
 import { IconRefresh } from '../icons';
 import ShopCard from './ShopCard';
 import ShopActionBar from './ShopActionBar';
-import type { MaterialDef } from '../../../data/types';
+import type { MaterialDefWithUrl } from '../../../data/types';
 import { css } from "#styled-system/css";
 
-interface ShopMaterialItem extends MaterialDef {
+interface ShopMaterialItem extends MaterialDefWithUrl {
   instanceId: string;
 }
 

@@ -1,8 +1,8 @@
 import { css } from "#styled-system/css";
-import type { MaterialDef } from "../../../data/types";
-import MaterialImage from "../common/MaterialImage";
+import type { MaterialDefWithUrl } from "../../../data/types";
+import Image from "../common/Image";
 
-interface ShopMaterialItem extends MaterialDef {
+interface ShopMaterialItem extends MaterialDefWithUrl {
   instanceId: string;
 }
 
@@ -41,7 +41,7 @@ export default function ShopCard({ item, isSelected, isSoldOut, onClick }: ShopC
         })}
       >
         <div className={css({ bg: "transparent", h: "115px", display: "flex", alignItems: "center", justifyContent: "center" })}>
-          <MaterialImage src={item.imagePath} alt={item.name} size={105} />
+          <Image src={item.imageUrl} alt={item.name} width={105} height={105} />
         </div>
 
         <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", mt: "8px", px: "4px" })}>
