@@ -1,8 +1,17 @@
 import { css } from "../../../styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
+import logoImage from "#assets/images/logo.png";
+import { CHARACTER_PORTRAITS, ITEM_IMAGES } from "#assets/preload";
+import { preloadImages } from "../../utils/preloadImages";
 
 export default function TitleScene() {
   const { startNewGame } = useGameStore();
+
+  const handleStart = () => {
+    // 立ち絵は会話シーンですぐ表示されるため先に、アイテム画像は店シーンに着くまで時間があるため後で読み込む
+    preloadImages(CHARACTER_PORTRAITS).then(() => preloadImages(ITEM_IMAGES));
+    startNewGame();
+  };
 
   return (
     <div
@@ -18,7 +27,7 @@ export default function TitleScene() {
       })}
     >
       <img
-        src={`${import.meta.env.BASE_URL}logo.png`}
+        src={logoImage}
         alt="Magic Potion"
         className={css({
           width: "700px",
@@ -28,7 +37,7 @@ export default function TitleScene() {
       />
 
       <button
-        onClick={startNewGame}
+        onClick={handleStart}
         className={css({
           px: "72px",
           py: "22px",

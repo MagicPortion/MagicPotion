@@ -23,7 +23,8 @@
     "resolveJsonModule": true,
     "paths": {
       "*": ["./*"],
-      "#styled-system/*": ["./styled-system/*"]
+      "#styled-system/*": ["./styled-system/*"],
+      "#assets/*": ["./src/assets/*"]
     }
   },
   "include": ["src", "styled-system"]
