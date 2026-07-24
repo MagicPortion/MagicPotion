@@ -1,8 +1,8 @@
 import { css } from "#styled-system/css";
-import type { MaterialDef } from "../../../data/types";
-import ColorOrb from "../common/ColorOrb";
+import type { MaterialDefWithUrl } from "../../../data/types";
+import Image from "../common/Image";
 
-interface ShopMaterialItem extends MaterialDef {
+interface ShopMaterialItem extends MaterialDefWithUrl {
   instanceId: string;
 }
 
@@ -40,8 +40,8 @@ export default function ShopCard({ item, isSelected, isSoldOut, onClick }: ShopC
           _hover: { transform: "scale(1.04)" },
         })}
       >
-        <div className={css({ bg: "white", borderRadius: "12px", h: "115px", display: "flex", alignItems: "center", justifyContent: "center" })}>
-          <ColorOrb colorHex={item.colorHex} size={72} />
+        <div className={css({ bg: "transparent", h: "115px", display: "flex", alignItems: "center", justifyContent: "center" })}>
+          <Image src={item.imageUrl} alt={item.name} width={105} height={105} />
         </div>
 
         <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", mt: "8px", px: "4px" })}>

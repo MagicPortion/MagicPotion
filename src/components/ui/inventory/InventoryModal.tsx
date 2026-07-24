@@ -1,9 +1,9 @@
 import { css } from "#styled-system/css";
 import { MATERIALS } from "../../../data/gameData";
-import ColorOrb from "../common/ColorOrb";
-import type { MaterialDef } from "../../../data/types";
+import Image from "../common/Image";
+import type { MaterialDefWithUrl } from "../../../data/types";
 
-interface OwnedMaterial extends MaterialDef {
+interface OwnedMaterial extends MaterialDefWithUrl {
   count: number;
 }
 
@@ -194,16 +194,14 @@ function InventoryCard({ item }: { item: OwnedMaterial }) {
     <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", width: "180px" })}>
       <div className={css({
         position: "relative",
-        backgroundColor: "white",
-        borderRadius: "16px",
+        backgroundColor: "transparent",
         width: "180px",
         height: "180px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        boxShadow: "inset 0 2px 6px rgba(0,0,0,0.05)",
       })}>
-        <ColorOrb colorHex={item.colorHex} size={96} />
+        <Image src={item.imageUrl} alt={item.name} width={160} height={160} />
 
         {/* 個数バッジ。素材画像に重ねて表示 */}
         <span className={css({

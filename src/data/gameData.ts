@@ -1,11 +1,31 @@
-import type { MaterialDef, RecipeDef, PotionDef } from "./types";
+import type { MaterialDef, MaterialDefWithUrl, RecipeDef, PotionDef } from "./types";
 import materialsJson from "./materials.json";
 import recipesJson from "./recipes.json";
 import potionsJson from "./potions.json";
 
-export type { MaterialDef, RecipeDef, PotionDef };
+// Vite がビルド時に全画像を解決して URL マップを作る
+// 相対パスで確実に解決
+// import: "default" なら Record<string, string> が返る (mod が直接URL文字列)
+const itemImageModules = import.meta.glob<string>("../assets/items/*.png", {
+  eager: true,
+  import: "default",
+});
+// JSON の imagePath (例: "items/SlimeGel.png") と一致させるため、
+// glob のキーから `../assets/` を除いた `items/xxx.png` をキーにする
+const itemImageMap: Record<string, string> = {};
+for (const [path, url] of Object.entries(itemImageModules)) {
+  // path: "../assets/items/SlimeGel.png" -> "items/SlimeGel.png"
+  const key = path.replace("../assets/", "");
+  itemImageMap[key] = url;
+}
 
-export const MATERIALS: MaterialDef[] = materialsJson as MaterialDef[];
+export type { MaterialDef, MaterialDefWithUrl, RecipeDef, PotionDef };
+
+const rawMaterials = materialsJson as MaterialDef[];
+export const MATERIALS: MaterialDefWithUrl[] = rawMaterials.map((m) => ({
+  ...m,
+  imageUrl: itemImageMap[m.imagePath] ?? m.imagePath,
+}));
 export const RECIPES: RecipeDef[] = recipesJson as RecipeDef[];
 export const POTIONS: PotionDef[] = potionsJson as PotionDef[];
 
@@ -15,7 +35,7 @@ export function colorNum(hex: string): number {
   return parseInt(hex, 16);
 }
 
-export function getMaterial(id: string): MaterialDef | undefined {
+export function getMaterial(id: string): MaterialDefWithUrl | undefined {
   return MATERIALS.find((m) => m.id === id);
 }
 

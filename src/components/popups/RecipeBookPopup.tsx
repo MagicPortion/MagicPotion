@@ -2,6 +2,7 @@ import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { getMaterial, getPotion, getRecipe, calcSellPrice } from "../../data/gameData";
 import { IconRecipe, IconClose } from "../ui/icons";
+import Image from "../ui/common/Image";
 
 interface RecipeBookPopupProps {
   isOpen: boolean;
@@ -129,10 +130,10 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
 
                           <div className={css({ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", width: "100%", flexWrap: "wrap" })}>
                             <div className={css({ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" })}>
-                              <Dot colorHex={base?.colorHex ?? "aaaaaa"} size={20} />
+                              {base && <Image src={base.imageUrl} alt={base.name} width={64} height={64} />}
                               <span className={css({ fontSize: "26px", color: "#e8d8b8", minW: "80px", wordBreak: "break-word" })}>{base?.name}</span>
                               <span className={css({ fontSize: "26px", color: "#4a3810", flexShrink: 0 })}>＋</span>
-                              <Dot colorHex={accent?.colorHex ?? "aaaaaa"} size={20} />
+                              {accent && <Image src={accent.imageUrl} alt={accent.name} width={64} height={64} />}
                               <span className={css({ fontSize: "26px", color: "#e8d8b8", minW: "80px", wordBreak: "break-word" })}>{accent?.name}</span>
                             </div>
                             {onSelectRecipe && (
