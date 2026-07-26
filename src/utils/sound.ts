@@ -1,4 +1,4 @@
-type UiSound = "select" | "cancel" | "voice" | "merging" | "mergeResult";
+type UiSound = "select" | "cancel" | "voice" | "merging" | "mergeResult" | "potionSold";
 
 const SOUND_FILES: Record<UiSound, string> = {
   select: "select.mp3",
@@ -6,6 +6,7 @@ const SOUND_FILES: Record<UiSound, string> = {
   voice: "voice_sound.mp3",
   merging: "merging.mp3",
   mergeResult: "merge_result.mp3",
+  potionSold: "potion_sold.mp3",
 };
 
 const VOLUMES: Record<UiSound, number> = {
@@ -14,6 +15,7 @@ const VOLUMES: Record<UiSound, number> = {
   voice: 0.36,
   merging: 0.65,
   mergeResult: 0.45,
+  potionSold: 0.45,
 };
 
 const audioCache = new Map<UiSound, HTMLAudioElement>();
@@ -79,6 +81,10 @@ export function stopMergingSound() {
 
 export function playMergeResultSound() {
   playSound("mergeResult");
+}
+
+export function playPotionSoldSound() {
+  playSound("potionSold");
 }
 
 export function startVoiceLoop() {
