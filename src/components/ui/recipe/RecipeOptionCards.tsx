@@ -56,9 +56,7 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
       >
     <div className={css({ mb: "12px", width: "100%", textAlign: "center" })}>
       <div className={css({ position: "relative", width:"400px", mx: "auto", bg: "rgba(8,6,18,0.93)", color: "#e8d8b8", border: "1px solid rgba(200,168,75,0.4)", fontSize: "36px", fontWeight: "bold", pl: "80px", pr: "80px", pt: "12px", pb: "12px", borderRadius: "10px", letterSpacing: "0.2em", boxShadow: "0 12px 36px rgba(0,0,0,0.55)" })}>
-        <span style={{ position: "absolute", left: "24px", color: "#c8a84b" }}>◀</span>
-          レシピ
-        <span style={{ position: "absolute", right: "24px", color: "#c8a84b" }}>▶</span>
+          レシピ選択
       </div>
       <p className={css({ fontSize: "24px", color: "#e8d8b8", m: "12px 0 0" })}>
         獲得するレシピを1つ選んでね
