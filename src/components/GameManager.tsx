@@ -68,7 +68,7 @@ export default function GameManager() {
     <div className={css({ width: "100vw", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#000", overflow: "hidden" })}>
       {/* クリップ領域：スケール後の実際の表示サイズ。width/height は動的計算値のためinline style */}
       <div style={{ width: scaledW, height: scaledH }} className={css({ overflow: "hidden", position: "relative", flexShrink: 0 })}>
-        {/* ゲームコンテナ：常に GAME_W×GAME_H、CSS scale で拡縮。transform・width・height は動的のためinline style */}
+        {/* ゲームコンテナ：常に GAME_W×GAME_H、CSS scale で拡縮。transform・width・height は動的ためinline style */}
         <div
           style={{ width: GAME_W, height: GAME_H, transform: `scale(${scale})` }}
           className={css({ transformOrigin: "top left", position: "absolute", top: 0, left: 0, overflow: "hidden" })}
