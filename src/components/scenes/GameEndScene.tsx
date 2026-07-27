@@ -1,16 +1,23 @@
 import { css } from "#styled-system/css";
+import React from "react";
 import { CLEAR_MONEY_THRESHOLD, useGameStore } from "../../store/useGameStore";
 import ed2Image from "#assets/images/ED2.png";
+import ed1Image from "#assets/images/ED1.png";
 
 export default function GameEndScene() {
   const { money, setScene } = useGameStore();
   const isClear = money >= CLEAR_MONEY_THRESHOLD;
   const endingNumber = isClear ? "END 01 : 返済完了 ~賑わいの店~" : "END 02 : 返済失敗 ~空き地~";
   const endingText = isClear
-    // 成功END1 の文章
     ? "あれから無事に返済を完了した魔女とあなたは、\n今日も不思議な店を営んでいる。\nお店は賑わい、魔法薬の調合も順調だ。\nこれからもあなたは魔女と共にこの町で歩んでいくのだろう。"
-    // 失敗END2 の文章
     : "間に合わなかったあぁぁ......(T^T)\nお店もなくなり立派な空き地です";
+
+  const [showButton, setShowButton] = React.useState(false);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setShowButton(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div
@@ -49,15 +56,15 @@ export default function GameEndScene() {
           })}
         >
           {isClear ? (
-            <span
+            <img
+              src={ed1Image}
+              alt="返済完了後の賑わいの店"
               className={css({
-                color: "rgba(255,255,255,0.42)",
-                fontSize: "26px",
-                letterSpacing: "0.12em",
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
               })}
-            >
-              END ILLUSTRATION
-            </span>
+            />
           ) : (
             <img
               src={ed2Image}
@@ -113,6 +120,7 @@ export default function GameEndScene() {
         {endingNumber}
       </div>
 
+      {showButton && (
       <button
         type="button"
         onClick={() => setScene("title")}
@@ -136,9 +144,11 @@ export default function GameEndScene() {
             transform: "translateY(-2px)",
           },
         })}
+        style={{ opacity: 0, animation: "fadeInButton 0.5s ease-out forwards" }}
       >
         ホームへ戻る
       </button>
+    )}
     </div>
   );
 }
