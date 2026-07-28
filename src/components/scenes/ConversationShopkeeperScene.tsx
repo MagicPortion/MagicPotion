@@ -4,6 +4,7 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import DialogueBox, { type DialogueBoxHandle } from "../ui/dialogue/DialogueBox";
 import Character from "../ui/character/Character";
+import shopBackground from "#assets/Back/ShopBack.png";
 import {
   firstDayShopDialogue,
   shopDialogues,
@@ -40,12 +41,12 @@ const dialogues = useMemo(() => {
   };
 
   const commands = useMemo<DrawCommand[]>(() => [
-    { type: "rect", x: 0, y: 0, width, height, color: 0xfff5e0 },
+    { type: "image", x: 0, y: 0, width, height, imageSrc: shopBackground },
   ], [width, height]);
 
   return (
     <div style={{ position: "relative", width, height, overflow: "hidden" }}>
-      <PixiCanvas commands={commands} backgroundColor={0xfff5e0} />
+      <PixiCanvas commands={commands} />
       <Character character="shopkeeper" animate={true} />
       <DialogueBox
         ref={dialogueRef}
