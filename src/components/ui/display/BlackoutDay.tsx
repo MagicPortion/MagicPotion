@@ -1,4 +1,5 @@
 import { css } from "#styled-system/css";
+import { formatDayLabel } from "../../../data/constants";
 
 interface BlackoutDayProps {
   day: number;
@@ -22,7 +23,7 @@ export default function BlackoutDay({ day }: BlackoutDayProps) {
         // dayTextShow: 日付テキスト表示アニメーションのためinline style
         style={{ animation: "dayTextShow 2.5s ease 0.4s both" }}
       >
-        {day}日目
+        {formatDayLabel(day)}
       </span>
     </div>
   );

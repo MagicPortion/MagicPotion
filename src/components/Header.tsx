@@ -1,4 +1,5 @@
 import { css } from "#styled-system/css";
+import { formatDayLabel } from "../data/constants";
 import { IconCoin, IconMorning, IconAfternoon, IconNight } from "./ui/icons";
 import titleImage from "#assets/images/title.png";
 
@@ -42,7 +43,7 @@ export default function Header({ label, day, money }: HeaderProps) {
         className={css({ display: "flex", gap: "16px", alignItems: "center", color: "white", flex: 1, justifyContent: "flex-end" })}
       >
         <div className={css({ display: "flex", alignItems: "center", gap: "8px", bg: "rgba(255,255,255,0.15)", borderRadius: "6px", px: "16px", py: "4px" })}>
-          <span className={css({ fontSize: "28px", fontWeight: "bold" })}>{day}日目</span>
+          <span className={css({ fontSize: "28px", fontWeight: "bold" })}>{formatDayLabel(day)}</span>
         </div>
         <div className={css({ display: "flex", alignItems: "center", gap: "8px", bg: "rgba(255,255,255,0.15)", borderRadius: "6px", px: "14px", py: "4px" })}>
           <TimeIcon size={24} />

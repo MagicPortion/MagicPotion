@@ -6,10 +6,11 @@ interface ShopActionBarProps {
   hasSelectedItems: boolean;
   setShowBuyModal: (show: boolean) => void;
   setShowExitModal: (show: boolean) => void;
+  onPurchase: () => void;
   onClear: () => void;
 }
 
-export default function ShopActionBar({ totalCost, canBuy, hasSelectedItems, setShowBuyModal, setShowExitModal, onClear }: ShopActionBarProps) {
+export default function ShopActionBar({ totalCost, canBuy, hasSelectedItems, setShowBuyModal, setShowExitModal, onPurchase, onClear }: ShopActionBarProps) {
   return (
     <div className={css({
       display: "flex",
@@ -29,7 +30,7 @@ export default function ShopActionBar({ totalCost, canBuy, hasSelectedItems, set
           <span className={css({ fontSize: "24px", fontWeight: "bold", color: "#111" })}>{totalCost === 0 ? "- -" : totalCost} - G</span>
         </div>
         <button
-          onClick={() => setShowBuyModal(true)} disabled={!canBuy}
+          onClick={onPurchase} disabled={!canBuy}
           className={css({ color: "#002766", border: "none", px: "56px", py: "16px", fontSize: "24px", fontWeight: "bold", clipPath: "polygon(18% 0%, 100% 0%, 82% 100%, 0% 100%)", transition: "opacity 0.2s", cursor: "pointer", _hover: { opacity: 0.9 } })}
           style={{ backgroundColor: canBuy ? "#5bc0f8" : "#bfbfbf", cursor: canBuy ? "pointer" : "not-allowed" }}
         >購入</button>
