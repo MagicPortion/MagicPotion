@@ -1,8 +1,10 @@
 import { css } from "#styled-system/css";
+import { useEffect } from "react";
 import { useGameStore } from "../store/useGameStore";
 import type { Scene } from "../store/useGameStore";
 import { useGameScale } from "../hooks/useGameScale";
 import { GAME_W, GAME_H } from "../hooks/gameConstants";
+import { isCancelSoundTarget, isSelectSoundTarget, playCancelSound, playSelectSound } from "../utils/sound";
 import { PixiAppProvider } from "../contexts/PixiAppContext";
 import Header from "./Header";
 import TitleScene from "./scenes/TitleScene";
@@ -59,6 +61,22 @@ const renderScene = (scene: Scene) => {
 export default function GameManager() {
   const { scene, day, money, materials, isInventoryOpen, setIsInventoryOpen } = useGameStore();
   const scale = useGameScale();
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (isCancelSoundTarget(event.target)) {
+        playCancelSound();
+        return;
+      }
+
+      if (isSelectSoundTarget(event.target)) {
+        playSelectSound();
+      }
+    };
+
+    window.addEventListener("pointerdown", handlePointerDown, { capture: true });
+    return () => window.removeEventListener("pointerdown", handlePointerDown, { capture: true });
+  }, []);
 
   const scaledW = Math.floor(GAME_W * scale);
   const scaledH = Math.floor(GAME_H * scale);

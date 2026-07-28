@@ -20,6 +20,7 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
   return (
     <>
       <div
+        data-sound="cancel"
         onClick={(e) => { e.stopPropagation(); onClose(); }}
         style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 }}
       />
@@ -36,7 +37,7 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
           <h2 style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, color: "#c8a84b", margin: 0, letterSpacing: "0.12em" }}>
             <IconSettings size={16} /> 会話ボックス設定
           </h2>
-          <button onClick={onClose} style={{ display: "flex", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "#8B6914", lineHeight: 1 }}>
+          <button data-sound="cancel" onClick={onClose} style={{ display: "flex", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "#8B6914", lineHeight: 1 }}>
             <IconClose size={20} />
           </button>
         </div>

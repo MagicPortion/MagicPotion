@@ -1,3 +1,5 @@
+import { playPotionSoldSound } from "../../../utils/sound";
+
 // アニメーション定数（DisplayScene がタイミング計算に使用するため export）
 export const ANIM = {
   ENTER_DURATION: 600,
@@ -47,6 +49,7 @@ export default function PotionSaleAnimation({ slots, launched }: PotionSaleAnima
             >
               {/* オーブ（放物線アニメ担当）: 色・デルタ・アニメが動的のためinline style */}
               <div
+                onAnimationStart={launched ? playPotionSoldSound : undefined}
                 style={{
                   width: ORB_SIZE,
                   height: ORB_SIZE,

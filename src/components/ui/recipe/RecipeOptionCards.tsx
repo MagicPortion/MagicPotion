@@ -40,10 +40,12 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
     >
       <div
         className={css({
-          background: "rgba(243, 190, 159, 0.70)",
+          background: "rgba(8, 6, 18, 0.8)",
+          border: "1px solid rgba(200, 168, 75, 0.3)",
           borderRadius: "24px",
           p: "32px 40px 24px 40px", // 決定ボタン用に下の余白を少し調整
-          boxShadow: "0 8px 40px rgba(0,0,0,0.20)",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.65)",
+          backdropFilter: "blur(2px)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -53,10 +55,10 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
         })}
       >
     <div className={css({ mb: "12px", width: "100%", textAlign: "center" })}>
-      <div className={css({ position: "relative", width:"400px", mx: "auto", bg: "#46a1ea", color: "white", fontSize: "36px", fontWeight: "bold", pl: "80px", pr: "80px", pt: "12px", pb: "12px", borderRadius: "10px", letterSpacing: "0.2em", boxShadow: "0 6px 16px rgba(0,0,0,0.25)" })}>
+      <div className={css({ position: "relative", width:"400px", mx: "auto", bg: "rgba(8,6,18,0.93)", color: "#e8d8b8", border: "1px solid rgba(200,168,75,0.4)", fontSize: "36px", fontWeight: "bold", pl: "80px", pr: "80px", pt: "12px", pb: "12px", borderRadius: "10px", letterSpacing: "0.2em", boxShadow: "0 12px 36px rgba(0,0,0,0.55)" })}>
           レシピ選択
       </div>
-      <p className={css({ fontSize: "24px", color: "#544164", m: "12px 0 0" })}>
+      <p className={css({ fontSize: "24px", color: "#e8d8b8", m: "12px 0 0" })}>
         獲得するレシピを1つ選んでね
       </p>
     </div>

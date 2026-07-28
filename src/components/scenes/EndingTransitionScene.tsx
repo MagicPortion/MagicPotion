@@ -29,6 +29,7 @@ export default function EndingTransitionScene() {
 
   return (
     <div
+      data-sound="select"
       onClick={handleAdvance}
       className={css({
         width: "100%",

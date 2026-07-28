@@ -82,6 +82,7 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
 
         {/* 右上のバツ閉じボタン */}
         <button 
+          data-sound="cancel"
           onClick={onClose}
           className={css({
             position: "absolute",
