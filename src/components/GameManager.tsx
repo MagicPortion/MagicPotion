@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { css } from "#styled-system/css";
-import { useEffect } from "react";
 import { useGameStore } from "../store/useGameStore";
 import type { Scene } from "../store/useGameStore";
 import { useGameScale } from "../hooks/useGameScale";
