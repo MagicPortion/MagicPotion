@@ -21,11 +21,9 @@ interface ShopUIProps {
   refreshCount: number;
   handleCardClick: (instanceId: string) => void;
   handleRefreshTap: () => void;
-  setShowBuyModal: (show: boolean) => void;
   setShowExitModal: (show: boolean) => void;
   setQuantities: (quantities: Record<string, number>) => void;
 
-  showBuyModal: boolean;
   showExitModal: boolean;
   showRefreshModal: boolean;
   setShowRefreshModal: (show: boolean) => void;
@@ -38,15 +36,12 @@ interface ShopUIProps {
 
 export default function ShopUI({
   money, day, shopItems, quantities, soldOutItems, totalCost, canBuy, currentRefreshCost, refreshCount,
-  handleCardClick, handleRefreshTap, setShowBuyModal, setShowExitModal, setQuantities,
-  showBuyModal, showExitModal, showRefreshModal, setShowRefreshModal, receiptItems, onPurchase, onRefresh, onExit
+  handleCardClick, handleRefreshTap, setShowExitModal, setQuantities,
+  showExitModal, showRefreshModal, setShowRefreshModal, receiptItems, onPurchase, onRefresh, onExit
 }: ShopUIProps) {
   const firstRowItems = shopItems.slice(0, 3);
   const secondRowItems = shopItems.slice(3, 5);
   const hasSelectedItems = shopItems.some((item) => (quantities[item.instanceId] ?? 0) > 0);
-
-  const selectedBaseItems = shopItems.filter(item => quantities[item.instanceId] === 1 && item.category === "base");
-  const selectedAccentItems = shopItems.filter(item => quantities[item.instanceId] === 1 && item.category === "accent");
 
   const selectableItems = shopItems.filter(item => !soldOutItems[item.instanceId]);
   const allSelected = selectableItems.length > 0 && selectableItems.every(item => quantities[item.instanceId] === 1);
@@ -131,7 +126,7 @@ export default function ShopUI({
             ))}
           </div>
         </div>
-        <ShopActionBar totalCost={totalCost} canBuy={canBuy} hasSelectedItems={hasSelectedItems} setShowBuyModal={setShowBuyModal} setShowExitModal={setShowExitModal} onPurchase={onPurchase} onClear={() => setQuantities({})} />
+        <ShopActionBar totalCost={totalCost} canBuy={canBuy} hasSelectedItems={hasSelectedItems} setShowExitModal={setShowExitModal} onPurchase={onPurchase} onClear={() => setQuantities({})} />
       </div>
 
       {/* 品揃え更新モーダル */}
@@ -159,66 +154,6 @@ export default function ShopUI({
                 </div>
               </>
             )}
-          </div>
-        </div>
-      )}
-
-      {/* 購入確認リストモーダル */}
-      {showBuyModal && (
-        <div className={modalOverlayStyle}>
-          <div className={modalContentStyle}>
-            <p className={css({ fontSize: "24px", fontWeight: "900", mb: "20px", color: "#4a3321", letterSpacing: "0.05em" })}>. 購入確認リスト .</p>
-            
-            <div className={css({ maxHeight: "260px", overflowY: "auto", mb: "20px", px: "4px", display: "flex", flexDirection: "column", gap: "12px" })}>
-              
-              {/* 【Base 素材の欄】 */}
-              {selectedBaseItems.length > 0 && (
-                <div className={css({ textAlign: "left" })}>
-                  <span className={css({ fontSize: "12px", fontWeight: "bold", color: "#ff4d4f", bg: "#fff1f0", px: "8px", py: "2px", borderRadius: "4px" })}>【 Base 素材 】</span>
-                  <div className={css({ mt: "6px", bg: "#fafafa", borderRadius: "8px", p: "8px" })}>
-                    {selectedBaseItems.map(item => (
-                      <div key={item.instanceId} className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", py: "4px" })}>
-                        <span className={css({ fontSize: "15px", fontWeight: "bold", color: "#222" })}>{item.name}</span>
-                        <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`${item.price} G`}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* 【Accent 素材の欄】 */}
-              {selectedAccentItems.length > 0 && (
-                <div className={css({ textAlign: "left" })}>
-                  <span className={css({ fontSize: "12px", fontWeight: "bold", color: "#52c41a", bg: "#f6ffed", px: "8px", py: "2px", borderRadius: "4px" })}>【 Accent 素材 】</span>
-                  <div className={css({ mt: "6px", bg: "#fafafa", borderRadius: "8px", p: "8px" })}>
-                    {selectedAccentItems.map(item => (
-                      <div key={item.instanceId} className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", py: "4px" })}>
-                        <span className={css({ fontSize: "15px", fontWeight: "bold", color: "#222" })}>{item.name}</span>
-                        <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`${item.price} G`}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* お会計・所持金エリア */}
-            <div className={css({ borderTop: "2px dashed #e8e8e8", pt: "16px", mb: "24px", textAlign: "left", px: "8px" })}>
-              <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", mb: "6px" })}>
-                <span className={css({ fontWeight: "bold", color: "#555", fontSize: "14px" })}>合計金額</span>
-                <span className={css({ fontWeight: "900", color: "#ff4d4f", fontSize: "22px" })}>{`${totalCost} G`}</span>
-              </div>
-              <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center" })}>
-                <span className={css({ color: "#777", fontSize: "14px", fontWeight: "bold" })}>現在の 所持金</span>
-                <span className={css({ fontWeight: "900", color: "#4a3321", fontSize: "16px" })}>{`${money} G`}</span>
-              </div>
-            </div>
-
-            <p className={css({ fontSize: "14px", fontWeight: "bold", color: "#555", mb: "24px" })}>以上の素材を購入しますか？</p>
-            <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
-              <button onClick={() => setShowBuyModal(false)} className={css({ bg: "#bae7ff", color: "#0050b3", border: "none", px: "36px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>戻る</button>
-              <button onClick={onPurchase} className={css({ bg: "#52c41a", color: "white", border: "none", px: "36px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>購入する</button>
-            </div>
           </div>
         </div>
       )}
