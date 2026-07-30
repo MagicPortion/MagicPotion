@@ -68,7 +68,7 @@ export default function ShopUI({
   return (
     <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "absolute", inset: 0, pb: "35px" })}>
       <div className={css({ position: "relative", bg: "#46a1ea", color: "white", fontSize: "42px", fontWeight: "bold", pl: "160px", pr: "160px", pt: "14px", pb: "14px", borderRadius: "10px", mb: "20px", letterSpacing: "0.2em", boxShadow: "0 6px 16px rgba(0,0,0,0.25)" })}>
-        素材 ショップ
+        素材ショップ
       </div>
       <div className={css({ position: "relative", bg: "#7a4a2e", border: "6px solid #e2a581", borderRadius: "24px", w: "95%", maxW: "1020px", h: "650px", p: "45px 35px 30px 35px", boxShadow: "0 22px 45px rgba(0,0,0,0.35)", display: "flex", flexDirection: "column", justifyContent: "space-between" })}>
         <button 
@@ -181,7 +181,7 @@ export default function ShopUI({
                 <span className={css({ fontWeight: "900", color: "#ff4d4f", fontSize: "22px" })}>{`${totalCost} G`}</span>
               </div>
               <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center" })}>
-                <span className={css({ color: "#777", fontSize: "14px", fontWeight: "bold" })}>現在の お財布 (所持金)</span>
+                <span className={css({ color: "#777", fontSize: "14px", fontWeight: "bold" })}>現在の 所持金</span>
                 <span className={css({ fontWeight: "900", color: "#4a3321", fontSize: "16px" })}>{`${money} G`}</span>
               </div>
             </div>
