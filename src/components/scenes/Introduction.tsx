@@ -237,7 +237,7 @@ export default function Introduction() {
         >
           <div
             className={css({
-              width: "900px",
+              width: "950px",
               border: "2px solid rgba(255, 227, 125, 0.83)",
               borderRadius: "28px",
               background: "rgba(217, 0, 255, 0.16)",
@@ -273,7 +273,7 @@ export default function Introduction() {
               })}
             >
               <p>長年の経営不振により、</p>
-              <p>督促状「魔女年金滞納のお知らせ」が届いてしまった！？</p>
+              <p>督促状「魔女銀行より滞納のお知らせ」が届いてしまった！？</p>
               <p
                 className={css({
                   fontSize: "34px",
@@ -284,7 +284,7 @@ export default function Introduction() {
                   textShadow: "0 0 16px rgba(255,230,109,0.35)",
                 })}
               >
-                期限は 5 日後、目標金額 100000 G。
+                期限は 5 日後、目標金額 10000 G。
               </p>
               <p>魔女の店と彼女の運命は主人公に託された！！！</p>
             </div>
