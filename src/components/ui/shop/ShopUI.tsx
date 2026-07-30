@@ -1,10 +1,10 @@
 import { IconRefresh } from '../icons';
 import ShopCard from './ShopCard';
 import ShopActionBar from './ShopActionBar';
-import type { MaterialDef } from '../../../data/types';
+import type { MaterialDefWithUrl } from '../../../data/types';
 import { css } from "#styled-system/css";
 
-interface ShopMaterialItem extends MaterialDef {
+interface ShopMaterialItem extends MaterialDefWithUrl {
   instanceId: string;
 }
 
@@ -68,11 +68,9 @@ export default function ShopUI({
   return (
     <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "absolute", inset: 0, pb: "35px" })}>
       <div className={css({ position: "relative", bg: "#46a1ea", color: "white", fontSize: "42px", fontWeight: "bold", pl: "160px", pr: "160px", pt: "14px", pb: "14px", borderRadius: "10px", mb: "20px", letterSpacing: "0.2em", boxShadow: "0 6px 16px rgba(0,0,0,0.25)" })}>
-        <span style={{ position: "absolute", left: "40px", color: "white" }}>◀</span>
         素材 ショップ
-        <span style={{ position: "absolute", right: "40px", color: "white" }}>▶</span>
       </div>
-      <div className={css({ position: "relative", bg: "#f3be9f", border: "6px solid #e2a581", borderRadius: "24px", w: "95%", maxW: "1020px", h: "650px", p: "45px 35px 30px 35px", boxShadow: "0 22px 45px rgba(0,0,0,0.35)", display: "flex", flexDirection: "column", justifyContent: "space-between" })}>
+      <div className={css({ position: "relative", bg: "#7a4a2e", border: "6px solid #e2a581", borderRadius: "24px", w: "95%", maxW: "1020px", h: "650px", p: "45px 35px 30px 35px", boxShadow: "0 22px 45px rgba(0,0,0,0.35)", display: "flex", flexDirection: "column", justifyContent: "space-between" })}>
         <button 
           onClick={handleRefreshTap}
           disabled={hasSelectedItems}
@@ -129,7 +127,7 @@ export default function ShopUI({
                 </p>
                 <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
                   <button onClick={() => setShowRefreshModal(false)} className={css({ bg: "#bae7ff", color: "#0050b3", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>戻る</button>
-                  <button onClick={onRefresh} className={css({ bg: "#ff7875", color: "white", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>入れ替える -{currentRefreshCost}G</button>
+                  <button onClick={onRefresh} className={css({ bg: "#ff7875", color: "white", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>入れ替える {currentRefreshCost}G</button>
                 </div>
               </>
             )}
@@ -153,8 +151,7 @@ export default function ShopUI({
                     {selectedBaseItems.map(item => (
                       <div key={item.instanceId} className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", py: "4px" })}>
                         <span className={css({ fontSize: "15px", fontWeight: "bold", color: "#222" })}>{item.name}</span>
-                        {/* 【修正】テンプレートリテラルで安全に文字列結合しました */}
-                        <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`-${item.price} G`}</span>
+                        <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`${item.price} G`}</span>
                       </div>
                     ))}
                   </div>
@@ -169,8 +166,7 @@ export default function ShopUI({
                     {selectedAccentItems.map(item => (
                       <div key={item.instanceId} className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", py: "4px" })}>
                         <span className={css({ fontSize: "15px", fontWeight: "bold", color: "#222" })}>{item.name}</span>
-                        {/* 【修正】こちらも同様に修正完了 */}
-                        <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`-${item.price} G`}</span>
+                        <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`${item.price} G`}</span>
                       </div>
                     ))}
                   </div>
@@ -182,7 +178,7 @@ export default function ShopUI({
             <div className={css({ borderTop: "2px dashed #e8e8e8", pt: "16px", mb: "24px", textAlign: "left", px: "8px" })}>
               <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", mb: "6px" })}>
                 <span className={css({ fontWeight: "bold", color: "#555", fontSize: "14px" })}>合計金額</span>
-                <span className={css({ fontWeight: "900", color: "#ff4d4f", fontSize: "22px" })}>{`-${totalCost} G`}</span>
+                <span className={css({ fontWeight: "900", color: "#ff4d4f", fontSize: "22px" })}>{`${totalCost} G`}</span>
               </div>
               <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center" })}>
                 <span className={css({ color: "#777", fontSize: "14px", fontWeight: "bold" })}>現在の お財布 (所持金)</span>

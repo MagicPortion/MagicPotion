@@ -30,6 +30,7 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
 
   return (
     <div
+      data-sound="cancel"
       onClick={handleClose}
       style={{
         position: "absolute", inset: 0, zIndex: 60,

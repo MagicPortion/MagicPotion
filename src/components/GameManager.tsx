@@ -1,8 +1,10 @@
 import { css } from "#styled-system/css";
+import { useEffect } from "react";
 import { useGameStore } from "../store/useGameStore";
 import type { Scene } from "../store/useGameStore";
 import { useGameScale } from "../hooks/useGameScale";
 import { GAME_W, GAME_H } from "../hooks/gameConstants";
+import { isCancelSoundTarget, isSelectSoundTarget, playCancelSound, playSelectSound } from "../utils/sound";
 import { PixiAppProvider } from "../contexts/PixiAppContext";
 import Header from "./Header";
 import TitleScene from "./scenes/TitleScene";
@@ -57,8 +59,24 @@ const renderScene = (scene: Scene) => {
 };
 
 export default function GameManager() {
-  const { scene, day, money, materials, brewedPotions, isInventoryOpen, setIsInventoryOpen } = useGameStore();
+  const { scene, day, money, materials, isInventoryOpen, setIsInventoryOpen } = useGameStore();
   const scale = useGameScale();
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (isCancelSoundTarget(event.target)) {
+        playCancelSound();
+        return;
+      }
+
+      if (isSelectSoundTarget(event.target)) {
+        playSelectSound();
+      }
+    };
+
+    window.addEventListener("pointerdown", handlePointerDown, { capture: true });
+    return () => window.removeEventListener("pointerdown", handlePointerDown, { capture: true });
+  }, []);
 
   const scaledW = Math.floor(GAME_W * scale);
   const scaledH = Math.floor(GAME_H * scale);
@@ -68,7 +86,7 @@ export default function GameManager() {
     <div className={css({ width: "100vw", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#000", overflow: "hidden" })}>
       {/* クリップ領域：スケール後の実際の表示サイズ。width/height は動的計算値のためinline style */}
       <div style={{ width: scaledW, height: scaledH }} className={css({ overflow: "hidden", position: "relative", flexShrink: 0 })}>
-        {/* ゲームコンテナ：常に GAME_W×GAME_H、CSS scale で拡縮。transform・width・height は動的のためinline style */}
+        {/* ゲームコンテナ：常に GAME_W×GAME_H、CSS scale で拡縮。transform・width・height は動的ためinline style */}
         <div
           style={{ width: GAME_W, height: GAME_H, transform: `scale(${scale})` }}
           className={css({ transformOrigin: "top left", position: "absolute", top: 0, left: 0, overflow: "hidden" })}
@@ -93,7 +111,6 @@ export default function GameManager() {
           {isInventoryOpen && (
             <InventoryModal
               materials={materials}
-              brewedPotions={brewedPotions}
               onClose={() => setIsInventoryOpen(false)}
             />
           )}

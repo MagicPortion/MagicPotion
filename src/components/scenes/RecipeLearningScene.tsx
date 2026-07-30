@@ -1,25 +1,24 @@
-import { useMemo, useState } from "react";
+import { useMemo} from "react";
 import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import { RECIPES, getPotion, calcSellPrice } from "../../data/gameData";
-import DialogueBox, { ActionButton } from "../ui/dialogue/DialogueBox";
+import DialogueBox from "../ui/dialogue/DialogueBox";
 import RecipeOptionCards from "../ui/recipe/RecipeOptionCards";
-import { IconRefresh } from "../ui/icons";
 import Character from "../ui/character/Character";
 
 export default function RecipeLearningScene() {
-  const { dailyRecipeOptions, recipeLevel, learnRecipe, reloadDailyOptions, money, advanceScene, setIsInventoryOpen } =
+  const { dailyRecipeOptions, recipeLevel, learnRecipe, advanceScene, setIsInventoryOpen } =
     useGameStore();
   const { width, height } = useWindowSize();
-  const [reloadMsg, setReloadMsg] = useState<string | null>(null);
+  
 
   const commands = useMemo<DrawCommand[]>(() => [
     { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
   ], [width, height]);
 
-  const options = dailyRecipeOptions.slice(0, 3).flatMap((id) => {
+  const options = dailyRecipeOptions.flatMap((id) => {
     const recipe = RECIPES.find((r) => r.id === id);
     if (!recipe) return [];
     const potion = getPotion(recipe.potionId);
@@ -34,11 +33,6 @@ export default function RecipeLearningScene() {
     advanceScene();
   };
 
-  const handleReload = () => {
-    const ok = reloadDailyOptions();
-    setReloadMsg(ok ? null : "お金が足りません…");
-  };
-
   return (
     <div style={{ width, height }} className={css({ position: "relative", overflow: "hidden" })}>
       <PixiCanvas commands={commands} backgroundColor={0xfde8f0} />
@@ -46,23 +40,6 @@ export default function RecipeLearningScene() {
       <RecipeOptionCards options={options} onLearn={handleLearn} />
       <DialogueBox
         onInventory={() => setIsInventoryOpen(true)}
-        actions={
-          <>
-            {reloadMsg && (
-              <span className={css({ fontSize: "13px", color: "#e07070", mr: "4px" })}>{reloadMsg}</span>
-            )}
-            <ActionButton
-              variant="secondary"
-              onClick={handleReload}
-              disabled={money < 10}
-            >
-              <IconRefresh size={14} /> 10Gで引き直す
-            </ActionButton>
-            <ActionButton variant="secondary" onClick={advanceScene}>
-              スキップ →
-            </ActionButton>
-          </>
-        }
       />
     </div>
   );

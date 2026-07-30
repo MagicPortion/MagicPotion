@@ -5,8 +5,13 @@ export interface MaterialDef {
   name: string;
   category: MaterialCategory;
   colorHex: string;
+  imagePath: string;
   price: number;
   spawnWeight: number;
+}
+
+export interface MaterialDefWithUrl extends MaterialDef {
+  imageUrl: string;
 }
 
 export interface RecipeDef {
