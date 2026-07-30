@@ -10,7 +10,8 @@ export default function GameEndScene() {
   const endingNumber = isClear ? "END 01 : 返済完了 ~賑わいの店~" : "END 02 : 返済失敗 ~空き地~";
   const endingText = isClear
     ? "あれから無事に返済を完了した魔女とあなたは、\n今日も不思議な店を営んでいる。\nお店は賑わい、魔法薬の調合も順調だ。\nこれからもあなたは魔女と共にこの町で歩んでいくのだろう。"
-    : "間に合わなかったあぁぁ......(T^T)\nお店もなくなり立派な空き地です";
+    // 失敗END2 の文章
+    : "返済期日に間に合わなかった魔女の店は、\n更地となり売りに出されてしまった。\n空き地を見つめる魔女はこれからどうやって生きていくのか、\nあなたは心配でならなかった。";
 
   const [showButton, setShowButton] = React.useState(false);
 
