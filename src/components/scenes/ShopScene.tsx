@@ -5,6 +5,7 @@ import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import { MATERIALS, SHOP_SLOTS_BY_LEVEL, sampleWeightedChoices } from "../../data/gameData";
 import DialogueBox from "../ui/dialogue/DialogueBox";
 import ShopUI from "../ui/shop/ShopUI";
+import shopBackground from "#assets/Back/ShopBack.png";
 
 export default function ShopScene() {
   const {
@@ -73,7 +74,7 @@ export default function ShopScene() {
   };
 
   const commands = useMemo<DrawCommand[]>(
-    () => [{ type: "rect", x: 0, y: 0, width, height, color: 0x2c2c2c }],
+    () => [{ type: "image", x: 0, y: 0, width, height, imageSrc: shopBackground }],
     [width, height],
   );
 
@@ -94,7 +95,7 @@ export default function ShopScene() {
 
   return (
     <div style={{ position: "relative", width, height, overflow: "hidden" }}>
-      <PixiCanvas commands={commands} backgroundColor={0x2c2c2c} />
+      <PixiCanvas commands={commands} />
       <ShopUI
         money={money}
         shopItems={shopItems}

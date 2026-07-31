@@ -10,6 +10,7 @@ import BrewResultPopup from "../ui/brew/BrewResultPopup";
 import PotionShelf from "../ui/brew/PotionShelf";
 import { css } from "#styled-system/css";
 import { playMergingSound, playMergeResultSound, stopMergingSound } from "../../utils/sound";
+import witchBackground from "#assets/Back/WitchBack.png";
 
 export default function BrewScene() {
   const { materials, brew, advanceScene, recipeLevel, setIsInventoryOpen } = useGameStore();
@@ -25,8 +26,20 @@ export default function BrewScene() {
   const [isBrewing, setIsBrewing] = useState(false);
   const [pendingResults, setPendingResults] = useState<{ results: BrewResult[]; targetColorHex: string } | null>(null);
   const [bubbles, setBubbles] = useState<{ x: number; y: number; radius: number; color: number }[]>([]);
+  // 混ぜ棒がカクカクと震えながら回るステップ（滑らかに補間せず、コマ送りっぽく角度を飛ばす）
+  const [stirStep, setStirStep] = useState(0);
+  // 蝋燭の灯りのゆらぎ（常時、控えめにちらつかせる）
+  const [candleAlpha, setCandleAlpha] = useState(0.3);
 
   useEffect(() => stopMergingSound, []);
+
+  // 蝋燭明かりのゆらぎループ（演出中でなくても常時ちらつかせる）
+  useEffect(() => {
+    const id = setInterval(() => {
+      setCandleAlpha(0.22 + Math.random() * 0.18);
+    }, 130);
+    return () => clearInterval(id);
+  }, []);
 
   const allBases   = MATERIALS.filter((m) => m.category === "base");
   const allAccents = MATERIALS.filter((m) => m.category === "accent");
@@ -124,18 +137,18 @@ export default function BrewScene() {
           }))
           .filter((b) => b.radius > 2); // 半径が小さくなったら消滅
 
-        // 一定確率で大釜の中心座標付近から新しい泡を生成
+        // 一定確率で大釜の口（液面）付近から新しい泡を生成（釜は画面左側に配置されている）
         if (Math.random() < 0.2) { // 60fps用の出現率調整
           const angle = Math.random() * Math.PI * 2;
-          const dist = Math.random() * 120; // 釜の半径（148）内に収まるように配置
+          const dist = Math.random() * 85; // 口の半径内に収まるように配置
 
           // 泡の色：現在の色、完成する薬の色、ゴールドのいずれかをランダムにブレンド
           const r = Math.random();
           const bubbleColor = r < 0.4 ? targetColorHex : (r < 0.8 ? "c8a84b" : "3d3d5c");
 
           next.push({
-            x: width / 2 + Math.cos(angle) * dist,
-            y: height * 0.64 + Math.sin(angle) * dist,
+            x: width * 0.15 + Math.cos(angle) * dist,
+            y: height * 0.62 - 120 + Math.sin(angle) * dist * 0.3,
             radius: 8 + Math.random() * 18,
             color: colorNum(bubbleColor),
           });
@@ -149,6 +162,11 @@ export default function BrewScene() {
           const r = Math.random();
           return r < 0.33 ? "3d3d5c" : (r < 0.66 ? targetColorHex : "c8a84b");
         });
+      }
+
+      // 混ぜ棒の角度をコマ送りで飛ばして、なめらかに回さずカクカクと震える見た目にする
+      if (frame % 8 === 0) {
+        setStirStep((s) => (s + 1) % 8);
       }
     }, 16); // 16ms (60 FPS) でぬるぬる動作
 
@@ -169,8 +187,17 @@ export default function BrewScene() {
   };
 
   const commands = useMemo<DrawCommand[]>(() => {
+    // 大釜は画面左側に配置し、中央のパネルと重ならないようにする（＝モーダル感をなくして一体感を出す）
+    const potCenterX = width * 0.15;
+    const potCenterY = height * 0.62;
+
     const list: DrawCommand[] = [
-      { type: "rect",   x: 0,               y: 0,              width,      height,      color: 0x0a0816 },
+      // 0. 魔女の背景（夜なので暗く落として、蝋燭の灯りだけがぼんやり点る雰囲気にする）
+      { type: "image", x: 0, y: 0, width, height, imageSrc: witchBackground },
+      { type: "rect",  x: 0, y: 0, width, height, color: 0x05040c, alpha: 0.78 },
+      // 蝋燭の灯りのゆらぎ（大釜の周り、控えめな暖色の光だまり）
+      { type: "ellipse", x: potCenterX, y: potCenterY - 60, radiusX: 240, radiusY: 190, color: 0xffb35c, alpha: candleAlpha * 0.35 },
+      { type: "ellipse", x: potCenterX, y: potCenterY - 60, radiusX: 130, radiusY: 105, color: 0xffcf8a, alpha: candleAlpha * 0.5 },
     ];
 
     // 1. 泡のパーティクルを先に描画リストに追加（これで大釜の本体やフチの裏側に描画されます）
@@ -182,25 +209,55 @@ export default function BrewScene() {
       }
     }
 
-    // 2. 大釜本体およびフチを、状態カラー (cauldronColorHex) に基づき描画（泡より手前）
-    // 液体を表す「丸い円 (circle)」は完全に削除し、釜自体が明滅・色変化するようにしています。
+    // 2. 大釜本体を丸みを帯びた楕円形で描画し、状態カラー (cauldronColorHex) に基づき色変化させる
+    // 液体を表す「丸い円 (circle)」は完全に削除し、釜自体が明滅・色変化するようにしている。
+    const potColor = colorNum(cauldronColorHex);
     list.push(
-      { type: "rect",   x: width / 2 - 190, y: height * 0.52,  width: 380, height: 290, color: colorNum(cauldronColorHex) },
-      { type: "rect",   x: width / 2 - 210, y: height * 0.52,  width: 420, height: 38,  color: colorNum(cauldronColorHex) }
+      // 丸くふくらんだ胴体
+      { type: "ellipse", x: potCenterX, y: potCenterY, radiusX: 165, radiusY: 130, color: potColor },
+      // 上部の縁（フチ）：胴体より少し張り出させ、鉄製の魔法の釜らしい厚みを出す
+      { type: "ellipse", x: potCenterX, y: potCenterY - 108, radiusX: 138, radiusY: 34, color: 0x2b2b40 },
+      // 口元のすぼまり（内側の暗がり）
+      { type: "ellipse", x: potCenterX, y: potCenterY - 108, radiusX: 108, radiusY: 26, color: 0x14101c },
+      // 口の中の液面
+      { type: "ellipse", x: potCenterX, y: potCenterY - 108, radiusX: 97, radiusY: 19, color: potColor },
+      // 左上のハイライトで丸みを強調
+      { type: "ellipse", x: potCenterX - 75, y: potCenterY - 50, radiusX: 46, radiusY: 34, color: 0xffffff, alpha: 0.1 },
+      // 持ち手（フチの少し上、細く短い輪っか）
+      { type: "ellipse", x: potCenterX - 118, y: potCenterY - 122, radiusX: 16, radiusY: 13, color: 0x2b2b40, filled: false, lineWidth: 5 },
+      { type: "ellipse", x: potCenterX + 118, y: potCenterY - 122, radiusX: 16, radiusY: 13, color: 0x2b2b40, filled: false, lineWidth: 5 },
+      // 胴体側面の持ち手（少し上の位置、胴体と同じ色で太く短い輪っか）
+      { type: "ellipse", x: potCenterX - 160, y: potCenterY - 40, radiusX: 13, radiusY: 11, color: potColor, filled: false, lineWidth: 9 },
+      { type: "ellipse", x: potCenterX + 160, y: potCenterY - 40, radiusX: 13, radiusY: 11, color: potColor, filled: false, lineWidth: 9 }
     );
 
-    // 3. 大釜の脚を描画（最手前）
+    // 3. 大釜の脚を描画（最手前）：胴体と同じ色にして一体感を出し、3本脚を胴体の下にぐっと寄せる
     list.push(
-      { type: "rect",   x: width / 2 - 168,  y: height * 0.80,  width: 38,  height: 58,  color: 0x1c1c2e },
-      { type: "rect",   x: width / 2 + 130,  y: height * 0.80,  width: 38,  height: 58,  color: 0x1c1c2e }
+      { type: "rect",   x: potCenterX - 88,  y: potCenterY + 90,  width: 28,  height: 46, cornerRadius: 8, color: potColor },
+      { type: "rect",   x: potCenterX + 60,  y: potCenterY + 90,  width: 28,  height: 46, cornerRadius: 8, color: potColor },
+      { type: "rect",   x: potCenterX - 17,  y: potCenterY + 100, width: 34,  height: 52, cornerRadius: 9, color: potColor }
     );
+
+    // 4. 混ぜ棒（演出中のみ）：なめらかに回さず、コマ送りの角度でカクカクと震えながら混ぜている見た目にする
+    if (isBrewing) {
+      const stirAngle = (stirStep / 8) * Math.PI * 2;
+      const stirRadius = 50;
+      const tipX = potCenterX + 12 + Math.cos(stirAngle) * stirRadius;
+      const tipY = potCenterY - 110 + Math.sin(stirAngle) * stirRadius * 0.4;
+      const handleX = potCenterX + 130;
+      const handleY = potCenterY - 230;
+      list.push(
+        { type: "line", x: handleX, y: handleY, x2: tipX, y2: tipY, lineWidth: 11, color: 0x6b4a2f },
+        { type: "circle", x: tipX, y: tipY, radius: 7, color: 0x4a3320 }
+      );
+    }
 
     return list;
-  }, [width, height, cauldronColorHex, isBrewing, bubbles]);
+  }, [width, height, cauldronColorHex, isBrewing, bubbles, stirStep, candleAlpha]);
 
   return (
     <div style={{ width, height }} className={css({ position: "relative", overflow: "hidden" })}>
-      <PixiCanvas commands={commands} backgroundColor={0x0a0816} />
+      <PixiCanvas commands={commands} backgroundColor={0x05040c} />
 
       {/* 演出中（isBrewing === true）は中央の調合パネルと棚を隠す */}
       {!isBrewing && (
