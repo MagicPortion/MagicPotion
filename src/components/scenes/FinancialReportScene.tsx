@@ -1,12 +1,13 @@
 import { css } from "#styled-system/css";
-import { CLEAR_MONEY_THRESHOLD, END_DAY, useGameStore } from "../../store/useGameStore";
+import { useGameStore } from "../../store/useGameStore";
+import { GOAL_MONEY, TOTAL_DAYS } from "../../data/constants";
 
 const formatGold = (amount: number) => `${amount.toLocaleString()}G`;
 
 export default function FinancialReportScene() {
   const { dailyFinanceReports, money, setScene } = useGameStore();
   const reportByDay = new Map(dailyFinanceReports.map((report) => [report.day, report]));
-  const reports = Array.from({ length: END_DAY }, (_, index) => {
+  const reports = Array.from({ length: TOTAL_DAYS }, (_, index) => {
     const day = index + 1;
     return reportByDay.get(day) ?? { day, expense: 0, income: 0 };
   });
@@ -128,7 +129,7 @@ export default function FinancialReportScene() {
         >
           <div className={css({ display: "flex", justifyContent: "space-between" })}>
             <span>返済額</span>
-            <span>{formatGold(CLEAR_MONEY_THRESHOLD)}</span>
+            <span>{formatGold(GOAL_MONEY)}</span>
           </div>
           <div className={css({ display: "flex", justifyContent: "space-between", color: "#f5e7b5", fontWeight: "700" })}>
             <span>所持金</span>
