@@ -8,6 +8,7 @@ import {
   shuffleArray,
 } from "../data/gameData";
 import type { BrewedPotion, RecipeDef, SaleRecord } from "../data/types";
+import { TOTAL_DAYS } from "../data/constants";
 
 export type DialogueTheme = "dark" | "parchment" | "semi";
 export interface DialogueAppearance { theme: DialogueTheme; }
@@ -43,10 +44,7 @@ const SCENE_ORDER: Scene[] = [
 
 let instanceCounter = 0;
 
-export const END_DAY = 5;
-export const CLEAR_MONEY_THRESHOLD = 10000;
-
-const shouldTriggerGameEnd = (day: number) => day >= END_DAY;
+const shouldTriggerGameEnd = (day: number) => day >= TOTAL_DAYS;
 
 export interface DailyFinanceReport {
   day: number;

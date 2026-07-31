@@ -1,12 +1,13 @@
 import { css } from "#styled-system/css";
 import React from "react";
-import { CLEAR_MONEY_THRESHOLD, useGameStore } from "../../store/useGameStore";
+import { useGameStore } from "../../store/useGameStore";
+import { GOAL_MONEY } from "../../data/constants";
 import ed2Image from "#assets/images/ED2.png";
 import ed1Image from "#assets/images/ED1.png";
 
 export default function GameEndScene() {
   const { money, setScene } = useGameStore();
-  const isClear = money >= CLEAR_MONEY_THRESHOLD;
+  const isClear = money >= GOAL_MONEY;
   const endingNumber = isClear ? "END 01 : 返済完了 ~賑わいの店~" : "END 02 : 返済失敗 ~空き地~";
   const endingText = isClear
     ? "あれから無事に返済を完了した魔女とあなたは、\n今日も不思議な店を営んでいる。\nお店は賑わい、魔法薬の調合も順調だ。\nこれからもあなたは魔女と共にこの町で歩んでいくのだろう。"

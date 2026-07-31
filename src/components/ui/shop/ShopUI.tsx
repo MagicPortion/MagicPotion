@@ -2,6 +2,7 @@ import { IconRefresh } from '../icons';
 import ShopCard from './ShopCard';
 import ShopActionBar from './ShopActionBar';
 import type { MaterialDefWithUrl } from '../../../data/types';
+import { GOAL_MONEY, formatDayLabel } from '../../../data/constants';
 import { css } from "#styled-system/css";
 
 interface ShopMaterialItem extends MaterialDefWithUrl {
@@ -10,6 +11,7 @@ interface ShopMaterialItem extends MaterialDefWithUrl {
 
 interface ShopUIProps {
   money: number;
+  day: number;
   shopItems: ShopMaterialItem[];
   quantities: Record<string, number>;
   soldOutItems: Record<string, boolean>;
@@ -19,14 +21,13 @@ interface ShopUIProps {
   refreshCount: number;
   handleCardClick: (instanceId: string) => void;
   handleRefreshTap: () => void;
-  setShowBuyModal: (show: boolean) => void;
   setShowExitModal: (show: boolean) => void;
   setQuantities: (quantities: Record<string, number>) => void;
 
-  showBuyModal: boolean;
   showExitModal: boolean;
   showRefreshModal: boolean;
   setShowRefreshModal: (show: boolean) => void;
+  receiptItems: Array<{ id: string; name: string; price: number; category: string }>;
   onPurchase: () => void;
   onRefresh: () => void;
   onExit: () => void;
@@ -34,16 +35,32 @@ interface ShopUIProps {
 
 
 export default function ShopUI({
-  money, shopItems, quantities, soldOutItems, totalCost, canBuy, currentRefreshCost, refreshCount,
-  handleCardClick, handleRefreshTap, setShowBuyModal, setShowExitModal, setQuantities,
-  showBuyModal, showExitModal, showRefreshModal, setShowRefreshModal, onPurchase, onRefresh, onExit
+  money, day, shopItems, quantities, soldOutItems, totalCost, canBuy, currentRefreshCost, refreshCount,
+  handleCardClick, handleRefreshTap, setShowExitModal, setQuantities,
+  showExitModal, showRefreshModal, setShowRefreshModal, receiptItems, onPurchase, onRefresh, onExit
 }: ShopUIProps) {
   const firstRowItems = shopItems.slice(0, 3);
   const secondRowItems = shopItems.slice(3, 5);
   const hasSelectedItems = shopItems.some((item) => (quantities[item.instanceId] ?? 0) > 0);
 
-  const selectedBaseItems = shopItems.filter(item => quantities[item.instanceId] === 1 && item.category === "base");
-  const selectedAccentItems = shopItems.filter(item => quantities[item.instanceId] === 1 && item.category === "accent");
+  const selectableItems = shopItems.filter(item => !soldOutItems[item.instanceId]);
+  const allSelected = selectableItems.length > 0 && selectableItems.every(item => quantities[item.instanceId] === 1);
+
+  const handleSelectAll = () => {
+    if (allSelected) {
+      setQuantities({});
+      return;
+    }
+    const next: Record<string, number> = {};
+    selectableItems.forEach(item => {
+      next[item.instanceId] = 1;
+    });
+    setQuantities(next);
+  };
+
+  const receiptBaseItems = receiptItems.filter(item => item.category === "base");
+  const receiptAccentItems = receiptItems.filter(item => item.category === "accent");
+  const receiptTotal = receiptItems.reduce((sum, item) => sum + item.price, 0);
 
   const modalOverlayStyle = css({
     position: "absolute",
@@ -79,6 +96,12 @@ export default function ShopUI({
         >
           <IconRefresh size={52} />
         </button>
+        <button
+          onClick={handleSelectAll}
+          disabled={selectableItems.length === 0}
+          className={css({ position: "absolute", top: "96px", left: "60px", bg: "#46a1ea", color: "white", border: "3px solid white", borderRadius: "14px", px: "18px", py: "10px", fontSize: "24px", fontWeight: "bold", zIndex: 5, boxShadow: "0 4px 12px rgba(0,0,0,0.3)", transition: "transform 0.15s, opacity 0.15s", cursor: "pointer", _hover: { transform: "scale(1.05)", opacity: 0.9 } })}
+          style={{ opacity: selectableItems.length === 0 ? 0.4 : 1, cursor: selectableItems.length === 0 ? "not-allowed" : "pointer" }}
+        >{allSelected ? "全解除" : "全選択"}</button>
         <div className={css({ display: "flex", flexDirection: "column", gap: "28px", alignItems: "center", justifyContent: "center", flex: 1 })}>
           <div className={css({ display: "flex", justifyContent: "center", gap: "32px", w: "100%" })}>
             {firstRowItems.map((item) => (
@@ -103,7 +126,7 @@ export default function ShopUI({
             ))}
           </div>
         </div>
-        <ShopActionBar totalCost={totalCost} canBuy={canBuy} hasSelectedItems={hasSelectedItems} setShowBuyModal={setShowBuyModal} setShowExitModal={setShowExitModal} onClear={() => setQuantities({})} />
+        <ShopActionBar totalCost={totalCost} canBuy={canBuy} hasSelectedItems={hasSelectedItems} setShowExitModal={setShowExitModal} onPurchase={onPurchase} onClear={() => setQuantities({})} />
       </div>
 
       {/* 品揃え更新モーダル */}
@@ -135,71 +158,74 @@ export default function ShopUI({
         </div>
       )}
 
-      {/* 購入確認リストモーダル */}
-      {showBuyModal && (
-        <div className={modalOverlayStyle}>
-          <div className={modalContentStyle}>
-            <p className={css({ fontSize: "24px", fontWeight: "900", mb: "20px", color: "#4a3321", letterSpacing: "0.05em" })}>. 購入確認リスト .</p>
-            
-            <div className={css({ maxHeight: "260px", overflowY: "auto", mb: "20px", px: "4px", display: "flex", flexDirection: "column", gap: "12px" })}>
-              
-              {/* 【Base 素材の欄】 */}
-              {selectedBaseItems.length > 0 && (
-                <div className={css({ textAlign: "left" })}>
-                  <span className={css({ fontSize: "12px", fontWeight: "bold", color: "#ff4d4f", bg: "#fff1f0", px: "8px", py: "2px", borderRadius: "4px" })}>【 Base 素材 】</span>
-                  <div className={css({ mt: "6px", bg: "#fafafa", borderRadius: "8px", p: "8px" })}>
-                    {selectedBaseItems.map(item => (
-                      <div key={item.instanceId} className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", py: "4px" })}>
-                        <span className={css({ fontSize: "15px", fontWeight: "bold", color: "#222" })}>{item.name}</span>
-                        <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`${item.price} G`}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* 【Accent 素材の欄】 */}
-              {selectedAccentItems.length > 0 && (
-                <div className={css({ textAlign: "left" })}>
-                  <span className={css({ fontSize: "12px", fontWeight: "bold", color: "#52c41a", bg: "#f6ffed", px: "8px", py: "2px", borderRadius: "4px" })}>【 Accent 素材 】</span>
-                  <div className={css({ mt: "6px", bg: "#fafafa", borderRadius: "8px", p: "8px" })}>
-                    {selectedAccentItems.map(item => (
-                      <div key={item.instanceId} className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", py: "4px" })}>
-                        <span className={css({ fontSize: "15px", fontWeight: "bold", color: "#222" })}>{item.name}</span>
-                        <span className={css({ fontWeight: "bold", color: "#4a3321" })}>{`${item.price} G`}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* お会計・所持金エリア */}
-            <div className={css({ borderTop: "2px dashed #e8e8e8", pt: "16px", mb: "24px", textAlign: "left", px: "8px" })}>
-              <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", mb: "6px" })}>
-                <span className={css({ fontWeight: "bold", color: "#555", fontSize: "14px" })}>合計金額</span>
-                <span className={css({ fontWeight: "900", color: "#ff4d4f", fontSize: "22px" })}>{`${totalCost} G`}</span>
-              </div>
-              <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center" })}>
-                <span className={css({ color: "#777", fontSize: "14px", fontWeight: "bold" })}>現在の 所持金</span>
-                <span className={css({ fontWeight: "900", color: "#4a3321", fontSize: "16px" })}>{`${money} G`}</span>
-              </div>
-            </div>
-
-            <p className={css({ fontSize: "14px", fontWeight: "bold", color: "#555", mb: "24px" })}>以上の素材を購入しますか？</p>
-            <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
-              <button onClick={() => setShowBuyModal(false)} className={css({ bg: "#bae7ff", color: "#0050b3", border: "none", px: "36px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>戻る</button>
-              <button onClick={onPurchase} className={css({ bg: "#52c41a", color: "white", border: "none", px: "36px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>購入する</button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* 退店確認モーダル */}
       {showExitModal && (
         <div className={modalOverlayStyle}>
           <div className={modalContentStyle}>
-            <p className={css({ fontSize: "20px", fontWeight: "bold", mb: "24px", color: "#4a3321" })}>ショップを退店しますか？</p>
+            <p className={css({ fontSize: "24px", fontWeight: "900", mb: "18px", color: "#4a3321", letterSpacing: "0.05em" })}>. 退店確認 .</p>
+            <div className={css({ textAlign: "left", mb: "18px", bg: "#fafafa", borderRadius: "12px", p: "16px", display: "flex", flexDirection: "column", gap: "10px" })}>
+              <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: "bold", color: "#4a3321" })}>
+                <span>進行状況</span>
+                <span>{formatDayLabel(day)}</span>
+              </div>
+              <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", fontWeight: "bold", color: "#4a3321" })}>
+                <span>目標金額</span>
+                <span>{GOAL_MONEY.toLocaleString()}G</span>
+              </div>
+            </div>
+            <div className={css({ textAlign: "left", mb: "20px", bg: "#fff8e6", borderRadius: "12px", p: "16px" })}>
+              <p className={css({ fontSize: "16px", fontWeight: "bold", color: "#7a4a2e", mb: "10px" })}>今回の購入レシート</p>
+              {receiptItems.length > 0 ? (
+                <div className={css({ display: "flex", gap: "12px", alignItems: "stretch" })}>
+                  {/* 【Base 素材の欄】 */}
+                  <div className={css({ flex: 1, minW: 0, display: "flex", flexDirection: "column" })}>
+                    <span className={css({ alignSelf: "flex-start", fontSize: "13px", fontWeight: "bold", color: "#ff4d4f", bg: "#fff1f0", px: "8px", py: "2px", borderRadius: "4px", border: "1px solid #ffccc7" })}>【 Base 素材 】</span>
+                    <div className={css({ mt: "8px", display: "flex", flexDirection: "column", gap: "6px", maxHeight: "220px", overflowY: "auto", pr: "6px" })}>
+                      {receiptBaseItems.length > 0 ? (
+                        receiptBaseItems.map((item) => (
+                          <div key={item.id} className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px", fontSize: "15px", color: "#a8071a", fontWeight: "bold" })}>
+                            <span className={css({ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" })}>{item.name}</span>
+                            <span className={css({ flexShrink: 0 })}>{item.price}G</span>
+                          </div>
+                        ))
+                      ) : (
+                        <p className={css({ fontSize: "14px", color: "#999", margin: 0 })}>なし</p>
+                      )}
+                    </div>
+                  </div>
+                  {/* 【Accent 素材の欄】 */}
+                  <div className={css({ flex: 1, minW: 0, display: "flex", flexDirection: "column", borderLeft: "1px dashed #e0d3a8", pl: "12px" })}>
+                    <span className={css({ alignSelf: "flex-start", fontSize: "13px", fontWeight: "bold", color: "#52c41a", bg: "#f6ffed", px: "8px", py: "2px", borderRadius: "4px", border: "1px solid #b7eb8f" })}>【 Accent 素材 】</span>
+                    <div className={css({ mt: "8px", display: "flex", flexDirection: "column", gap: "6px", maxHeight: "220px", overflowY: "auto", pr: "6px" })}>
+                      {receiptAccentItems.length > 0 ? (
+                        receiptAccentItems.map((item) => (
+                          <div key={item.id} className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px", fontSize: "15px", color: "#237804", fontWeight: "bold" })}>
+                            <span className={css({ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" })}>{item.name}</span>
+                            <span className={css({ flexShrink: 0 })}>{item.price}G</span>
+                          </div>
+                        ))
+                      ) : (
+                        <p className={css({ fontSize: "14px", color: "#999", margin: 0 })}>なし</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <p className={css({ fontSize: "15px", color: "#777", margin: 0 })}>今回の購入はありません</p>
+              )}
+            </div>
+            {/* お会計・所持金残高エリア */}
+            <div className={css({ textAlign: "left", mb: "20px", bg: "#fafafa", borderRadius: "12px", p: "16px", display: "flex", flexDirection: "column", gap: "10px" })}>
+              <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center" })}>
+                <span className={css({ fontSize: "14px", fontWeight: "bold", color: "#777" })}>今回の購入合計</span>
+                <span className={css({ fontSize: "18px", fontWeight: "900", color: "#ff4d4f" })}>{`${receiptTotal.toLocaleString()} G`}</span>
+              </div>
+              <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center" })}>
+                <span className={css({ fontSize: "14px", fontWeight: "bold", color: "#777" })}>所持金残高</span>
+                <span className={css({ fontSize: "18px", fontWeight: "900", color: "#4a3321" })}>{`${money.toLocaleString()} G`}</span>
+              </div>
+            </div>
+            <p className={css({ fontSize: "18px", fontWeight: "bold", mb: "24px", color: "#4a3321" })}>ショップを退店しますか？</p>
             <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
               <button onClick={() => setShowExitModal(false)} className={css({ bg: "#bae7ff", color: "#0050b3", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>戻る</button>
               <button onClick={onExit} className={css({ bg: "#ff4d4f", color: "white", border: "none", px: "32px", py: "12px", borderRadius: "12px", fontSize: "16px", fontWeight: "bold", cursor: "pointer" })}>退店する</button>

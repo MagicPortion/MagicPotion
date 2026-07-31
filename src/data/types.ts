@@ -43,3 +43,10 @@ export interface SaleRecord {
   name: string;
   price: number;
 }
+
+export interface ReceiptItem {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+}
