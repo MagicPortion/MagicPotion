@@ -3,16 +3,10 @@ import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import { MATERIALS, SHOP_SLOTS_BY_LEVEL, sampleWeightedChoices } from "../../data/gameData";
+import type { ReceiptItem } from "../../data/types";
 import DialogueBox from "../ui/dialogue/DialogueBox";
 import ShopUI from "../ui/shop/ShopUI";
 import shopBackground from "#assets/Back/ShopBack.png";
-
-interface ReceiptItem {
-  id: string;
-  name: string;
-  price: number;
-  category: "base" | "accent";
-}
 
 export default function ShopScene() {
   const {
@@ -38,7 +32,6 @@ export default function ShopScene() {
   const [soldOutItems, setSoldOutItems] = useState<Record<string, boolean>>({});
   const [receiptItems, setReceiptItems] = useState<ReceiptItem[]>([]);
   const [refreshCount, setRefreshCount] = useState(1);
-  const [showBuyModal, setShowBuyModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
   const [showRefreshModal, setShowRefreshModal] = useState(false);
   const { width, height } = useWindowSize();
@@ -106,7 +99,6 @@ export default function ShopScene() {
     setReceiptItems((prev) => [...prev, ...purchasedReceiptItems]);
     setSoldOutItems(newSoldOut);
     setQuantities({});
-    setShowBuyModal(false);
     setPendingPostPurchaseScene("conversation_brew");
   };
 
@@ -125,10 +117,8 @@ export default function ShopScene() {
         refreshCount={refreshCount}
         handleCardClick={handleCardClick}
         handleRefreshTap={handleRefreshTap}
-        setShowBuyModal={setShowBuyModal}
         setShowExitModal={setShowExitModal}
         setQuantities={setQuantities}
-        showBuyModal={showBuyModal}
         showExitModal={showExitModal}
         showRefreshModal={showRefreshModal}
         setShowRefreshModal={setShowRefreshModal}

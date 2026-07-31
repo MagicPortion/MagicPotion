@@ -1,5 +1,5 @@
 export const TOTAL_DAYS = 5;
-export const GOAL_MONEY = 100000;
+export const GOAL_MONEY = 10000;
 
 export const formatDayLabel = (day: number, totalDays: number = TOTAL_DAYS) => {
   if (day >= totalDays) {
