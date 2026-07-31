@@ -40,11 +40,11 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
     >
       <div
         className={css({
-          background: "rgba(8, 6, 18, 0.8)",
-          border: "1px solid rgba(200, 168, 75, 0.3)",
-          borderRadius: "24px",
+          background: "rgba(12,8,3,0.96)",
+          border: "6px solid #8B6914",
+          borderRadius: "12px",
           p: "32px 40px 24px 40px", // 決定ボタン用に下の余白を少し調整
-          boxShadow: "0 24px 80px rgba(0,0,0,0.65)",
+          boxShadow: "0 20px 96px rgba(0,0,0,0.78)",
           backdropFilter: "blur(2px)",
           display: "flex",
           flexDirection: "column",
@@ -53,9 +53,9 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
           width: "750px", // 決定ボタンの配置を安定させるため幅を固定（必要に応じて調整してください）
           ml: "-750px",
         })}
-      >
+    >
     <div className={css({ mb: "12px", width: "100%", textAlign: "center" })}>
-      <div className={css({ position: "relative", width:"400px", mx: "auto", bg: "rgba(8,6,18,0.93)", color: "#e8d8b8", border: "1px solid rgba(200,168,75,0.4)", fontSize: "36px", fontWeight: "bold", pl: "80px", pr: "80px", pt: "12px", pb: "12px", borderRadius: "10px", letterSpacing: "0.2em", boxShadow: "0 12px 36px rgba(0,0,0,0.55)" })}>
+      <div className={css({ position: "relative", width:"400px", mx: "auto", bg: "rgba(30,20,8,0.78)", color: "#c8a84b", border: "1px solid #8B6914", fontSize: "36px", fontWeight: "bold", pl: "80px", pr: "80px", pt: "12px", pb: "12px", borderRadius: "10px", letterSpacing: "0.2em", boxShadow: "0 12px 36px rgba(0,0,0,0.55)" })}>
           レシピ選択
       </div>
       <p className={css({ fontSize: "24px", color: "#e8d8b8", m: "12px 0 0" })}>
@@ -83,18 +83,19 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
                 onClick={() => setSelectedId(opt.id)}
                 className={css({
                   display: "flex", flexDirection: "column", alignItems: "center", gap: "10px",
-                  bg: "white", 
+                  bg: "rgba(30,20,8,0.92)",
                   borderRadius: "20px", p: "20px 16px 16px",
                   cursor: "pointer", width: "200px",
-                  boxShadow: isSelected ? "0 0 0 5px #ffb347, 0 12px 32px rgba(0,0,0,0.2)" : "0 4px 16px rgba(0,0,0,0.1)", // 選択中のハイライト
-                  border: "3px solid",
-                  borderColor: isSelected ? "#ffb347" : (isKnown ? "pastel.lilac" : "pastel.mint"), // 選択中はオレンジ等の目立つ色に
+                  boxShadow: isSelected ? "0 0 0 4px rgba(200,168,75,0.24), 0 12px 32px rgba(0,0,0,0.5)" : "0 4px 16px rgba(0,0,0,0.32)", // 選択中のハイライト
+                  border: "2px solid",
+                  borderColor: isSelected ? "#c8a84b" : (isKnown ? "#8B6914" : "#4a3810"),
                   transform: isSelected ? "translateY(-6px) scale(1.04)" : "none", // 選択中は少し浮かせたままにする
                   transition: "all 0.18s",
                   _hover: {
                     transform: "translateY(-6px) scale(1.04)",
-                    boxShadow: "0 12px 32px rgba(0,0,0,0.18)",
-                    borderColor: isSelected ? "#ffb347" : (isKnown ? "pastel.lavender" : "pastel.sage"),
+                    bg: "rgba(42,29,12,0.96)",
+                    boxShadow: "0 12px 32px rgba(0,0,0,0.5)",
+                    borderColor: "#c8a84b",
                   },
                 })}
               >
@@ -105,15 +106,18 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
                   }}
                   className={css({ display: "block", w: "64px", h: "64px", borderRadius: "50%", flexShrink: 0 })}
                 />
-                <span className={css({ fontSize: "30px", fontWeight: "bold", color: "#4a3f55", textAlign: "center", lineHeight: 1.3 })}>
-                  {opt.potion.name}
+                <span className={css({ fontSize: "30px", fontWeight: "bold", color: "#e8d8b8", textAlign: "center", lineHeight: 1.3 })}>
+                  <PotionName name={opt.potion.name} />
                 </span>
-                <span className={css({ fontSize: "24px", color: "#8b7f99" })}>{opt.nextPrice}G</span>
+                <span className={css({ fontSize: "24px", color: "#c8a84b" })}>{opt.nextPrice}G</span>
                 <span className={css({
                   fontSize: "24px", fontWeight: "bold",
                   px: "10px", py: "3px", borderRadius: "20px",
-                  bg: isKnown ? "pastel.lilac" : "pastel.mint",
-                  color: "#4a3f55", whiteSpace: "nowrap",
+                  bg: "#1a0e06",
+                  border: "1px solid",
+                  borderColor: isKnown ? "#a6534f" : "#789b4a",
+                  color: isKnown ? "#d87872" : "#a7cb70",
+                  whiteSpace: "nowrap",
                 })}>
                   {isKnown ? `Lv.${opt.level} → ${opt.nextLevel}` : "Lv.1 習得"}
                 </span>
@@ -130,16 +134,17 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
             className={css({
               fontSize: "26px",
               fontWeight: "bold",
-              color: "white",
-              bg: selectedId ? "#46a1ea" : "#ccc", // 選択中のみ緑色、未選択はグレー
-              border: "none",
+              color: selectedId ? "#1a0e06" : "#6b5040",
+              bg: selectedId ? "#c8a84b" : "#1a0e06",
+              border: "1px solid",
+              borderColor: selectedId ? "#c8a84b" : "#4a3810",
               borderRadius: "12px",
               padding: "12px 36px",
               cursor: selectedId ? "pointer" : "not-allowed",
-              boxShadow: selectedId ? "0 4px 12px rgba(0,0,0,0.15)" : "none",
+              boxShadow: selectedId ? "0 4px 14px rgba(200,168,75,0.24)" : "none",
               transition: "all 0.15s",
               _hover: selectedId ? {
-                bg: "#4cae4c",
+                bg: "#e0c56f",
                 transform: "translateY(-2px)",
               } : {},
               _active: selectedId ? {
@@ -153,5 +158,21 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
 
       </div>
     </div>  
+  );
+}
+
+function PotionName({ name }: { name: string }) {
+  const suffix = "ポーション";
+
+  if (!name.endsWith(suffix)) {
+    return name;
+  }
+
+  return (
+    <>
+      {name.slice(0, -suffix.length)}
+      <br />
+      {suffix}
+    </>
   );
 }
