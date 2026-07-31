@@ -8,6 +8,7 @@ import { firstDayMorningDialogue,firstDayMoveDialogue,firstDayBrewDialogue,morni
 import witchEndImage from "#assets/characters/witch-end.png";
 import witchCoatImage from "#assets/characters/witch-coat.png";
 import type { Scene } from "../../store/useGameStore";
+import witchBackground from "#assets/Back/WitchBack.png";
 
 interface ConversationSceneProps {
   sceneOverride?: Scene;
@@ -71,15 +72,24 @@ export default function ConversationScene({ sceneOverride }: ConversationScenePr
     else advanceScene();
   };
 
-  const commands = useMemo<DrawCommand[]>(() => [
-    { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
-  ], [width, height]);
+  const commands = useMemo<DrawCommand[]>(() => {
+    const list: DrawCommand[] = [
+      { type: "image", x: 0, y: 0, width, height, imageSrc: witchBackground },
+    ];
+    // 調合前の会話（夜）は背景を暗く落とす
+    if (scene === "conversation_brew") {
+      list.push(
+        { type: "rect", x: 0, y: 0, width, height, color: 0x05040c, alpha: 0.78 }
+      );
+    }
+    return list;
+  }, [width, height, scene]);
 
   return (
     <div
       style={{ position: "relative", width, height, overflow: "hidden", cursor: "pointer" }} 
     >
-      <PixiCanvas commands={commands} backgroundColor={0xfff0f5} />
+      <PixiCanvas commands={commands} />
       <Character
         character="witch"
         imageSrc={

@@ -7,6 +7,7 @@ import { RECIPES, getPotion, calcSellPrice } from "../../data/gameData";
 import DialogueBox from "../ui/dialogue/DialogueBox";
 import RecipeOptionCards from "../ui/recipe/RecipeOptionCards";
 import Character from "../ui/character/Character";
+import witchBackground from "#assets/Back/WitchBack.png";
 
 export default function RecipeLearningScene() {
   const { dailyRecipeOptions, recipeLevel, learnRecipe, advanceScene, setIsInventoryOpen } =
@@ -15,7 +16,7 @@ export default function RecipeLearningScene() {
   
 
   const commands = useMemo<DrawCommand[]>(() => [
-    { type: "rect", x: 0, y: 0, width, height, color: 0xfde8f0 },
+    { type: "image", x: 0, y: 0, width, height, imageSrc: witchBackground },
   ], [width, height]);
 
   const options = dailyRecipeOptions.flatMap((id) => {
@@ -35,7 +36,7 @@ export default function RecipeLearningScene() {
 
   return (
     <div style={{ width, height }} className={css({ position: "relative", overflow: "hidden" })}>
-      <PixiCanvas commands={commands} backgroundColor={0xfde8f0} />
+      <PixiCanvas commands={commands} />
       <Character character="witch" />
       <RecipeOptionCards options={options} onLearn={handleLearn} />
       <DialogueBox
