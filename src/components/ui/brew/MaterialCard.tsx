@@ -75,7 +75,7 @@ export default function MaterialCard({
         )}
       </button>
 
-      {count > 1 && (
+      {count > 0 && (
         <span
           className={css({
             position: "absolute",
