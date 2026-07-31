@@ -14,7 +14,9 @@ export default function ConversationShopkeeperScene() {
   const { day, advanceScene, setIsInventoryOpen, pendingPostPurchaseScene } = useGameStore();
   const { width, height } = useWindowSize();
 
-const isPostPurchase = pendingPostPurchaseScene !== null;
+// 暗転中に pendingPostPurchaseScene が解除されても、
+// 「毎度あり。」から通常の店主会話へ切り替わらないよう入場時の状態を保持する。
+const [isPostPurchase] = useState(() => pendingPostPurchaseScene !== null);
 
 const dialogues = useMemo(() => {
   if (day === 1) {

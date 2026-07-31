@@ -1,5 +1,5 @@
+import { useEffect, useRef, useState } from "react";
 import { css } from "#styled-system/css";
-import { useEffect } from "react";
 import { useGameStore } from "../store/useGameStore";
 import type { Scene } from "../store/useGameStore";
 import { useGameScale } from "../hooks/useGameScale";
@@ -19,6 +19,8 @@ import EndingTransitionScene from "./scenes/EndingTransitionScene";
 import FinancialReportScene from "./scenes/FinancialReportScene";
 import GameEndScene from "./scenes/GameEndScene";
 import InventoryModal from "./ui/inventory/InventoryModal";
+import PixelSceneTransition from "./ui/common/PixelSceneTransition";
+import WhiteSceneTransition from "./ui/common/WhiteSceneTransition";
 
 
 const SCENE_LABEL: Record<Scene, string> = {
@@ -43,24 +45,82 @@ const renderScene = (scene: Scene) => {
   switch (scene) {
     case "title":                   return <TitleScene />;
     case "introduction":            return <Introduction />;
-    case "conversation":            return <ConversationScene />;
+    case "conversation":            return <ConversationScene sceneOverride={scene} />;
     case "recipe_learning":         return <RecipeLearningScene />;
-    case "conversation_move":       return <ConversationScene />;
+    case "conversation_move":       return <ConversationScene sceneOverride={scene} />;
     case "conversation_shopkeeper": return <ConversationShopkeeperScene />;
     case "shop":                    return <ShopScene />;
-    case "conversation_brew":       return <ConversationScene />;
+    case "conversation_brew":       return <ConversationScene sceneOverride={scene} />;
     case "brew":                    return <BrewScene />;
     case "display":                 return <DisplayScene />;
-    case "conversation_end":        return <ConversationScene />;
+    case "conversation_end":        return <ConversationScene sceneOverride={scene} />;
     case "ending_transition":      return <EndingTransitionScene />;
     case "financial_report":        return <FinancialReportScene />;
     case "game_end":                return <GameEndScene />;
   }
 };
 
+const sceneLocation = (scene: Scene): "witch" | "shopkeeper" | null => {
+  if (scene === "conversation_shopkeeper" || scene === "shop") return "shopkeeper";
+  if (
+    scene === "conversation" ||
+    scene === "recipe_learning" ||
+    scene === "conversation_move" ||
+    scene === "conversation_brew" ||
+    scene === "brew" ||
+    scene === "display"
+  ) return "witch";
+  return null;
+};
+
+const getTransitionKind = (from: Scene, to: Scene): "pixel" | "white" | null => {
+  if (from === "financial_report" && to === "game_end") return "white";
+  const fromLocation = sceneLocation(from);
+  const toLocation = sceneLocation(to);
+  if (fromLocation !== null && toLocation !== null && fromLocation !== toLocation) {
+    return "pixel";
+  }
+  return null;
+};
+
 export default function GameManager() {
   const { scene, day, money, materials, isInventoryOpen, setIsInventoryOpen } = useGameStore();
   const scale = useGameScale();
+  const [displayedScene, setDisplayedScene] = useState(scene);
+  const [transition, setTransition] = useState<{
+    kind: "pixel" | "white";
+    phase: "cover" | "uncover";
+  } | null>(null);
+  const displayedSceneRef = useRef(scene);
+
+  useEffect(() => {
+    const transitionKind = getTransitionKind(displayedSceneRef.current, scene);
+
+    if (!transitionKind) {
+      displayedSceneRef.current = scene;
+      setDisplayedScene(scene);
+      setTransition(null);
+      return;
+    }
+
+    const swapDelay = transitionKind === "white" ? 1200 : 620;
+    const finishDelay = transitionKind === "white" ? 2000 : 1240;
+
+    setTransition({ kind: transitionKind, phase: "cover" });
+    const swapTimer = window.setTimeout(() => {
+      displayedSceneRef.current = scene;
+      setDisplayedScene(scene);
+      setTransition({ kind: transitionKind, phase: "uncover" });
+    }, swapDelay);
+    const finishTimer = window.setTimeout(() => {
+      setTransition(null);
+    }, finishDelay);
+
+    return () => {
+      window.clearTimeout(swapTimer);
+      window.clearTimeout(finishTimer);
+    };
+  }, [scene]);
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
@@ -93,15 +153,15 @@ export default function GameManager() {
         >
           <PixiAppProvider>
             {/* シーン切り替え：key でリマウントして CSS フェード */}
-            <div key={scene} className={`scene-enter ${css({ width: "100%", height: "100%" })}`}>
-              {renderScene(scene)}
+            <div key={displayedScene} className={`scene-enter ${css({ width: "100%", height: "100%" })}`}>
+              {renderScene(displayedScene)}
             </div>
           </PixiAppProvider>
 
           {/* ヘッダー：タイトル画面・エンド画面では非表示 */}
-          {scene !== "title" && scene !== "game_end" && scene !== "ending_transition" && scene !== "financial_report" && scene !== "conversation_end" && (
+          {displayedScene !== "title" && displayedScene !== "game_end" && displayedScene !== "ending_transition" && displayedScene !== "financial_report" && displayedScene !== "conversation_end" && (
             <Header
-              label={SCENE_LABEL[scene]}
+              label={SCENE_LABEL[displayedScene]}
               day={day}
               money={money}
             />
@@ -113,6 +173,13 @@ export default function GameManager() {
               materials={materials}
               onClose={() => setIsInventoryOpen(false)}
             />
+          )}
+
+          {transition?.kind === "pixel" && (
+            <PixelSceneTransition phase={transition.phase} />
+          )}
+          {transition?.kind === "white" && (
+            <WhiteSceneTransition phase={transition.phase} />
           )}
         </div>
       </div>
