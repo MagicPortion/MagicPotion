@@ -72,9 +72,18 @@ export default function ConversationScene({ sceneOverride }: ConversationScenePr
     else advanceScene();
   };
 
-  const commands = useMemo<DrawCommand[]>(() => [
-    { type: "image", x: 0, y: 0, width, height, imageSrc: witchBackground },
-  ], [width, height]);
+  const commands = useMemo<DrawCommand[]>(() => {
+    const list: DrawCommand[] = [
+      { type: "image", x: 0, y: 0, width, height, imageSrc: witchBackground },
+    ];
+    // 調合前の会話（夜）は背景を暗く落とす
+    if (scene === "conversation_brew") {
+      list.push(
+        { type: "rect", x: 0, y: 0, width, height, color: 0x05040c, alpha: 0.78 }
+      );
+    }
+    return list;
+  }, [width, height, scene]);
 
   return (
     <div

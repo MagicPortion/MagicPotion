@@ -3,13 +3,21 @@ import { Assets, Graphics, Text, TextStyle, Sprite, type Application, type Textu
 import { usePixiApp } from "../contexts/PixiAppContext";
 
 export interface DrawCommand {
-  type: "rect" | "circle" | "text" | "image";
+  type: "rect" | "circle" | "ellipse" | "line" | "text" | "image";
   x: number;
   y: number;
   width?: number;
   height?: number;
   radius?: number;
+  radiusX?: number;
+  radiusY?: number;
+  cornerRadius?: number;
+  x2?: number;
+  y2?: number;
+  lineWidth?: number;
+  filled?: boolean;
   color?: number;
+  alpha?: number;
   text?: string;
   fontSize?: number;
   textColor?: string;
@@ -73,13 +81,36 @@ async function draw(
   for (const cmd of commands) {
     if (cmd.type === "rect") {
       const g = new Graphics();
-      g.rect(cmd.x, cmd.y, cmd.width ?? 50, cmd.height ?? 50);
+      if (cmd.cornerRadius) {
+        g.roundRect(cmd.x, cmd.y, cmd.width ?? 50, cmd.height ?? 50, cmd.cornerRadius);
+      } else {
+        g.rect(cmd.x, cmd.y, cmd.width ?? 50, cmd.height ?? 50);
+      }
       g.fill(cmd.color ?? 0xffffff);
+      if (cmd.alpha !== undefined) g.alpha = cmd.alpha;
       app.stage.addChild(g);
     } else if (cmd.type === "circle") {
       const g = new Graphics();
       g.circle(cmd.x, cmd.y, cmd.radius ?? 20);
       g.fill(cmd.color ?? 0xffffff);
+      if (cmd.alpha !== undefined) g.alpha = cmd.alpha;
+      app.stage.addChild(g);
+    } else if (cmd.type === "ellipse") {
+      const g = new Graphics();
+      g.ellipse(cmd.x, cmd.y, cmd.radiusX ?? 20, cmd.radiusY ?? 20);
+      if (cmd.filled === false) {
+        g.stroke({ width: cmd.lineWidth ?? 4, color: cmd.color ?? 0xffffff });
+      } else {
+        g.fill(cmd.color ?? 0xffffff);
+      }
+      if (cmd.alpha !== undefined) g.alpha = cmd.alpha;
+      app.stage.addChild(g);
+    } else if (cmd.type === "line") {
+      const g = new Graphics();
+      g.moveTo(cmd.x, cmd.y);
+      g.lineTo(cmd.x2 ?? cmd.x, cmd.y2 ?? cmd.y);
+      g.stroke({ width: cmd.lineWidth ?? 4, color: cmd.color ?? 0xffffff });
+      if (cmd.alpha !== undefined) g.alpha = cmd.alpha;
       app.stage.addChild(g);
     } else if (cmd.type === "text") {
       const style = new TextStyle({
@@ -104,6 +135,9 @@ async function draw(
         }
         if (cmd.scaleX !== undefined) {
           sprite.scale.x = cmd.scaleX;
+        }
+        if (cmd.alpha !== undefined) {
+          sprite.alpha = cmd.alpha;
         }
         app.stage.addChild(sprite);
       }
