@@ -49,14 +49,14 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
         onClick={(e) => e.stopPropagation()}
         className={css({
           width: "1400px",
-          height: "850px",
-          backgroundColor: "#f4f4f4",
-          border: "8px solid #5bc0f8",
-          borderRadius: "32px",
+          height: "880px",
+          background: "rgba(12,8,3,0.98)",
+          border: "2px solid #8B6914",
+          borderRadius: "12px",
           display: "flex",
           flexDirection: "column",
           position: "relative",
-          boxShadow: "0 24px 48px rgba(0, 0, 0, 0.4)",
+          boxShadow: "0 20px 96px rgba(0,0,0,0.78)",
           padding: "40px",
           gap: "30px",
         })}
@@ -65,9 +65,10 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
         {/* 大きな持ち物一覧の看板リボン */}
         <div className={css({
           position: "relative",
-          backgroundColor: "#5bc0f8",
-          color: "white",
-          fontSize: "46px",
+          background: "rgba(30,20,8,0.78)",
+          color: "#c8a84b",
+          border: "1px solid #8B6914",
+          fontSize: "35px",
           fontWeight: "900",
           py: "16px",
           textAlign: "center",
@@ -90,10 +91,10 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
             right: "40px",
             background: "none",
             border: "none",
-            color: "#5bc0f8",
+            color: "#8B6914",
             cursor: "pointer",
             transition: "transform 0.1s",
-            _hover: { transform: "scale(1.1)" },
+            _hover: { color: "#c8a84b", transform: "scale(1.1)" },
           })}
         >
           <IconClose />
@@ -112,8 +113,9 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
           {/* 🟥 上段：【Base 素材】セクション */}
           <div className={css({ display: "flex", flexDirection: "column", gap: "20px", textAlign: "left" })}>
             <div className={css({
-              backgroundColor: "#ff7875", 
-              color: "white",
+              background: "rgba(30,20,8,0.78)",
+              color: "#d87872",
+              border: "2px solid #a6534f",
               fontSize: "32px",
               fontWeight: "bold",
               px: "36px",
@@ -122,7 +124,7 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
               display: "inline-block",
               width: "fit-content",
               letterSpacing: "0.05em",
-              boxShadow: "0 4px 10px rgba(255,120,117,0.2)"
+              boxShadow: "0 4px 14px rgba(166,83,79,0.2)"
             })}>
               Base 素材
             </div>
@@ -132,7 +134,7 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
                 /* ★ 修正ポイント：文字サイズを32pxに拡大し、whiteSpace: "nowrap" で絶対に改行させない1行に固定！ */
                 <p className={css({ 
                   fontSize: "32px", 
-                  color: "#777777", 
+                  color: "#a6534f",
                   fontWeight: "bold",
                   pl: "10px", 
                   m: 0,
@@ -149,8 +151,9 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
           {/* 🟩 下段：【Accent 素材】セクション */}
           <div className={css({ display: "flex", flexDirection: "column", gap: "20px", textAlign: "left" })}>
             <div className={css({
-              backgroundColor: "#95de64", 
-              color: "white",
+              background: "rgba(30,20,8,0.78)",
+              color: "#a7cb70",
+              border: "2px solid #789b4a",
               fontSize: "32px",
               fontWeight: "bold",
               px: "36px",
@@ -159,7 +162,7 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
               display: "inline-block",
               width: "fit-content",
               letterSpacing: "0.05em",
-              boxShadow: "0 4px 10px rgba(149,222,100,0.2)"
+              boxShadow: "0 4px 14px rgba(120,155,74,0.2)"
             })}>
               Accent 素材
             </div>
@@ -169,7 +172,7 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
                 /* ★ 修正ポイント：こちらも同様に32pxに拡大して、綺麗な1行に並ぶよう修正完了！ */
                 <p className={css({ 
                   fontSize: "32px", 
-                  color: "#777777", 
+                  color: "#789b4a",
                   fontWeight: "bold",
                   pl: "10px", 
                   m: 0,
@@ -195,7 +198,10 @@ function InventoryCard({ item }: { item: OwnedMaterial }) {
     <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", width: "180px" })}>
       <div className={css({
         position: "relative",
-        backgroundColor: "transparent",
+        background: "rgba(30,20,8,0.78)",
+        border: "2px solid",
+        borderColor: item.category === "base" ? "#a6534f" : "#789b4a",
+        borderRadius: "12px",
         width: "180px",
         height: "180px",
         display: "flex",
@@ -209,9 +215,9 @@ function InventoryCard({ item }: { item: OwnedMaterial }) {
           position: "absolute",
           bottom: "10px",
           right: "10px",
-          backgroundColor: "#5bc0f8",
-          color: "#002766",
-          border: "2px solid #002766",
+          backgroundColor: "#1a0e06",
+          color: "#c8a84b",
+          border: "1px solid #8B6914",
           fontSize: "26px",
           fontWeight: "bold",
           px: "12px",
@@ -226,7 +232,7 @@ function InventoryCard({ item }: { item: OwnedMaterial }) {
       <div className={css({
         fontSize: "26px",
         fontWeight: "bold",
-        color: "#4a3321",
+        color: "#e8d8b8",
         mt: "10px",
         whiteSpace: "nowrap",
         textAlign: "center",
