@@ -1,12 +1,12 @@
 import { css } from "#styled-system/css";
-import type { MaterialDef } from "../../../data/types";
+import type { MaterialDefWithUrl } from "../../../data/types";
 import type { BrewResult } from "./BrewPanel";
 import { findRecipeByIngredients, getPotion } from "../../../data/gameData";
-import MaterialImage from "../common/MaterialImage";
+import Image from "../common/Image";
 
 interface BrewEquationProps {
-  baseMaterial: MaterialDef | null;
-  accentMaterial: MaterialDef | null;
+  baseMaterial: MaterialDefWithUrl | null;
+  accentMaterial: MaterialDefWithUrl | null;
   selectedBase: string | null;
   selectedAccent: string | null;
   result: BrewResult | null;
@@ -45,7 +45,7 @@ export default function BrewEquation({
 function SlotBtn({
   item, placeholder, label, onClick,
 }: {
-  item: MaterialDef | null;
+  item: MaterialDefWithUrl | null;
   placeholder: string;
   label: string;
   onClick: () => void;
@@ -54,7 +54,7 @@ function SlotBtn({
     <button
       onClick={onClick}
       aria-label={label}
-      // width・height・border・backgroundは状態依存かつテーマと調和するためinline styleを使用
+      // width・height・border・backgroundは状態依存かつテーマと調和するたinline styleを使用
       style={{
         width: 260, height: 260,
         borderRadius: 20,
@@ -78,7 +78,7 @@ function SlotBtn({
     >
       {item ? (
         <>
-          <MaterialImage src={item.imagePath} alt={item.name} size={150} />
+          <Image src={item.imageUrl} alt={item.name} width={150} height={150} />
           <span className={css({ fontSize: "32px", color: "#ffffff", fontWeight: "bold", textAlign: "center", px: "8px" })}>{item.name}</span>
         </>
       ) : (

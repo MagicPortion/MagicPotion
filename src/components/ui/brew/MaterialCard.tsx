@@ -1,9 +1,9 @@
 import { css } from "#styled-system/css";
-import type { MaterialDef } from "../../../data/types";
-import MaterialImage from "../common/MaterialImage";
+import type { MaterialDefWithUrl } from "../../../data/types";
+import Image from "../common/Image";
 
 interface MaterialCardProps {
-  item: MaterialDef;
+  item: MaterialDefWithUrl;
   count: number;
   isSelected: boolean;
   onClick: () => void;
@@ -55,7 +55,7 @@ export default function MaterialCard({
           </span>
         )}
 
-        <MaterialImage src={item.imagePath} alt={item.name} size={isPicker ? 208 : 96} />
+        <Image src={item.imageUrl} alt={item.name} width={isPicker ? 208 : 96} height={isPicker ? 208 : 96} />
 
         {isPicker && (
           <span className={css({ fontSize: "30px", fontWeight: "bold", color: "#ffffff", letterSpacing: "0.05em", textAlign: "center" })}>

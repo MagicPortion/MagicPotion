@@ -1,10 +1,10 @@
 import { css } from "#styled-system/css";
-import type { MaterialDef } from "../../../data/types";
-import MaterialImage from "../common/MaterialImage";
+import type { MaterialDefWithUrl } from "../../../data/types";
+import Image from "../common/Image";
 
 interface MaterialCardGridProps {
   title: string;
-  items: MaterialDef[];
+  items: MaterialDefWithUrl[];
   counts: Record<string, number>;
   selectedId: string | null;
   onSelect: (id: string) => void;
@@ -55,7 +55,7 @@ export default function MaterialCardGrid({ title, items, counts, selectedId, onS
                 >
                   ×{count}
                 </span>
-                <MaterialImage src={item.imagePath} alt={item.name} size={92} />
+                <Image src={item.imageUrl} alt={item.name} width={92} height={92} />
                 <span style={{ fontSize: 16, color: isSelected ? "#c8a84b" : "#e8d8b8", fontWeight: isSelected ? "bold" : "normal" }}>
                   {item.name}
                 </span>

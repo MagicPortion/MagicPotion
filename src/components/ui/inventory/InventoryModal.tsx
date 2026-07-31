@@ -1,9 +1,9 @@
 import { css } from "#styled-system/css";
 import { MATERIALS } from "../../../data/gameData";
-import MaterialImage from "../common/MaterialImage";
-import type { MaterialDef } from "../../../data/types";
+import Image from "../common/Image";
+import type { MaterialDefWithUrl } from "../../../data/types";
 
-interface OwnedMaterial extends MaterialDef {
+interface OwnedMaterial extends MaterialDefWithUrl {
   count: number;
 }
 
@@ -82,6 +82,7 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
 
         {/* 右上のバツ閉じボタン */}
         <button 
+          data-sound="cancel"
           onClick={onClose}
           className={css({
             position: "absolute",
@@ -201,7 +202,7 @@ function InventoryCard({ item }: { item: OwnedMaterial }) {
         alignItems: "center",
         justifyContent: "center",
       })}>
-        <MaterialImage src={item.imagePath} alt={item.name} size={160} />
+        <Image src={item.imageUrl} alt={item.name} width={160} height={160} />
 
         {/* 個数バッジ。素材画像に重ねて表示 */}
         <span className={css({

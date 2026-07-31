@@ -1,8 +1,8 @@
 import { css } from "#styled-system/css";
-import type { MaterialDef } from "../../../data/types";
-import MaterialImage from "../common/MaterialImage";
+import type { MaterialDefWithUrl } from "../../../data/types";
+import Image from "../common/Image";
 
-interface ShopMaterialItem extends MaterialDef {
+interface ShopMaterialItem extends MaterialDefWithUrl {
   instanceId: string;
 }
 
@@ -14,29 +14,23 @@ interface ShopCardProps {
 }
 
 export default function ShopCard({ item, isSelected, isSoldOut, onClick }: ShopCardProps) {
-  const isBase = item.category === "base";
-  const categoryColor = isBase ? "#ef4444" : "#4ade80";
-  const categoryGlow = isBase ? "rgba(239, 68, 68, 0.28)" : "rgba(74, 222, 128, 0.28)";
-  const imageGlow = isBase ? "rgba(239, 68, 68, 0.42)" : "rgba(74, 222, 128, 0.42)";
+  const cardBg = item.category === "base" ? "#ff7875" : "#95de64";
 
   return (
     <div
+      data-sound={isSoldOut ? "none" : "select"}
       onClick={onClick}
       // cursor は動的な状態値のためinline style
       style={{ cursor: isSoldOut ? "not-allowed" : "pointer" }}
-      className={css({ display: "flex", flexDirection: "column", alignItems: "center", w: "220px" })}
+      className={css({ display: "flex", flexDirection: "column", alignItems: "center", w: "185px" })}
     >
       <div
-        // category・選択状態による動的な色のためinline style
+        // backgroundColor・boxShadow は動的な状態値のためinline style
         style={{
-          background: "#ffffff",
-          borderColor: categoryColor,
-          boxShadow: isSelected
-            ? "0 0 0 5px #46a1ea, 0 8px 16px rgba(0,0,0,0.3)"
-            : "0 8px 16px rgba(0,0,0,0.3)",
+          backgroundColor: cardBg,
+          boxShadow: isSelected ? "0 0 0 5px #46a1ea, 0 8px 16px rgba(0,0,0,0.3)" : undefined,
         }}
         className={css({
-          border: "3px solid",
           borderRadius: "16px",
           p: "12px",
           w: "185px",
@@ -47,23 +41,19 @@ export default function ShopCard({ item, isSelected, isSoldOut, onClick }: ShopC
           _hover: { transform: "scale(1.04)" },
         })}
       >
-        <div
-          style={{
-            background: `radial-gradient(circle at center, ${imageGlow} 0%, ${categoryGlow} 38%, rgba(0, 0, 0, 0) 74%)`,
-          }}
-          className={css({ h: "115px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center" })}
-        >
-          <MaterialImage src={item.imagePath} alt={item.name} size={105} />
+        <div className={css({ bg: "transparent", h: "115px", display: "flex", alignItems: "center", justifyContent: "center" })}>
+          <Image src={item.imageUrl} alt={item.name} width={105} height={105} />
         </div>
 
         <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", mt: "8px", px: "4px" })}>
+          {/* color は category 動的値のためinline style */}
           <span
-            style={{ borderColor: categoryColor, backgroundColor: categoryGlow, color: categoryColor }}
-            className={css({ fontSize: "26px", border: "1px solid", px: "6px", py: "2px", borderRadius: "4px", fontWeight: "bold" })}
+            style={{ color: item.category === "base" ? "#ff4d4f" : "#52c41a" }}
+            className={css({ fontSize: "26px", bg: "white", px: "6px", py: "2px", borderRadius: "4px", fontWeight: "bold" })}
           >
-            {isBase ? "Base" : "Accent"}
+            {item.category === "base" ? "Base" : "Accent"}
           </span>
-          <span className={css({ fontSize: "28px", fontWeight: "bold", color: "#171717" })}>{item.price}G</span>
+          <span className={css({ fontSize: "28px", fontWeight: "bold", color: "white" })}>{item.price}G</span>
         </div>
 
         {isSelected && !isSoldOut && (
@@ -89,12 +79,11 @@ export default function ShopCard({ item, isSelected, isSoldOut, onClick }: ShopC
       {/* 素材名（カード外）。カード幅に縛られず1行で表示し、見切れさせない */}
       <div className={css({
         fontSize: "24px",
-        color: "#ffffff",
+        color: "#e8d8b8",
         fontWeight: "bold",
         mt: "10px",
         whiteSpace: "nowrap",
         textAlign: "center",
-        textShadow: "0 2px 8px rgba(0,0,0,0.9)",
       })}>
         {item.name}
       </div>
