@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 import { playSelectSound } from "../../utils/sound";
@@ -39,7 +39,7 @@ export default function Introduction() {
   const isLastPage = page === STORY_PANELS.length - 1;
   const isSkippingText = () => !textCompletedRef.current && (animatingRef.current || timeoutRefs.current.length > 0);
 
-  const handleAdvance = useCallback(() => {
+  const handleAdvance = () => {
     if (isFadingOut) return;
 
     if (textCompletedRef.current) {
@@ -100,7 +100,7 @@ export default function Introduction() {
     }
 
     setShowGoal(true);
-  }, [isFadingOut, showGoal, isLastPage, setScene, currentText]);
+  };
 
   const handleClick = () => {
     if (!isFadingOut && !isSkippingText()) {
@@ -168,18 +168,6 @@ export default function Introduction() {
       timeoutRefs.current = [];
     };
   }, [currentText, showGoal]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Enter" || event.key === " " || event.key === "ArrowRight") {
-        event.preventDefault();
-        handleAdvance();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleAdvance]);
 
   return (
     <div
