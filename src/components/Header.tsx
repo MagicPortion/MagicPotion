@@ -1,5 +1,6 @@
 import { css } from "#styled-system/css";
 import { IconCoin, IconMorning, IconAfternoon, IconNight } from "./ui/icons";
+import titleImage from "#assets/images/title.png";
 
 type HeaderProps = {
   label: string;
@@ -31,7 +32,7 @@ export default function Header({ label, day, money }: HeaderProps) {
     >
       <h1 className={css({ display: "flex", alignItems: "center", m: 0, minW: "0" })}>
         <img
-          src="/MagicPotion/title.png"
+          src={titleImage}
           alt="title"
           className={css({ h: "70px", w: "auto", objectFit: "contain", display: "block" })}
         />

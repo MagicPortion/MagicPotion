@@ -10,6 +10,10 @@ export interface MaterialDef {
   spawnWeight: number;
 }
 
+export interface MaterialDefWithUrl extends MaterialDef {
+  imageUrl: string;
+}
+
 export interface RecipeDef {
   id: string;
   baseId: string;

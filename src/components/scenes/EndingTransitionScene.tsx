@@ -1,4 +1,3 @@
-import { useCallback, useEffect } from "react";
 import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
 
@@ -11,24 +10,13 @@ const ENDING_LINES = [
 export default function EndingTransitionScene() {
   const { setScene } = useGameStore();
 
-  const handleAdvance = useCallback(() => {
+  const handleAdvance = () => {
     setScene("financial_report");
-  }, [setScene]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Enter" || event.key === " " || event.key === "ArrowRight") {
-        event.preventDefault();
-        handleAdvance();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleAdvance]);
+  };
 
   return (
     <div
+      data-sound="select"
       onClick={handleAdvance}
       className={css({
         width: "100%",

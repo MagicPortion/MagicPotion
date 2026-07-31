@@ -9,6 +9,7 @@ import MaterialPickerPopup from "../ui/brew/MaterialPickerPopup";
 import BrewResultPopup from "../ui/brew/BrewResultPopup";
 import PotionShelf from "../ui/brew/PotionShelf";
 import { css } from "#styled-system/css";
+import { playMergingSound, playMergeResultSound, stopMergingSound } from "../../utils/sound";
 
 export default function BrewScene() {
   const { materials, brew, advanceScene, recipeLevel, setIsInventoryOpen } = useGameStore();
@@ -24,6 +25,8 @@ export default function BrewScene() {
   const [isBrewing, setIsBrewing] = useState(false);
   const [pendingResults, setPendingResults] = useState<{ results: BrewResult[]; targetColorHex: string } | null>(null);
   const [bubbles, setBubbles] = useState<{ x: number; y: number; radius: number; color: number }[]>([]);
+
+  useEffect(() => stopMergingSound, []);
 
   const allBases   = MATERIALS.filter((m) => m.category === "base");
   const allAccents = MATERIALS.filter((m) => m.category === "accent");
@@ -66,6 +69,7 @@ export default function BrewScene() {
     }
     if (results.length > 0) {
       // 演出フェーズの開始。即時結果は表示せず、状態を一時保存して演出をONにする
+      playMergingSound();
       setPendingResults({ results, targetColorHex: lastColorHex });
       setIsBrewing(true);
       setSelectedBase(null);
@@ -80,6 +84,8 @@ export default function BrewScene() {
     setIsBrewing(false);
     setCauldronColorHex(pendingResults.targetColorHex);
     setBrewResults(pendingResults.results);
+    stopMergingSound();
+    playMergeResultSound();
     setPendingResults(null);
     setBubbles([]);
   };
@@ -98,6 +104,8 @@ export default function BrewScene() {
       setIsBrewing(false);
       setCauldronColorHex(targetColorHex);
       setBrewResults(results);
+      stopMergingSound();
+      playMergeResultSound();
       setPendingResults(null);
       setBubbles([]);
     }, 2000);

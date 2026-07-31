@@ -1,10 +1,10 @@
 import { css } from "#styled-system/css";
-import type { MaterialDef } from "../../../data/types";
+import type { MaterialDefWithUrl } from "../../../data/types";
 import MaterialCard from "./MaterialCard";
 
 interface MaterialPickerPopupProps {
   title: string;
-  items: MaterialDef[];
+  items: MaterialDefWithUrl[];
   counts: Record<string, number>;
   selectedId: string | null;
   onSelect: (id: string) => void;
@@ -24,6 +24,7 @@ export default function MaterialPickerPopup({
   return (
     // 暗くぼかしたフルスクリーンオーバーレイ。カード外クリックで閉じる
     <div
+      data-sound="cancel"
       onClick={onClose}
       style={{
         position: "absolute",

@@ -175,6 +175,7 @@ export default function SaleResultPopup({ potions, onClose, buttonLabel = "ç¿Œæœ
           )}
 
           <button
+            data-sound="select"
             onClick={onClose}
             className={css({
               alignSelf: "center",

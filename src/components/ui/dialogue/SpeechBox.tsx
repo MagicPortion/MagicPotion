@@ -3,6 +3,7 @@ import { animate, stagger } from "animejs";
 import { useGameStore } from "../../../store/useGameStore";
 import { THEMES, type ThemeTokens } from "./dialogueThemes";
 import { css } from "#styled-system/css";
+import { startVoiceLoop, stopVoiceLoop } from "../../../utils/sound";
 
 export interface SpeechBoxHandle {
   click: () => void;
@@ -36,6 +37,7 @@ const SpeechBox = forwardRef<SpeechBoxHandle, SpeechBoxProps>(function SpeechBox
     const el = textRef.current;
     if (!el) return;
     animRef.current?.pause();
+    stopVoiceLoop();
     el.innerHTML = "";
     text.split("").forEach((char) => {
       if (char === "\n") {
@@ -49,13 +51,21 @@ const SpeechBox = forwardRef<SpeechBoxHandle, SpeechBoxProps>(function SpeechBox
       el.appendChild(span);
     });
     setAnimating(true);
+    startVoiceLoop();
     animRef.current = animate(el.querySelectorAll("span"), {
       opacity: [0, 1],
       delay: stagger(28),
       duration: 1,
       ease: "linear",
-      onComplete: () => setAnimating(false),
+      onComplete: () => {
+        stopVoiceLoop();
+        setAnimating(false);
+      },
     });
+
+    return () => {
+      stopVoiceLoop();
+    };
   }, [text]);
 
   const showChoices = !!choices && choices.length > 0 && !animating;
@@ -64,6 +74,7 @@ const SpeechBox = forwardRef<SpeechBoxHandle, SpeechBoxProps>(function SpeechBox
     if (showChoices) return;
     if (animating) {
       animRef.current?.pause();
+      stopVoiceLoop();
       textRef.current
         ?.querySelectorAll("span")
         .forEach((s) => ((s as HTMLElement).style.opacity = "1"));

@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { css } from "#styled-system/css";
 import { useGameStore } from "../../store/useGameStore";
+import { playSelectSound } from "../../utils/sound";
 
 const STORY_PANELS = [
   "都会の生活に疲れ、\nのどかな町へ引っ越してきたあなた。",
@@ -36,8 +37,9 @@ export default function Introduction() {
 
   const currentText = STORY_PANELS[page];
   const isLastPage = page === STORY_PANELS.length - 1;
+  const isSkippingText = () => !textCompletedRef.current && (animatingRef.current || timeoutRefs.current.length > 0);
 
-  const handleAdvance = useCallback(() => {
+  const handleAdvance = () => {
     if (isFadingOut) return;
 
     if (textCompletedRef.current) {
@@ -98,7 +100,15 @@ export default function Introduction() {
     }
 
     setShowGoal(true);
-  }, [isFadingOut, showGoal, isLastPage, setScene, currentText]);
+  };
+
+  const handleClick = () => {
+    if (!isFadingOut && !isSkippingText()) {
+      playSelectSound();
+    }
+
+    handleAdvance();
+  };
 
   useEffect(() => {
     if (showGoal) return;
@@ -159,21 +169,10 @@ export default function Introduction() {
     };
   }, [currentText, showGoal]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Enter" || event.key === " " || event.key === "ArrowRight") {
-        event.preventDefault();
-        handleAdvance();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleAdvance]);
-
   return (
     <div
-      onClick={handleAdvance}
+      data-sound="none"
+      onClick={handleClick}
       className={css({
         width: "100%",
         height: "100%",
@@ -237,7 +236,7 @@ export default function Introduction() {
         >
           <div
             className={css({
-              width: "900px",
+              width: "950px",
               border: "2px solid rgba(255, 227, 125, 0.83)",
               borderRadius: "28px",
               background: "rgba(217, 0, 255, 0.16)",
@@ -273,7 +272,7 @@ export default function Introduction() {
               })}
             >
               <p>長年の経営不振により、</p>
-              <p>督促状「魔女年金滞納のお知らせ」が届いてしまった！？</p>
+              <p>督促状「魔女銀行より滞納のお知らせ」が届いてしまった！？</p>
               <p
                 className={css({
                   fontSize: "34px",
@@ -284,7 +283,7 @@ export default function Introduction() {
                   textShadow: "0 0 16px rgba(255,230,109,0.35)",
                 })}
               >
-                期限は 5 日後、目標金額 100000 G。
+                期限は 5 日後、目標金額 10000 G。
               </p>
               <p>魔女の店と彼女の運命は主人公に託された！！！</p>
             </div>
