@@ -21,13 +21,11 @@ interface InventoryModalProps {
 }
 
 export default function InventoryModal({ materials, onClose }: InventoryModalProps) {
-  const ownedItems: OwnedMaterial[] = Object.entries(materials)
-    .filter(([, count]) => count > 0)
-    .map(([id, count]) => {
-      const def = MATERIALS.find((m) => m.id === id);
-      return def ? { ...def, count } : null;
-    })
-    .filter((item): item is OwnedMaterial => item !== null);
+  // 調合シーンと同じ MATERIALS の定義順（高レア度順）で所持素材を並べる
+  const ownedItems: OwnedMaterial[] = MATERIALS.flatMap((material) => {
+    const count = materials[material.id] ?? 0;
+    return count > 0 ? [{ ...material, count }] : [];
+  });
 
   const baseItems = ownedItems.filter((item) => item.category === "base");
   const accentItems = ownedItems.filter((item) => item.category === "accent");
