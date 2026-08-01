@@ -9,6 +9,7 @@ import {
 } from "../data/gameData";
 import type { BrewedPotion, RecipeDef, SaleRecord } from "../data/types";
 import { TOTAL_DAYS } from "../data/constants";
+import { parseResultParams } from "../utils/share";
 
 export type DialogueTheme = "dark" | "parchment" | "semi";
 export interface DialogueAppearance { theme: DialogueTheme; }
@@ -16,6 +17,7 @@ export const DEFAULT_APPEARANCE: DialogueAppearance = { theme: "dark" };
 
 export type Scene =
   | "title"
+  | "shared_result"
   | "introduction"
   | "conversation"
   | "recipe_learning"
@@ -174,10 +176,13 @@ function createInitialGameProgress(scene: Scene): GameProgressState {
   };
 }
 
+const initialScene: Scene =
+  typeof window !== "undefined" && parseResultParams(window.location.search) ? "shared_result" : "title";
+
 export const useGameStore = create<GameState>()(
   devtools(
     (set, get) => ({
-      ...createInitialGameProgress("title"),
+      ...createInitialGameProgress(initialScene),
       setIsInventoryOpen: (open) => set({ isInventoryOpen: open }),
       dialogueAppearance: DEFAULT_APPEARANCE,
       setDialogueAppearance: (a) => set({ dialogueAppearance: a }),

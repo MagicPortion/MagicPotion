@@ -8,6 +8,7 @@ import { isCancelSoundTarget, isSelectSoundTarget, playCancelSound, playSelectSo
 import { PixiAppProvider } from "../contexts/PixiAppContext";
 import Header from "./Header";
 import TitleScene from "./scenes/TitleScene";
+import SharedResultScene from "./scenes/SharedResultScene";
 import Introduction from "./scenes/Introduction";
 import ConversationScene from "./scenes/ConversationScene";
 import RecipeLearningScene from "./scenes/RecipeLearningScene";
@@ -25,6 +26,7 @@ import WhiteSceneTransition from "./ui/common/WhiteSceneTransition";
 
 const SCENE_LABEL: Record<Scene, string> = {
   title:                    "",
+  shared_result:            "",
   introduction:            "物語",
   conversation:             "朝",
   recipe_learning:          "朝",
@@ -44,6 +46,7 @@ const SCENE_LABEL: Record<Scene, string> = {
 const renderScene = (scene: Scene) => {
   switch (scene) {
     case "title":                   return <TitleScene />;
+    case "shared_result":           return <SharedResultScene />;
     case "introduction":            return <Introduction />;
     case "conversation":            return <ConversationScene sceneOverride={scene} />;
     case "recipe_learning":         return <RecipeLearningScene />;

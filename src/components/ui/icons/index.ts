@@ -10,3 +10,4 @@ export { default as IconCoin } from "./IconCoin";
 export { default as IconMorning } from "./IconMorning";
 export { default as IconAfternoon } from "./IconAfternoon";
 export { default as IconNight } from "./IconNight";
+export { default as IconX } from "./IconX";
