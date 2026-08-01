@@ -36,8 +36,8 @@ export default function SceneToolbar({ onSettings, onHint, onInventory, onRecipe
       })}
     >
       <div className={css({ position: "absolute", left: "12px", display: "flex", alignItems: "center", gap: "12px" })}>
-        <ToolBtn icon={<IconSettings size={20} />} label="設定" onClick={onSettings} fontSize={toolbarFont} t={t} />
-        <ToolBtn icon={<IconHint size={20} />} label="ヒント" onClick={onHint} fontSize={toolbarFont} t={t} />
+        <ToolBtn icon={<IconSettings size={34} />} label="設定" onClick={onSettings} fontSize={toolbarFont} sizeScale={1.2} t={t} />
+        <ToolBtn icon={<IconHint size={34} />} label="ヒント" onClick={onHint} fontSize={toolbarFont} sizeScale={1.2} t={t} />
       </div>
 
       <div className={css({ display: "flex", alignItems: "center", gap: "12px" })}>
