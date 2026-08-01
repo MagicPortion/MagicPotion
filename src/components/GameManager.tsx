@@ -130,6 +130,11 @@ export default function GameManager() {
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
+      // スマホ：初回タップでブラウザUIを隠すためフルスクリーン化を試みる（対応ブラウザのみ）
+      if (event.pointerType === "touch" && !document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.().catch(() => {});
+      }
+
       if (isCancelSoundTarget(event.target)) {
         playCancelSound();
         return;
