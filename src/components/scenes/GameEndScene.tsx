@@ -4,15 +4,21 @@ import { useGameStore } from "../../store/useGameStore";
 import { GOAL_MONEY } from "../../data/constants";
 import ed2Image from "#assets/images/ED2.png";
 import ed1Image from "#assets/images/ED1.png";
+import { IconX } from "../ui/icons";
+import { openTwitterShare } from "../../utils/share";
 
 export default function GameEndScene() {
-  const { money, setScene } = useGameStore();
+  const { money, dailyFinanceReports, setScene } = useGameStore();
   const isClear = money >= GOAL_MONEY;
   const endingNumber = isClear ? "END 01 : 返済完了 ~賑わいの店~" : "END 02 : 返済失敗 ~空き地~";
   const endingText = isClear
     ? "あれから無事に返済を完了した魔女とあなたは、\n今日も不思議な店を営んでいる。\nお店は賑わい、魔法薬の調合も順調だ。\nこれからもあなたは魔女と共にこの町で歩んでいくのだろう。"
     // 失敗END2 の文章
     : "借金を返済することができなかった。\n魔女の店は更地となり、売りに出されてしまった。\n空き地を見つめる魔女の背中は小さかった。";
+
+  const handleShare = () => {
+    openTwitterShare({ money, dailyFinanceReports });
+  };
 
   const [showButton, setShowButton] = React.useState(false);
 
@@ -121,6 +127,41 @@ export default function GameEndScene() {
       >
         {endingNumber}
       </div>
+
+      {showButton && (
+      <button
+        type="button"
+        onClick={handleShare}
+        className={css({
+          position: "absolute",
+          right: "352px",
+          bottom: "48px",
+          minWidth: "260px",
+          height: "72px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "16px",
+          border: "1px solid rgba(245,231,181,0.72)",
+          background: "rgba(0,0,0,0.72)",
+          color: "#f5e7b5",
+          cursor: "pointer",
+          fontSize: "28px",
+          fontWeight: "700",
+          letterSpacing: "0.1em",
+          textAlign: "center",
+          transition: "all 0.16s ease",
+          _hover: {
+            background: "rgba(245,231,181,0.16)",
+            transform: "translateY(-2px)",
+          },
+        })}
+        style={{ opacity: 0, animation: "fadeInButton 0.5s ease-out forwards" }}
+      >
+        <IconX size={26} />
+        結果をシェア
+      </button>
+    )}
 
       {showButton && (
       <button
