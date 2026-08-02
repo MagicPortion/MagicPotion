@@ -46,7 +46,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
       >
         <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", mb: "20px" })}>
           <h2 className={css({ display: "flex", alignItems: "center", gap: "12px", fontSize: "30px", color: "#c8a84b", m: 0, letterSpacing: "0.12em" })}>
-            <IconRecipe size={28} /> レシピ帳
+            <IconRecipe size={28} /> レシピ帳（{knownRecipes.length} / 15）
           </h2>
           <button
             data-sound="cancel"

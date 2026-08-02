@@ -1,15 +1,22 @@
 import { css } from "#styled-system/css";
-import { CLEAR_MONEY_THRESHOLD, END_DAY, useGameStore } from "../../store/useGameStore";
+import { useGameStore } from "../../store/useGameStore";
+import { GOAL_MONEY, TOTAL_DAYS } from "../../data/constants";
+import { IconX } from "../ui/icons";
+import { openTwitterShare } from "../../utils/share";
 
 const formatGold = (amount: number) => `${amount.toLocaleString()}G`;
 
 export default function FinancialReportScene() {
   const { dailyFinanceReports, money, setScene } = useGameStore();
   const reportByDay = new Map(dailyFinanceReports.map((report) => [report.day, report]));
-  const reports = Array.from({ length: END_DAY }, (_, index) => {
+  const reports = Array.from({ length: TOTAL_DAYS }, (_, index) => {
     const day = index + 1;
     return reportByDay.get(day) ?? { day, expense: 0, income: 0 };
   });
+
+  const handleShare = () => {
+    openTwitterShare({ money, dailyFinanceReports });
+  };
 
   return (
     <div
@@ -128,7 +135,7 @@ export default function FinancialReportScene() {
         >
           <div className={css({ display: "flex", justifyContent: "space-between" })}>
             <span>返済額</span>
-            <span>{formatGold(CLEAR_MONEY_THRESHOLD)}</span>
+            <span>{formatGold(GOAL_MONEY)}</span>
           </div>
           <div className={css({ display: "flex", justifyContent: "space-between", color: "#f5e7b5", fontWeight: "700" })}>
             <span>所持金</span>
@@ -136,6 +143,38 @@ export default function FinancialReportScene() {
           </div>
         </footer>
       </div>
+
+      <button
+        type="button"
+        onClick={handleShare}
+        className={css({
+          position: "absolute",
+          right: "352px",
+          bottom: "48px",
+          minWidth: "260px",
+          height: "72px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "16px",
+          border: "1px solid rgba(245,231,181,0.72)",
+          background: "rgba(0,0,0,0.72)",
+          color: "#f5e7b5",
+          cursor: "pointer",
+          fontSize: "28px",
+          fontWeight: "700",
+          letterSpacing: "0.1em",
+          textAlign: "center",
+          transition: "all 0.16s ease",
+          _hover: {
+            background: "rgba(245,231,181,0.16)",
+            transform: "translateY(-2px)",
+          },
+        })}
+      >
+        <IconX size={26} />
+        結果をシェア
+      </button>
 
       <button
         type="button"

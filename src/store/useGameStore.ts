@@ -8,6 +8,8 @@ import {
   shuffleArray,
 } from "../data/gameData";
 import type { BrewedPotion, RecipeDef, SaleRecord } from "../data/types";
+import { TOTAL_DAYS } from "../data/constants";
+import { parseResultParams } from "../utils/share";
 
 export type DialogueTheme = "dark" | "parchment" | "semi";
 export interface DialogueAppearance { theme: DialogueTheme; }
@@ -15,6 +17,7 @@ export const DEFAULT_APPEARANCE: DialogueAppearance = { theme: "dark" };
 
 export type Scene =
   | "title"
+  | "shared_result"
   | "introduction"
   | "conversation"
   | "recipe_learning"
@@ -43,10 +46,7 @@ const SCENE_ORDER: Scene[] = [
 
 let instanceCounter = 0;
 
-export const END_DAY = 5;
-export const CLEAR_MONEY_THRESHOLD = 10000;
-
-const shouldTriggerGameEnd = (day: number) => day >= END_DAY;
+const shouldTriggerGameEnd = (day: number) => day >= TOTAL_DAYS;
 
 export interface DailyFinanceReport {
   day: number;
@@ -176,10 +176,13 @@ function createInitialGameProgress(scene: Scene): GameProgressState {
   };
 }
 
+const initialScene: Scene =
+  typeof window !== "undefined" && parseResultParams(window.location.search) ? "shared_result" : "title";
+
 export const useGameStore = create<GameState>()(
   devtools(
     (set, get) => ({
-      ...createInitialGameProgress("title"),
+      ...createInitialGameProgress(initialScene),
       setIsInventoryOpen: (open) => set({ isInventoryOpen: open }),
       dialogueAppearance: DEFAULT_APPEARANCE,
       setDialogueAppearance: (a) => set({ dialogueAppearance: a }),

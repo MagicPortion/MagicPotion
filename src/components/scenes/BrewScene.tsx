@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
-import { MATERIALS, getPotion, colorNum } from "../../data/gameData";
+import { MATERIALS, getMaterial, getPotion, colorNum } from "../../data/gameData";
 import DialogueBox, { ActionButton } from "../ui/dialogue/DialogueBox";
 import BrewPanel, { type BrewResult } from "../ui/brew/BrewPanel";
 import MaterialPickerPopup from "../ui/brew/MaterialPickerPopup";
@@ -12,20 +12,28 @@ import { css } from "#styled-system/css";
 import { playMergingSound, playMergeResultSound, stopMergingSound } from "../../utils/sound";
 import witchBackground from "#assets/Back/WitchBack.png";
 
+// 大釜の平常時の色（調合終了後はこの色に戻す）
+const DEFAULT_CAULDRON_COLOR = "3d3d5c";
+
 export default function BrewScene() {
   const { materials, brew, advanceScene, recipeLevel, setIsInventoryOpen } = useGameStore();
   const [selectedBase, setSelectedBase] = useState<string | null>(null);
   const [selectedAccent, setSelectedAccent] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState<"base" | "accent" | null>(null);
-  const [cauldronColorHex, setCauldronColorHex] = useState("3d3d5c");
+  const [cauldronColorHex, setCauldronColorHex] = useState(DEFAULT_CAULDRON_COLOR);
   const [brewCount, setBrewCount] = useState(1);
   const [brewResults, setBrewResults] = useState<BrewResult[] | null>(null);
   const { width, height } = useWindowSize();
+  // 大釜は画面下部中央に配置する
+  const potCenterX = width / 2;
+  const potCenterY = height * 0.82;
 
   // ── 調合アニメーション演出用の状態 ──
   const [isBrewing, setIsBrewing] = useState(false);
   const [pendingResults, setPendingResults] = useState<{ results: BrewResult[]; targetColorHex: string } | null>(null);
   const [bubbles, setBubbles] = useState<{ x: number; y: number; radius: number; color: number }[]>([]);
+  // 素材を釜へ投げ入れる演出用の状態（開始位置→終了位置へ0→1で弧を描いて飛ばす）
+  const [flyingItems, setFlyingItems] = useState<{ imageUrl: string; startX: number; startY: number; endX: number; endY: number; t: number }[]>([]);
   // 混ぜ棒がカクカクと震えながら回るステップ（滑らかに補間せず、コマ送りっぽく角度を飛ばす）
   const [stirStep, setStirStep] = useState(0);
   // 蝋燭の灯りのゆらぎ（常時、控えめにちらつかせる）
@@ -83,6 +91,21 @@ export default function BrewScene() {
     if (results.length > 0) {
       // 演出フェーズの開始。即時結果は表示せず、状態を一時保存して演出をONにする
       playMergingSound();
+
+      // 選んだ素材（Base・Accent）のアイコンを、パネルの位置から釜の口へ投げ入れる演出を仕込む
+      const baseMaterial = getMaterial(selectedBase);
+      const accentMaterial = getMaterial(selectedAccent);
+      const potMouthX = potCenterX;
+      const potMouthY = potCenterY - 108;
+      const newFlyingItems: typeof flyingItems = [];
+      if (baseMaterial) {
+        newFlyingItems.push({ imageUrl: baseMaterial.imageUrl, startX: width / 2 - 360, startY: height / 2 - 80, endX: potMouthX - 20, endY: potMouthY, t: 0 });
+      }
+      if (accentMaterial) {
+        newFlyingItems.push({ imageUrl: accentMaterial.imageUrl, startX: width / 2 - 10, startY: height / 2 - 80, endX: potMouthX + 20, endY: potMouthY, t: 0 });
+      }
+      setFlyingItems(newFlyingItems);
+
       setPendingResults({ results, targetColorHex: lastColorHex });
       setIsBrewing(true);
       setSelectedBase(null);
@@ -95,12 +118,13 @@ export default function BrewScene() {
   const handleSkip = () => {
     if (!isBrewing || !pendingResults) return;
     setIsBrewing(false);
-    setCauldronColorHex(pendingResults.targetColorHex);
+    setCauldronColorHex(DEFAULT_CAULDRON_COLOR);
     setBrewResults(pendingResults.results);
     stopMergingSound();
     playMergeResultSound();
     setPendingResults(null);
     setBubbles([]);
+    setFlyingItems([]);
   };
 
   // 演出用タイマーと泡パーティクルアニメーションループ
@@ -115,12 +139,13 @@ export default function BrewScene() {
     // 2秒（2000ms）で自動的に調合ポップアップ表示へ遷移
     const timeout = setTimeout(() => {
       setIsBrewing(false);
-      setCauldronColorHex(targetColorHex);
+      setCauldronColorHex(DEFAULT_CAULDRON_COLOR);
       setBrewResults(results);
       stopMergingSound();
       playMergeResultSound();
       setPendingResults(null);
       setBubbles([]);
+      setFlyingItems([]);
     }, 2000);
 
     let frame = 0;
@@ -137,7 +162,7 @@ export default function BrewScene() {
           }))
           .filter((b) => b.radius > 2); // 半径が小さくなったら消滅
 
-        // 一定確率で大釜の口（液面）付近から新しい泡を生成（釜は画面左側に配置されている）
+        // 一定確率で大釜の口（液面）付近から新しい泡を生成
         if (Math.random() < 0.2) { // 60fps用の出現率調整
           const angle = Math.random() * Math.PI * 2;
           const dist = Math.random() * 85; // 口の半径内に収まるように配置
@@ -147,11 +172,40 @@ export default function BrewScene() {
           const bubbleColor = r < 0.4 ? targetColorHex : (r < 0.8 ? "c8a84b" : "3d3d5c");
 
           next.push({
-            x: width * 0.15 + Math.cos(angle) * dist,
-            y: height * 0.62 - 120 + Math.sin(angle) * dist * 0.3,
+            x: potCenterX + Math.cos(angle) * dist,
+            y: potCenterY - 108 + Math.sin(angle) * dist * 0.3,
             radius: 8 + Math.random() * 18,
             color: colorNum(bubbleColor),
           });
+        }
+        return next;
+      });
+
+      // 投げ入れた素材を釜の口へ向けて弧を描いて飛ばす。着地したら泡の飛沫を発生させる
+      setFlyingItems((prev) => {
+        if (prev.length === 0) return prev;
+        const next: typeof prev = [];
+        const landed: typeof prev = [];
+        for (const item of prev) {
+          const nt = item.t + 0.06; // 約16フレーム（約270ms）で着地
+          if (nt >= 1) {
+            landed.push(item);
+          } else {
+            next.push({ ...item, t: nt });
+          }
+        }
+        if (landed.length > 0) {
+          setBubbles((bprev) => [
+            ...bprev,
+            ...landed.flatMap((item) =>
+              Array.from({ length: 6 }, () => ({
+                x: item.endX + (Math.random() - 0.5) * 50,
+                y: item.endY + (Math.random() - 0.5) * 20,
+                radius: 10 + Math.random() * 16,
+                color: colorNum(targetColorHex),
+              }))
+            ),
+          ]);
         }
         return next;
       });
@@ -187,10 +241,6 @@ export default function BrewScene() {
   };
 
   const commands = useMemo<DrawCommand[]>(() => {
-    // 大釜は画面左側に配置し、中央のパネルと重ならないようにする（＝モーダル感をなくして一体感を出す）
-    const potCenterX = width * 0.15;
-    const potCenterY = height * 0.62;
-
     const list: DrawCommand[] = [
       // 0. 魔女の背景（夜なので暗く落として、蝋燭の灯りだけがぼんやり点る雰囲気にする）
       { type: "image", x: 0, y: 0, width, height, imageSrc: witchBackground },
@@ -252,8 +302,18 @@ export default function BrewScene() {
       );
     }
 
+    // 5. 釜へ投げ入れられる素材（放物線を描いて口へ落ちていき、着地手前で少し縮む）
+    for (const item of flyingItems) {
+      const t = item.t;
+      const x = item.startX + (item.endX - item.startX) * t;
+      const arcHeight = 220;
+      const y = item.startY + (item.endY - item.startY) * t - Math.sin(t * Math.PI) * arcHeight;
+      const size = 150 - 90 * t;
+      list.push({ type: "image", x: x - size / 2, y: y - size / 2, width: size, height: size, imageSrc: item.imageUrl });
+    }
+
     return list;
-  }, [width, height, cauldronColorHex, isBrewing, bubbles, stirStep, candleAlpha]);
+  }, [width, height, cauldronColorHex, isBrewing, bubbles, stirStep, candleAlpha, flyingItems]);
 
   return (
     <div style={{ width, height }} className={css({ position: "relative", overflow: "hidden" })}>

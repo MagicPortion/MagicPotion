@@ -3,6 +3,7 @@ import { useGameStore } from "../../store/useGameStore";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import PixiCanvas, { type DrawCommand } from "../PixiCanvas";
 import { MATERIALS, SHOP_SLOTS_BY_LEVEL, sampleWeightedChoices } from "../../data/gameData";
+import type { ReceiptItem } from "../../data/types";
 import DialogueBox from "../ui/dialogue/DialogueBox";
 import ShopUI from "../ui/shop/ShopUI";
 import shopBackground from "#assets/Back/ShopBack.png";
@@ -10,6 +11,7 @@ import shopBackground from "#assets/Back/ShopBack.png";
 export default function ShopScene() {
   const {
     money,
+    day,
     shopLevel,
     buyMaterial,
     advanceScene,
@@ -28,8 +30,8 @@ export default function ShopScene() {
 
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [soldOutItems, setSoldOutItems] = useState<Record<string, boolean>>({});
+  const [receiptItems, setReceiptItems] = useState<ReceiptItem[]>([]);
   const [refreshCount, setRefreshCount] = useState(1);
-  const [showBuyModal, setShowBuyModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
   const [showRefreshModal, setShowRefreshModal] = useState(false);
   const { width, height } = useWindowSize();
@@ -82,14 +84,21 @@ export default function ShopScene() {
     if (selectedItems.length === 0 || !canBuy) return;
 
     const newSoldOut = { ...soldOutItems };
+    const purchasedReceiptItems: ReceiptItem[] = [];
     for (const item of selectedItems) {
       buyMaterial(item.id, item.price);
       newSoldOut[item.instanceId] = true;
+      purchasedReceiptItems.push({
+        id: item.instanceId,
+        name: item.name,
+        price: item.price,
+        category: item.category,
+      });
     }
 
+    setReceiptItems((prev) => [...prev, ...purchasedReceiptItems]);
     setSoldOutItems(newSoldOut);
     setQuantities({});
-    setShowBuyModal(false);
     setPendingPostPurchaseScene("conversation_brew");
   };
 
@@ -98,6 +107,7 @@ export default function ShopScene() {
       <PixiCanvas commands={commands} />
       <ShopUI
         money={money}
+        day={day}
         shopItems={shopItems}
         quantities={quantities}
         soldOutItems={soldOutItems}
@@ -107,13 +117,12 @@ export default function ShopScene() {
         refreshCount={refreshCount}
         handleCardClick={handleCardClick}
         handleRefreshTap={handleRefreshTap}
-        setShowBuyModal={setShowBuyModal}
         setShowExitModal={setShowExitModal}
         setQuantities={setQuantities}
-        showBuyModal={showBuyModal}
         showExitModal={showExitModal}
         showRefreshModal={showRefreshModal}
         setShowRefreshModal={setShowRefreshModal}
+        receiptItems={receiptItems}
         onPurchase={handleExecutePurchase}
         onRefresh={handleExecuteRefresh}
         onExit={advanceScene}
