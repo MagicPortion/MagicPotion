@@ -185,26 +185,27 @@ export default function Introduction() {
         transition: `opacity ${FADE_OUT_DURATION}ms ease-out`,
       })}
     >
-
-    <div
-    onClick={(e) => {
-      e.stopPropagation();
-      setShowGoal(true);  
-    }}
-    className={css({
-      position: "absolute",
-      top: "100px",
-      right: "48px",
-      fontSize: "28px",
-      color: "rgba(255,255,255,0.6)",
-      cursor: "pointer",
-      letterSpacing: "0.08em",
-      zIndex: 100,
-      _hover: { color: "rgba(255,255,255,1)" },
-    })}
-    >
-      スキップ ▶▶
-    </div>
+      {!showGoal && (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowGoal(true);
+          }}
+          className={css({
+            position: "absolute",
+            top: "100px",
+            right: "48px",
+            fontSize: "28px",
+            color: "rgba(255,255,255,0.6)",
+            cursor: "pointer",
+            letterSpacing: "0.08em",
+            zIndex: 100,
+            _hover: { color: "rgba(255,255,255,1)" },
+          })}
+        >
+          スキップ ▶▶
+        </div>
+      )}
       {!showGoal ? (
         <div
           className={css({
