@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/MagicPotion/pr-preview/pr-87/sw.js', { scope: '/MagicPotion/pr-preview/pr-87/' })})}
