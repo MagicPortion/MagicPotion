@@ -45,7 +45,10 @@ const dialogues = useMemo(() => {
   ], [width, height]);
 
   return (
-    <div style={{ position: "relative", width, height, overflow: "hidden" }}>
+    <div
+      onClick={() => dialogueRef.current?.click()}
+      style={{ position: "relative", width, height, overflow: "hidden", cursor: "pointer" }}
+    >
       <PixiCanvas commands={commands} />
       <Character character="shopkeeper" animate={true} />
       <DialogueBox
