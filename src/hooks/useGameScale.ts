@@ -1,16 +1,9 @@
-import { useState, useEffect } from "react";
 import { GAME_W, GAME_H } from "./gameConstants";
 
-function calc() {
-  return Math.min(window.innerWidth / GAME_W, window.innerHeight / GAME_H);
-}
-
-export function useGameScale() {
-  const [scale, setScale] = useState(calc);
-  useEffect(() => {
-    const onResize = () => setScale(calc());
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-  return scale;
+/**
+ * 縦持ち時は画面を90度回転させて横持ち表示にするため、
+ * その場合は呼び出し側で viewportW/viewportH を入れ替えて渡す。
+ */
+export function useGameScale(viewportW: number, viewportH: number) {
+  return Math.min(viewportW / GAME_W, viewportH / GAME_H);
 }

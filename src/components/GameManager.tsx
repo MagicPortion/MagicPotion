@@ -3,6 +3,7 @@ import { css } from "#styled-system/css";
 import { useGameStore } from "../store/useGameStore";
 import type { Scene } from "../store/useGameStore";
 import { useGameScale } from "../hooks/useGameScale";
+import { useViewportSize } from "../hooks/useViewportSize";
 import { GAME_W, GAME_H } from "../hooks/gameConstants";
 import { isCancelSoundTarget, isSelectSoundTarget, playCancelSound, playSelectSound } from "../utils/sound";
 import { PixiAppProvider } from "../contexts/PixiAppContext";
@@ -88,7 +89,9 @@ const getTransitionKind = (from: Scene, to: Scene): "pixel" | "white" | null => 
 
 export default function GameManager() {
   const { scene, day, money, materials, isInventoryOpen, setIsInventoryOpen } = useGameStore();
-  const scale = useGameScale();
+  const { width: viewportW, height: viewportH } = useViewportSize();
+  const isPortrait = viewportH > viewportW;
+  const scale = useGameScale(isPortrait ? viewportH : viewportW, isPortrait ? viewportW : viewportH);
   const [displayedScene, setDisplayedScene] = useState(scene);
   const [transition, setTransition] = useState<{
     kind: "pixel" | "white";
@@ -127,6 +130,11 @@ export default function GameManager() {
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
+      // スマホ：初回タップでブラウザUIを隠すためフルスクリーン化を試みる（対応ブラウザのみ）
+      if (event.pointerType === "touch" && !document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.().catch(() => {});
+      }
+
       if (isCancelSoundTarget(event.target)) {
         playCancelSound();
         return;
@@ -144,9 +152,9 @@ export default function GameManager() {
   const scaledW = Math.floor(GAME_W * scale);
   const scaledH = Math.floor(GAME_H * scale);
 
-  return (
-    // レターボックス：ウィンドウ全体を黒で埋め、ゲームエリアを中央に
-    <div className={css({ width: "100vw", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#000", overflow: "hidden" })}>
+  const letterbox = (
+    // レターボックス：親要素全体を黒で埋め、ゲームエリアを中央に
+    <div className={css({ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#000", overflow: "hidden" })}>
       {/* クリップ領域：スケール後の実際の表示サイズ。width/height は動的計算値のためinline style */}
       <div style={{ width: scaledW, height: scaledH }} className={css({ overflow: "hidden", position: "relative", flexShrink: 0 })}>
         {/* ゲームコンテナ：常に GAME_W×GAME_H、CSS scale で拡縮。transform・width・height は動的ためinline style */}
@@ -186,6 +194,32 @@ export default function GameManager() {
           )}
         </div>
       </div>
+    </div>
+  );
+
+  if (!isPortrait) {
+    return (
+      <div className={css({ position: "fixed", inset: 0 })}>
+        {letterbox}
+      </div>
+    );
+  }
+
+  return (
+    // スマホなど縦持ちの場合：画面いっぱいを90度回転させ、横持ち表示として強制的に見せる
+    <div
+      className={css({
+        position: "fixed",
+        top: "100vh",
+        left: 0,
+        width: "100vh",
+        height: "100vw",
+        transformOrigin: "left top",
+        transform: "rotate(-90deg)",
+        overflow: "hidden",
+      })}
+    >
+      {letterbox}
     </div>
   );
 }

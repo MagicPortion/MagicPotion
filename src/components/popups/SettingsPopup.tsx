@@ -28,25 +28,25 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
         onClick={(e) => e.stopPropagation()}
         style={{
           position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
-          zIndex: 301, width: "min(460px, 90vw)",
+          zIndex: 301, width: "900px",
           background: "rgba(12,8,3,0.97)", border: "2px solid #8B6914",
-          borderRadius: 6, padding: "28px 32px", boxShadow: "0 12px 48px rgba(0,0,0,0.7)",
+          borderRadius: 12, padding: "44px 48px", boxShadow: "0 20px 96px rgba(0,0,0,0.78)",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
-          <h2 style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 16, color: "#c8a84b", margin: 0, letterSpacing: "0.12em" }}>
-            <IconSettings size={16} /> 会話ボックス設定
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 36 }}>
+          <h2 style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 30, color: "#c8a84b", margin: 0, letterSpacing: "0.12em" }}>
+            <IconSettings size={28} /> 会話ボックス設定
           </h2>
           <button data-sound="cancel" onClick={onClose} style={{ display: "flex", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "#8B6914", lineHeight: 1 }}>
-            <IconClose size={20} />
+            <IconClose size={32} />
           </button>
         </div>
 
         <section>
-          <p style={{ fontSize: 11, color: "#8B6914", letterSpacing: "0.15em", margin: "0 0 10px", textTransform: "uppercase" }}>
+          <p style={{ fontSize: 24, color: "#8B6914", letterSpacing: "0.15em", margin: "0 0 16px" }}>
             ─ 背景テーマ
           </p>
-          <div style={{ display: "flex", gap: 8 }}>
+          <div style={{ display: "flex", gap: 12 }}>
             {THEME_OPTIONS.map(({ key, label, bg, textColor }) => {
               const active = appearance.theme === key;
               return (
@@ -54,11 +54,11 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
                   key={key}
                   onClick={() => onChange({ ...appearance, theme: key })}
                   style={{
-                    flex: 1, padding: "18px 8px",
+                    flex: 1, padding: "24px 12px",
                     background: bg,
                     border: `2px solid ${active ? "#c8a84b" : "#4a3810"}`,
-                    borderRadius: 4, cursor: "pointer",
-                    color: textColor, fontSize: 13,
+                    borderRadius: 8, cursor: "pointer",
+                    color: textColor, fontSize: 26,
                     fontWeight: active ? "bold" : "normal",
                     letterSpacing: "0.08em", transition: "border-color 0.15s",
                   }}
@@ -70,7 +70,7 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
           </div>
         </section>
 
-        <p style={{ fontSize: 11, color: "#4a3810", letterSpacing: "0.08em", margin: "20px 0 0", textAlign: "center" }}>
+        <p style={{ fontSize: 24, color: "#4a3810", letterSpacing: "0.08em", margin: "28px 0 0", textAlign: "center" }}>
           ─ 変更は即時反映されます ─
         </p>
       </div>
