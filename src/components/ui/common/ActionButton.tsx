@@ -1,5 +1,6 @@
 import { css } from "#styled-system/css";
 import type { ReactNode } from "react";
+import { useUITheme } from "../../../hooks/useUITheme";
 
 interface ActionButtonProps {
   onClick: () => void;
@@ -10,27 +11,32 @@ interface ActionButtonProps {
 }
 
 export function ActionButton({ onClick, disabled, children, variant = "primary", emphasized = false }: ActionButtonProps) {
+  const t = useUITheme();
+
   return (
     <button
       onClick={onClick}
       disabled={disabled}
+      // 背景テーマ設定・emphasizedに応じて変わる配色のためinline style
+      style={{
+        background: variant === "primary" ? t.border : t.btnBg,
+        border: emphasized
+          ? `4px solid ${t.nameText}`
+          : variant === "primary"
+            ? `1.5px solid ${t.nameText}`
+            : `1.5px solid ${t.btnBorder}`,
+        color: variant === "primary" ? t.surface : t.btnText,
+      }}
       className={css({
         display: "flex",
         alignItems: "center",
         gap: "8px",
-        bg: variant === "primary" ? "#8B6914" : "rgba(14,8,2,0.92)",
-        border: emphasized
-          ? "4px solid #c8a84b"
-          : variant === "primary"
-            ? "1.5px solid #c8a84b"
-            : "1.5px solid #5a4418",
         borderRadius: "10px",
         px: "36px",
         py: "14px",
         cursor: disabled ? "not-allowed" : "pointer",
         fontSize: "30px",
         fontWeight: emphasized || variant === "primary" ? "bold" : "normal",
-        color: variant === "primary" ? "#1a0e06" : "#c8a84b",
         letterSpacing: "0.06em",
         opacity: disabled ? 0.4 : 1,
         whiteSpace: "nowrap",

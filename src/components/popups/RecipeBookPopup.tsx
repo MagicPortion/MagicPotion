@@ -33,32 +33,32 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
       <div
         data-sound="cancel"
         onClick={(e) => { e.stopPropagation(); onClose(); }}
-        className={css({ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 })}
+        className={css({ position: "absolute", inset: 0, bg: "parchment.overlay", zIndex: 300 })}
       />
       <div
         onClick={(e) => e.stopPropagation()}
         className={css({
           position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
           zIndex: 301, w: "1800px", maxH: "760px", overflowY: "auto",
-          background: "rgba(12,8,3,0.98)", border: "2px solid #8B6914",
+          background: "parchment.bg", border: "2px solid", borderColor: "parchment.border",
           borderRadius: "12px", p: "42px 48px", boxShadow: "0 20px 96px rgba(0,0,0,0.78)",
         })}
       >
         <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", mb: "20px" })}>
-          <h2 className={css({ display: "flex", alignItems: "center", gap: "12px", fontSize: "30px", color: "#c8a84b", m: 0, letterSpacing: "0.12em" })}>
+          <h2 className={css({ display: "flex", alignItems: "center", gap: "12px", fontSize: "30px", color: "parchment.accent", m: 0, letterSpacing: "0.12em" })}>
             <IconRecipe size={28} /> レシピ帳（{knownRecipes.length} / 15）
           </h2>
           <button
             data-sound="cancel"
             onClick={onClose}
-            className={css({ display: "flex", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "#8B6914" })}
+            className={css({ display: "flex", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "parchment.textMuted" })}
           >
             <IconClose size={28} />
           </button>
         </div>
 
         {Object.keys(grouped).length === 0 ? (
-          <p className={css({ textAlign: "center", color: "#8B6914", fontSize: "30px", p: "20px 0", letterSpacing: "0.06em" })}>
+          <p className={css({ textAlign: "center", color: "parchment.textMuted", fontSize: "30px", p: "20px 0", letterSpacing: "0.06em" })}>
             まだレシピがありません。<br />
             調合するか、朝のレシピ習得で覚えよう！
           </p>
@@ -72,7 +72,7 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                   key={potionId}
                   className={css({
                     display: "flex", alignItems: "flex-start", gap: "0",
-                    background: "rgba(30,20,8,0.78)", border: "1px solid #4a3810",
+                    background: "parchment.bgSoft", border: "1px solid", borderColor: "parchment.borderMuted",
                     borderRadius: "12px", overflow: "hidden",
                   })}
                 >
@@ -80,14 +80,14 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                     <div className={css({
                     display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
                     gap: "10px", w: "170px", flexShrink: 0, p: "20px 16px",
-                    borderRight: "1px solid #4a3810", alignSelf: "stretch",
+                    borderRight: "1px solid", borderColor: "parchment.borderMuted", alignSelf: "stretch",
                   })}>
                     <Dot colorHex={potion?.colorHex ?? "808080"} size={40} />
-                    <span className={css({ fontSize: "26px", fontWeight: "bold", color: "#c8a84b", textAlign: "center", lineHeight: 1.3 })}>
+                    <span className={css({ fontSize: "26px", fontWeight: "bold", color: "parchment.accent", textAlign: "center", lineHeight: 1.3 })}>
                       {potion?.name}
                     </span>
                     {recipes.length > 1 && (
-                      <span className={css({ fontSize: "24px", color: "#6b5040", letterSpacing: "0.04em" })}>
+                      <span className={css({ fontSize: "24px", color: "parchment.subtleText", letterSpacing: "0.04em" })}>
                         {recipes.length}通り
                       </span>
                     )}
@@ -122,10 +122,10 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                           })}
                         >
                           <div className={css({ display: "flex", alignItems: "center", gap: "10px", width: "100%", flexWrap: "wrap" })}>
-                            <span className={css({ background: "#1a0e06", border: "1px solid #8B6914", borderRadius: "20px", px: "10px", py: "3px", fontSize: "26px", color: "#c8a84b", whiteSpace: "nowrap" })}>
+                            <span className={css({ background: "parchment.surface", border: "1px solid", borderColor: "parchment.border", borderRadius: "20px", px: "10px", py: "3px", fontSize: "26px", color: "parchment.accent", whiteSpace: "nowrap" })}>
                               Lv.{level}
                             </span>
-                            <span className={css({ fontSize: "26px", fontWeight: "bold", color: "#c8a84b", whiteSpace: "nowrap" })}>
+                            <span className={css({ fontSize: "26px", fontWeight: "bold", color: "parchment.accent", whiteSpace: "nowrap" })}>
                               {price}G
                             </span>
                           </div>
@@ -133,10 +133,10 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                           <div className={css({ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", width: "100%", flexWrap: "wrap" })}>
                             <div className={css({ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" })}>
                               {base && <Image src={base.imageUrl} alt={base.name} width={64} height={64} />}
-                              <span className={css({ fontSize: "26px", color: "#e8d8b8", minW: "80px", wordBreak: "break-word" })}>{base?.name}</span>
-                              <span className={css({ fontSize: "26px", color: "#4a3810", flexShrink: 0 })}>＋</span>
+                              <span className={css({ fontSize: "26px", color: "parchment.text", minW: "80px", wordBreak: "break-word" })}>{base?.name}</span>
+                              <span className={css({ fontSize: "26px", color: "parchment.borderMuted", flexShrink: 0 })}>＋</span>
                               {accent && <Image src={accent.imageUrl} alt={accent.name} width={64} height={64} />}
-                              <span className={css({ fontSize: "26px", color: "#e8d8b8", minW: "80px", wordBreak: "break-word" })}>{accent?.name}</span>
+                              <span className={css({ fontSize: "26px", color: "parchment.text", minW: "80px", wordBreak: "break-word" })}>{accent?.name}</span>
                             </div>
                             {onSelectRecipe && (
                               <button
@@ -144,10 +144,10 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                                 disabled={!canBrew}
                                 className={css({
                                   bg: canBrew ? "pastel.mint" : "transparent",
-                                  border: "1px solid", borderColor: canBrew ? "pastel.sage" : "#4a3810",
+                                  border: "1px solid", borderColor: canBrew ? "pastel.sage" : "parchment.borderMuted",
                                   borderRadius: "6px", p: "4px 12px", flexShrink: 0,
                                   cursor: canBrew ? "pointer" : "not-allowed",
-                                  fontSize: "26px", color: canBrew ? "#4a3f55" : "#4a3810",
+                                  fontSize: "26px", color: canBrew ? "#4a3f55" : "parchment.borderMuted",
                                   whiteSpace: "nowrap", opacity: canBrew ? "1" : "0.5",
                                   _hover: { bg: canBrew ? "pastel.sage" : "transparent" },
                                 })}
