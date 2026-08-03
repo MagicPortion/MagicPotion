@@ -7,19 +7,24 @@ interface ActionButtonProps {
   disabled?: boolean;
   children: ReactNode;
   variant?: "primary" | "secondary";
+  emphasized?: boolean;
 }
 
-export function ActionButton({ onClick, disabled, children, variant = "primary" }: ActionButtonProps) {
+export function ActionButton({ onClick, disabled, children, variant = "primary", emphasized = false }: ActionButtonProps) {
   const t = useUITheme();
 
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      // 背景テーマ設定に応じて変わる配色のためinline style
+      // 背景テーマ設定・emphasizedに応じて変わる配色のためinline style
       style={{
         background: variant === "primary" ? t.border : t.btnBg,
-        border: variant === "primary" ? `1.5px solid ${t.nameText}` : `1.5px solid ${t.btnBorder}`,
+        border: emphasized
+          ? `4px solid ${t.nameText}`
+          : variant === "primary"
+            ? `1.5px solid ${t.nameText}`
+            : `1.5px solid ${t.btnBorder}`,
         color: variant === "primary" ? t.surface : t.btnText,
       }}
       className={css({
@@ -31,7 +36,7 @@ export function ActionButton({ onClick, disabled, children, variant = "primary" 
         py: "14px",
         cursor: disabled ? "not-allowed" : "pointer",
         fontSize: "30px",
-        fontWeight: variant === "primary" ? "bold" : "normal",
+        fontWeight: emphasized || variant === "primary" ? "bold" : "normal",
         letterSpacing: "0.06em",
         opacity: disabled ? 0.4 : 1,
         whiteSpace: "nowrap",
