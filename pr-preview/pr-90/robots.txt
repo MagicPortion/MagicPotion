@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /MagicPotion/pr-preview/
-
-Sitemap: https://magicportion.github.io/MagicPotion/sitemap.xml
