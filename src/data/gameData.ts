@@ -19,6 +19,17 @@ for (const [path, url] of Object.entries(itemImageModules)) {
   itemImageMap[key] = url;
 }
 
+// ポーション画像も、存在する素材だけをビルド時に URL として解決する。
+// 画像がまだ用意されていないポーションは、呼び出し側で従来の色演出にフォールバックできる。
+const potionImageModules = import.meta.glob<string>("../assets/potions/*.png", {
+  eager: true,
+  import: "default",
+});
+const potionImageMap: Record<string, string> = {};
+for (const [path, url] of Object.entries(potionImageModules)) {
+  potionImageMap[path.replace("../assets/potions/", "")] = url;
+}
+
 export type { MaterialDef, MaterialDefWithUrl, RecipeDef, PotionDef };
 
 const rawMaterials = materialsJson as MaterialDef[];
@@ -45,6 +56,10 @@ export function getRecipe(id: string): RecipeDef | undefined {
 
 export function getPotion(id: string): PotionDef | undefined {
   return POTIONS.find((p) => p.id === id);
+}
+
+export function getPotionImageUrl(image?: string): string | undefined {
+  return image ? potionImageMap[image] : undefined;
 }
 
 export function findRecipeByIngredients(baseId: string, accentId: string): RecipeDef | undefined {

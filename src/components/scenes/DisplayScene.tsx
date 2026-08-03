@@ -23,9 +23,11 @@ function buildSlots(potions: BrewedPotion[]): AnimationSlot[] {
   const originX = GAME_W / 2 - (spacing * (n - 1)) / 2;
   return potions.map((p, i) => {
     const lineupX = originX + i * spacing;
+    const potion = getPotion(p.potionId);
     return {
       id: p.instanceId,
-      colorHex: getPotion(p.potionId)?.colorHex ?? "888888",
+      colorHex: potion?.colorHex ?? "888888",
+      image: potion?.image,
       lineupX,
       dx: CENTER_X - lineupX,
       dy: CENTER_Y - LINEUP_Y,

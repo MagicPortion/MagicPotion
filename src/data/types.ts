@@ -26,6 +26,7 @@ export interface PotionDef {
   name: string;
   colorHex: string;
   basePrice: number;
+  image?: string;
 }
 
 export interface BrewedPotion {

@@ -80,6 +80,7 @@ export default function BrewScene() {
         results.push({
           name: potionDef.name,
           colorHex: potionDef.colorHex,
+          image: potionDef.image,
           level: brewed.level,
           sellPrice: brewed.sellPrice,
           isNew: i === 0 && brewed.isNew,

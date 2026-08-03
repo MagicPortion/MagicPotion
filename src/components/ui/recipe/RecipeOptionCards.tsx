@@ -1,6 +1,7 @@
 import { useState } from "react"; // 1. useState をインポート
 import { css } from "#styled-system/css";
 import type { PotionDef } from "../../../data/types";
+import ColorOrb from "../common/ColorOrb";
 import { SEMANTIC } from "../dialogue/dialogueThemes";
 import { useUITheme } from "../../../hooks/useUITheme";
 
@@ -106,13 +107,8 @@ export default function RecipeOptionCards({ options, onLearn }: RecipeOptionCard
                   },
                 })}
               >
-                <span
-                  style={{
-                    backgroundColor: `#${opt.potion.colorHex}`,
-                    boxShadow: `0 4px 16px #${opt.potion.colorHex}88`,
-                  }}
-                  className={css({ display: "block", w: "64px", h: "64px", borderRadius: "50%", flexShrink: 0 })}
-                />
+                <ColorOrb colorHex={opt.potion.colorHex} image={opt.potion.image} size={64} />
+
                 <span style={{ color: t.text }} className={css({ fontSize: "30px", fontWeight: "bold", textAlign: "center", lineHeight: 1.3 })}>
                   <PotionName name={opt.potion.name} />
                 </span>

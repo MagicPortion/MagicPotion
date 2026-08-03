@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import { css } from "#styled-system/css";
 import type { BrewResult } from "./BrewPanel";
 import NewBadge from "../common/NewBadge";
+import { getPotionImageUrl } from "../../../data/gameData";
 
 interface BrewResultPopupProps {
   results: BrewResult[];
@@ -17,6 +18,7 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
   const isNew    = results[0]?.isNew === true; // ポーション初回
   const isNewRecipe = results[0]?.isNewRecipe === true; // レシピ初回
   const isFailed = results[0]?.isFailed === true; // 失敗（微妙なポーション）
+  const potionImageUrl = getPotionImageUrl(potion.image);
   const mountTime = useRef(0);
 
   useEffect(() => {
@@ -108,18 +110,31 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
               </div>
             )}
 
-            {/* メインオーブ: colorHexが動的のためinline style */}
+            {/* ポーションを際立たせる発光。画像未登録時は従来どおりオーブとして表示する。 */}
             <div
               style={{
-                backgroundColor: `#${potion.colorHex}`,
-                boxShadow: `0 0 60px #${potion.colorHex}bb, 0 0 130px #${potion.colorHex}44, inset 0 12px 36px rgba(255,255,255,0.22)`,
+                backgroundColor: potionImageUrl ? "transparent" : `#${potion.colorHex}`,
+                boxShadow: potionImageUrl
+                  ? `0 0 60px #${potion.colorHex}bb, 0 0 130px #${potion.colorHex}44`
+                  : `0 0 60px #${potion.colorHex}bb, 0 0 130px #${potion.colorHex}44, inset 0 12px 36px rgba(255,255,255,0.22)`,
                 animation: "orbPulseGlow 2s ease-in-out infinite",
               }}
               className={css({
-                width: "280px", height: "280px", borderRadius: "full",
-                position: "relative", zIndex: 2,
+                width: potionImageUrl ? "190px" : "280px", height: potionImageUrl ? "190px" : "280px", borderRadius: "full",
+                position: "absolute", top: potionImageUrl ? "45px" : "0", left: potionImageUrl ? "45px" : "0", zIndex: 2,
               })}
             />
+
+            {potionImageUrl && (
+              <img
+                src={potionImageUrl}
+                alt={potion.name}
+                className={css({
+                  position: "relative", zIndex: 3, width: "100%", height: "100%",
+                  objectFit: "contain", filter: "drop-shadow(0 12px 20px rgba(0,0,0,0.45))",
+                })}
+              />
+            )}
 
             {/* NEW バッジ: 失敗時は非表示 */}
             {!isFailed && isNew && (

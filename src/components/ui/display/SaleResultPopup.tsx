@@ -14,6 +14,7 @@ interface PotionGroup {
   potionId: string;
   name: string;
   colorHex: string;
+  image?: string;
   level: number;
   count: number;
   total: number;
@@ -37,6 +38,7 @@ function groupPotions(potions: BrewedPotion[]): PotionGroup[] {
         potionId: p.potionId,
         name: def.name,
         colorHex: def.colorHex,
+        image: def.image,
         level: p.level,
         count: 1,
         total: p.sellPrice,
@@ -110,7 +112,7 @@ export default function SaleResultPopup({ potions, onClose, buttonLabel = "ç¿Œæœ
                     p: "16px 24px", position: "relative",
                   })}
                 >
-                  <ColorOrb colorHex={g.colorHex} size={64} />
+                  <ColorOrb colorHex={g.colorHex} image={g.image} size={64} />
 
                   <div className={css({ flex: 1, display: "flex", flexDirection: "column", gap: "8px" })}>
                     <span className={css({ fontWeight: "700", color: "white", fontSize: "32px" })}>

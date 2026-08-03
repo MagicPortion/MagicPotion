@@ -5,6 +5,7 @@ import BrewEquation from "./BrewEquation";
 export interface BrewResult {
   name: string;
   colorHex: string;
+  image?: string;
   level: number;
   sellPrice: number;
   isNew: boolean;
