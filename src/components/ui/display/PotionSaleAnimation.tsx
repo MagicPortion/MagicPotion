@@ -1,4 +1,5 @@
 import { playPotionSoldSound } from "../../../utils/sound";
+import { getPotionImageUrl } from "../../../data/gameData";
 
 // アニメーション定数（DisplayScene がタイミング計算に使用するため export）
 export const ANIM = {
@@ -18,6 +19,7 @@ const LINEUP_Y  = 1080 - 150;
 export interface AnimationSlot {
   id: string;
   colorHex: string;
+  image?: string;
   lineupX: number;
   dx: number;  // lineupX → CENTER_X
   dy: number;  // LINEUP_Y → CENTER_Y
@@ -35,6 +37,7 @@ export default function PotionSaleAnimation({ slots, launched }: PotionSaleAnima
       {slots.map((s, i) => {
         const arcDelay   = i * ANIM.STAGGER;
         const moneyDelay = arcDelay + ANIM.MONEY_OFFSET;
+        const imageUrl = getPotionImageUrl(s.image);
 
         return (
           <div key={s.id}>
@@ -47,22 +50,34 @@ export default function PotionSaleAnimation({ slots, launched }: PotionSaleAnima
                 animation: `lineupEnter ${ANIM.ENTER_DURATION}ms cubic-bezier(0.22,1,0.36,1) both`,
               }}
             >
-              {/* オーブ（放物線アニメ担当）: 色・デルタ・アニメが動的のためinline style */}
+              {/* ポーション（放物線アニメ担当） */}
               <div
                 onAnimationStart={launched ? playPotionSoldSound : undefined}
                 style={{
                   width: ORB_SIZE,
                   height: ORB_SIZE,
-                  borderRadius: "50%",
-                  backgroundColor: `#${s.colorHex}`,
-                  boxShadow: `0 0 36px #${s.colorHex}99, 0 0 80px #${s.colorHex}44`,
+                  position: "relative",
+                  borderRadius: imageUrl ? 0 : "50%",
+                  backgroundColor: imageUrl ? "transparent" : `#${s.colorHex}`,
+                  boxShadow: imageUrl ? "none" : `0 0 36px #${s.colorHex}99, 0 0 80px #${s.colorHex}44`,
                   ["--dx" as string]: `${s.dx}px`,
                   ["--dy" as string]: `${s.dy}px`,
                   ...(launched
                     ? { animation: `potionArc ${ANIM.ARC_DURATION}ms cubic-bezier(0.45,0,0.55,1) ${arcDelay}ms both` }
                     : {}),
                 }}
-              />
+              >
+                {imageUrl && (
+                  <img
+                    src={imageUrl}
+                    alt=""
+                    style={{
+                      position: "absolute", inset: 0, width: ORB_SIZE, height: ORB_SIZE,
+                      objectFit: "contain", pointerEvents: "none",
+                    }}
+                  />
+                )}
+              </div>
             </div>
 
             {/* 売値テキスト（中央で出現・上昇・消滅）: 座標・アニメが動的のためinline style */}

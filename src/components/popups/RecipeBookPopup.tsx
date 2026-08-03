@@ -3,6 +3,7 @@ import { useGameStore } from "../../store/useGameStore";
 import { getMaterial, getPotion, getRecipe, calcSellPrice } from "../../data/gameData";
 import { IconRecipe, IconClose } from "../ui/icons";
 import Image from "../ui/common/Image";
+import ColorOrb from "../ui/common/ColorOrb";
 
 interface RecipeBookPopupProps {
   isOpen: boolean;
@@ -77,12 +78,13 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                   })}
                 >
                   {/* 左：ポーション情報 */}
-                    <div className={css({
+                  <div className={css({
                     display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
                     gap: "10px", w: "170px", flexShrink: 0, p: "20px 16px",
                     borderRight: "1px solid #4a3810", alignSelf: "stretch",
                   })}>
-                    <Dot colorHex={potion?.colorHex ?? "808080"} size={40} />
+                    <ColorOrb colorHex={potion?.colorHex ?? "808080"} image={potion?.image} size={64} />
+
                     <span className={css({ fontSize: "26px", fontWeight: "bold", color: "#c8a84b", textAlign: "center", lineHeight: 1.3 })}>
                       {potion?.name}
                     </span>
@@ -167,15 +169,5 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
         )}
       </div>
     </>
-  );
-}
-
-function Dot({ colorHex, size = 12 }: { colorHex: string; size?: number }) {
-  return (
-    // backgroundColor・width・height は動的値のためinline style
-    <span
-      style={{ backgroundColor: `#${colorHex}`, width: size, height: size }}
-      className={css({ display: "inline-block", borderRadius: "50%", flexShrink: 0, border: "1px solid rgba(255,255,255,0.2)" })}
-    />
   );
 }

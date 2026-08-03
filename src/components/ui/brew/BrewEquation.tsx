@@ -1,8 +1,9 @@
 import { css } from "#styled-system/css";
-import type { MaterialDefWithUrl } from "../../../data/types";
+import type { MaterialDefWithUrl, PotionDef } from "../../../data/types";
 import type { BrewResult } from "./BrewPanel";
 import { findRecipeByIngredients, getPotion } from "../../../data/gameData";
 import Image from "../common/Image";
+import ColorOrb from "../common/ColorOrb";
 
 interface BrewEquationProps {
   baseMaterial: MaterialDefWithUrl | null;
@@ -91,7 +92,7 @@ function SlotBtn({
   );
 }
 
-function ResultSlot({ result, previewPotion }: { result: BrewResult | null; previewPotion?: { name: string; colorHex: string } | null }) {
+function ResultSlot({ result, previewPotion }: { result: BrewResult | null; previewPotion?: PotionDef | null }) {
   if (!result) {
     // previewPotion があればうっすら表示
     if (previewPotion) {
@@ -105,12 +106,7 @@ function ResultSlot({ result, previewPotion }: { result: BrewResult | null; prev
           padding: "16px 8px 12px",
           opacity: 0.4,
         }}>
-          <span style={{
-            display: "block", width: 120, height: 120, borderRadius: "50%",
-            backgroundColor: `#${previewPotion.colorHex}`,
-            boxShadow: `0 2px 28px #${previewPotion.colorHex}`,
-            flexShrink: 0,
-          }} />
+          <ColorOrb colorHex={previewPotion.colorHex} image={previewPotion.image} size={120} />
           <span className={css({ fontSize: "32px", color: "#ffffff", fontWeight: "bold", textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" })}>{previewPotion.name}</span>
         </div>
       );
@@ -140,13 +136,7 @@ function ResultSlot({ result, previewPotion }: { result: BrewResult | null; prev
       animation: "resultPop 0.25s ease",
       padding: "16px 8px 12px",
     }}>
-      {/* カラーオーブ。colorHexが動的のためinline style */}
-      <span style={{
-        display: "block", width: 120, height: 120, borderRadius: "50%",
-        backgroundColor: `#${result.colorHex}`,
-        boxShadow: `0 2px 28px #${result.colorHex}`,
-        flexShrink: 0,
-      }} />
+      <ColorOrb colorHex={result.colorHex} image={result.image} size={120} />
       <span className={css({ fontSize: "32px", color: "#ffffff", fontWeight: "bold", textAlign: "center", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" })}>{result.name}</span>
       <span className={css({ fontSize: "26px", color: "#c8a84b", fontWeight: "bold", whiteSpace: "nowrap" })}>Lv.{result.level} / {result.sellPrice}G</span>
     </div>

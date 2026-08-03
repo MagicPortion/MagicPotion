@@ -2,6 +2,7 @@ import { css } from "#styled-system/css";
 import { useGameStore } from "../../../store/useGameStore";
 import { getPotion } from "../../../data/gameData";
 import type { PotionDef } from "../../../data/types";
+import ColorOrb from "../common/ColorOrb";
 
 interface ShelfGroup {
   def: PotionDef;
@@ -62,13 +63,7 @@ export default function PotionShelf() {
               borderRadius: "14px",
             })}
           >
-            {/* カラーオーブ。colorHexが動的のためinline style */}
-            <span style={{
-              display: "block", flexShrink: 0,
-              width: 64, height: 64, borderRadius: "50%",
-              backgroundColor: `#${g.def.colorHex}`,
-              boxShadow: `0 2px 20px #${g.def.colorHex}99`,
-            }} />
+            <ColorOrb colorHex={g.def.colorHex} image={g.def.image} size={64} />
             {/* テキスト */}
             <div className={css({ flex: 1, minWidth: 0 })}>
               <p className={css({ fontSize: "32px", color: "#ffffff", m: 0, fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" })}>
