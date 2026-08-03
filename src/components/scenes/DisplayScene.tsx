@@ -4,7 +4,8 @@ import { useGameStore } from "../../store/useGameStore";
 import { getPotion } from "../../data/gameData";
 import type { BrewedPotion } from "../../data/types";
 import { TOTAL_DAYS } from "../../data/constants";
-import PotionSaleAnimation, { type AnimationSlot, ANIM } from "../ui/display/PotionSaleAnimation";
+import PotionSaleAnimation from "../ui/display/PotionSaleAnimation";
+import { type AnimationSlot, ANIM } from "../ui/display/potionSaleAnimation.constants";
 import SaleResultPopup from "../ui/display/SaleResultPopup";
 import BlackoutDay from "../ui/display/BlackoutDay";
 

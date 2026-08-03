@@ -14,57 +14,33 @@ interface ConversationSceneProps {
   sceneOverride?: Scene;
 }
 
+// ランダムな会話セットの抽選（Math.randomを含むため、呼び出し側はeffect/イベント内から呼ぶこと）
+function pickDialogues(scene: Scene, day: number): string[] {
+  if (scene === "conversation_move") {
+    if (day === 1) return [...firstDayMoveDialogue];
+    return [...moveDialogues[Math.floor(Math.random() * moveDialogues.length)]];
+  }
+  if (scene === "conversation_brew") {
+    if (day === 1) return [...firstDayBrewDialogue];
+    return [...brewDialogues[Math.floor(Math.random() * brewDialogues.length)]];
+  }
+  if (scene === "conversation_end") {
+    return [...endingDialogues];
+  }
+  if (day === 1) return [...firstDayMorningDialogue];
+  return [...morningDialogues[Math.floor(Math.random() * morningDialogues.length)]];
+}
+
 export default function ConversationScene({ sceneOverride }: ConversationSceneProps) {
-  const { day, lastSaleResult, advanceScene, scene: storeScene, setIsInventoryOpen } = useGameStore();
+  const { day, advanceScene, scene: storeScene, setIsInventoryOpen } = useGameStore();
   const scene = sceneOverride ?? storeScene;
   const { width, height } = useWindowSize();
 
-  const dialogues = useMemo(() => {
-    //魔女-昼お店移動の会話
-    if (scene === "conversation_move") {
-      // 初日
-      if (day === 1) {
-        return firstDayMoveDialogue;
-      }
-      // 2日目以降
-      const randomSet =
-        moveDialogues[
-          Math.floor(Math.random() * moveDialogues.length)
-        ];
-      return [...randomSet];
-    }
-    //魔女-夜ポーション調合の会話
-    if (scene === "conversation_brew") {
-      // 初日
-      if (day === 1) {
-        return firstDayBrewDialogue;
-      }
-      // 2日目以降
-      const randomSet =
-        brewDialogues[
-          Math.floor(Math.random() * brewDialogues.length)
-        ];
-      return [...randomSet];
-    }
-
-    if (scene === "conversation_end") {
-      return endingDialogues;
-    }
-
-    //魔女-朝レシピ選択の会話
-    // 初日
-    if (day === 1) {
-      return firstDayMorningDialogue;
-    }
-    // 2日目以降
-    const randomSet =
-      morningDialogues[
-        Math.floor(Math.random() * morningDialogues.length)
-      ];
-    return [...randomSet];
-  }, [day, lastSaleResult, scene]);
-
+  // シーンは日ごと・遷移ごとに GameManager 側で key 付きで再マウントされるため、
+  // 初回マウント時に一度だけ抽選すれば十分（useStateの遅延初期化）
+  const [dialogues] = useState<string[]>(() => pickDialogues(scene, day));
   const [index, setIndex] = useState(0);
+
   const dialogueRef = useRef<DialogueBoxHandle>(null);
 
   const handleAdvance = () => {

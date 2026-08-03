@@ -8,6 +8,8 @@ import DialogueBox from "../ui/dialogue/DialogueBox";
 import ShopUI from "../ui/shop/ShopUI";
 import shopBackground from "#assets/Back/ShopBack.png";
 
+const REFRESH_COSTS = [10, 20, 40, 70, 100, 140, 180, 220, 260, 300];
+
 export default function ShopScene() {
   const {
     money,
@@ -39,8 +41,6 @@ export default function ShopScene() {
   const selectedItems = shopItems.filter((item) => (quantities[item.instanceId] ?? 0) === 1);
   const totalCost = useMemo(() => selectedItems.reduce((sum, item) => sum + item.price, 0), [selectedItems]);
   const canBuy = selectedItems.length > 0 && totalCost <= money;
-
-  const REFRESH_COSTS = [10, 20, 40, 70, 100, 140, 180, 220, 260, 300];
 
   const currentRefreshCost = useMemo(() => {
     const index = Math.min(refreshCount - 1, REFRESH_COSTS.length - 1);

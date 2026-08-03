@@ -11,28 +11,30 @@ import {
   shopAfterPurchaseDialogue,
 } from "../../data/conversations";
 
+// ランダムな会話セットの抽選（Math.randomを含むため、呼び出し側はeffect/イベント内から呼ぶこと）
+function pickDialogues(day: number, isPostPurchase: boolean): string[] {
+  if (day === 1) {
+    return isPostPurchase ? [...shopAfterPurchaseDialogue] : [...firstDayShopDialogue];
+  }
+  if (isPostPurchase) {
+    return [...shopAfterPurchaseDialogue];
+  }
+  return [...shopDialogues[Math.floor(Math.random() * shopDialogues.length)]];
+}
+
 export default function ConversationShopkeeperScene() {
   const { day, advanceScene, setIsInventoryOpen, pendingPostPurchaseScene } = useGameStore();
   const { width, height } = useWindowSize();
 
-// 暗転中に pendingPostPurchaseScene が解除されても、
-// 「毎度あり。」から通常の店主会話へ切り替わらないよう入場時の状態を保持する。
-const [isPostPurchase] = useState(() => pendingPostPurchaseScene !== null);
+  // 暗転中に pendingPostPurchaseScene が解除されても、
+  // 「毎度あり。」から通常の店主会話へ切り替わらないよう入場時の状態を保持する。
+  const [isPostPurchase] = useState(() => pendingPostPurchaseScene !== null);
 
-const dialogues = useMemo(() => {
-  if (day === 1) {
-    return isPostPurchase ? shopAfterPurchaseDialogue : firstDayShopDialogue;
-  }
-
-  if (isPostPurchase) {
-    return [...shopAfterPurchaseDialogue];
-  }
-
-  const randomSet = shopDialogues[Math.floor(Math.random() * shopDialogues.length)];
-  return [...randomSet];
-}, [day, isPostPurchase]);
-
+  // シーンは日ごと・遷移ごとに GameManager 側で key 付きで再マウントされるため、
+  // 初回マウント時に一度だけ抽選すれば十分（useStateの遅延初期化）
+  const [dialogues] = useState<string[]>(() => pickDialogues(day, isPostPurchase));
   const [index, setIndex] = useState(0);
+
   const dialogueRef = useRef<DialogueBoxHandle>(null);
 
   const handleAdvance = () => {
