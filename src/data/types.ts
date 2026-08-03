@@ -49,4 +49,5 @@ export interface ReceiptItem {
   name: string;
   price: number;
   category: string;
+  spawnWeight: number;
 }

@@ -1,3 +1,4 @@
+import { css } from "#styled-system/css";
 import { IconHint, IconClose, IconDiamond } from "../ui/icons";
 
 const DEFAULT_HINTS = [
@@ -22,30 +23,30 @@ export default function HintPopup({ isOpen, onClose }: HintPopupProps) {
       <div
         data-sound="cancel"
         onClick={(e) => { e.stopPropagation(); onClose(); }}
-        style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 300 }}
+        className={css({ position: "absolute", inset: 0, bg: "parchment.overlay", zIndex: 300 })}
       />
       <div
         onClick={(e) => e.stopPropagation()}
-        style={{
+        className={css({
           position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
           zIndex: 301, width: "900px",
-          background: "rgba(12,8,3,0.97)", border: "2px solid #8B6914",
-          borderRadius: 12, padding: "44px 48px", boxShadow: "0 20px 96px rgba(0,0,0,0.78)",
-        }}
+          bg: "parchment.bg", border: "2px solid", borderColor: "parchment.border",
+          borderRadius: "12px", padding: "44px 48px", boxShadow: "0 20px 96px rgba(0,0,0,0.78)",
+        })}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
-          <h2 style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 30, color: "#c8a84b", margin: 0, letterSpacing: "0.12em" }}>
+        <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center", mb: "28px" })}>
+          <h2 className={css({ display: "flex", alignItems: "center", gap: "12px", fontSize: "30px", color: "parchment.accent", m: 0, letterSpacing: "0.12em" })}>
             <IconHint size={28} /> ヒント
           </h2>
-          <button data-sound="cancel" onClick={onClose} style={{ display: "flex", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "#8B6914", lineHeight: 1 }}>
+          <button data-sound="cancel" onClick={onClose} className={css({ display: "flex", alignItems: "center", background: "none", border: "none", cursor: "pointer", color: "parchment.textMuted", lineHeight: 1 })}>
             <IconClose size={32} />
           </button>
         </div>
 
-        <ul style={{ margin: 0, padding: "0 0 0 4px", listStyle: "none", display: "flex", flexDirection: "column", gap: 18 }}>
+        <ul className={css({ margin: 0, padding: "0 0 0 4px", listStyle: "none", display: "flex", flexDirection: "column", gap: "18px" })}>
           {DEFAULT_HINTS.map((hint, i) => (
-            <li key={i} style={{ display: "flex", gap: 14, fontSize: 26, color: "#e8d8b8", lineHeight: 1.6, letterSpacing: "0.03em" }}>
-              <span style={{ color: "#8B6914", flexShrink: 0, marginTop: 8 }}>
+            <li key={i} className={css({ display: "flex", gap: "14px", fontSize: "26px", color: "parchment.text", lineHeight: 1.6, letterSpacing: "0.03em" })}>
+              <span className={css({ color: "parchment.textMuted", flexShrink: 0, mt: "8px" })}>
                 <IconDiamond size={16} />
               </span>
               {hint}
