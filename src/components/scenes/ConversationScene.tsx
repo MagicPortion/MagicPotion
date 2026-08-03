@@ -87,7 +87,8 @@ export default function ConversationScene({ sceneOverride }: ConversationScenePr
 
   return (
     <div
-      style={{ position: "relative", width, height, overflow: "hidden", cursor: "pointer" }} 
+      onClick={() => dialogueRef.current?.click()}
+      style={{ position: "relative", width, height, overflow: "hidden", cursor: "pointer" }}
     >
       <PixiCanvas commands={commands} />
       <Character

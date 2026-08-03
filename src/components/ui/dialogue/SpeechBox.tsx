@@ -70,7 +70,8 @@ const SpeechBox = forwardRef<SpeechBoxHandle, SpeechBoxProps>(function SpeechBox
 
   const showChoices = !!choices && choices.length > 0 && !animating;
 
-  const handleClick = () => {
+  const handleClick = (e?: { stopPropagation?: () => void }) => {
+    e?.stopPropagation?.();
     if (showChoices) return;
     if (animating) {
       animRef.current?.pause();
