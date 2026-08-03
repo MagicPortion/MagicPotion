@@ -48,8 +48,9 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
         className={css({
           width: "1400px",
           height: "880px",
-          background: "rgba(12,8,3,0.98)",
-          border: "2px solid #8B6914",
+          background: "parchment.bg",
+          border: "2px solid",
+          borderColor: "parchment.border",
           borderRadius: "12px",
           display: "flex",
           flexDirection: "column",
@@ -63,9 +64,10 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
         {/* 大きな持ち物一覧の看板リボン */}
         <div className={css({
           position: "relative",
-          background: "rgba(30,20,8,0.78)",
-          color: "#c8a84b",
-          border: "1px solid #8B6914",
+          background: "parchment.bgSoft",
+          color: "parchment.accent",
+          border: "1px solid",
+          borderColor: "parchment.border",
           fontSize: "35px",
           fontWeight: "900",
           py: "16px",
@@ -80,7 +82,7 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
         </div>
 
         {/* 右上のバツ閉じボタン */}
-        <button 
+        <button
           data-sound="cancel"
           onClick={onClose}
           className={css({
@@ -89,10 +91,10 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
             right: "40px",
             background: "none",
             border: "none",
-            color: "#8B6914",
+            color: "parchment.textMuted",
             cursor: "pointer",
             transition: "transform 0.1s",
-            _hover: { color: "#c8a84b", transform: "scale(1.1)" },
+            _hover: { color: "parchment.accent", transform: "scale(1.1)" },
           })}
         >
           <IconClose />
@@ -111,9 +113,10 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
           {/* 🟥 上段：【Base 素材】セクション */}
           <div className={css({ display: "flex", flexDirection: "column", gap: "20px", textAlign: "left" })}>
             <div className={css({
-              background: "rgba(30,20,8,0.78)",
-              color: "#d87872",
-              border: "2px solid #a6534f",
+              background: "parchment.bgSoft",
+              color: "parchment.dangerBorder",
+              border: "2px solid",
+              borderColor: "parchment.danger",
               fontSize: "32px",
               fontWeight: "bold",
               px: "36px",
@@ -126,17 +129,17 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
             })}>
               Base 素材
             </div>
-            
+
             <div className={css({ display: "flex", flexWrap: "wrap", gap: "28px", width: "100%" })}>
               {baseItems.length === 0 ? (
                 /* ★ 修正ポイント：文字サイズを32pxに拡大し、whiteSpace: "nowrap" で絶対に改行させない1行に固定！ */
-                <p className={css({ 
-                  fontSize: "32px", 
-                  color: "#a6534f",
+                <p className={css({
+                  fontSize: "32px",
+                  color: "parchment.danger",
                   fontWeight: "bold",
-                  pl: "10px", 
+                  pl: "10px",
                   m: 0,
-                  whiteSpace: "nowrap" 
+                  whiteSpace: "nowrap"
                 })}>
                   持っている Base 素材はありません
                 </p>
@@ -149,9 +152,10 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
           {/* 🟩 下段：【Accent 素材】セクション */}
           <div className={css({ display: "flex", flexDirection: "column", gap: "20px", textAlign: "left" })}>
             <div className={css({
-              background: "rgba(30,20,8,0.78)",
-              color: "#a7cb70",
-              border: "2px solid #789b4a",
+              background: "parchment.bgSoft",
+              color: "parchment.successText",
+              border: "2px solid",
+              borderColor: "parchment.success",
               fontSize: "32px",
               fontWeight: "bold",
               px: "36px",
@@ -164,17 +168,17 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
             })}>
               Accent 素材
             </div>
-            
+
             <div className={css({ display: "flex", flexWrap: "wrap", gap: "28px", width: "100%" })}>
               {accentItems.length === 0 ? (
                 /* ★ 修正ポイント：こちらも同様に32pxに拡大して、綺麗な1行に並ぶよう修正完了！ */
-                <p className={css({ 
-                  fontSize: "32px", 
-                  color: "#789b4a",
+                <p className={css({
+                  fontSize: "32px",
+                  color: "parchment.success",
                   fontWeight: "bold",
-                  pl: "10px", 
+                  pl: "10px",
                   m: 0,
-                  whiteSpace: "nowrap" 
+                  whiteSpace: "nowrap"
                 })}>
                   持っている Accent 素材はありません
                 </p>
@@ -196,9 +200,9 @@ function InventoryCard({ item }: { item: OwnedMaterial }) {
     <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", width: "180px" })}>
       <div className={css({
         position: "relative",
-        background: "rgba(30,20,8,0.78)",
+        background: "parchment.bgSoft",
         border: "2px solid",
-        borderColor: item.category === "base" ? "#a6534f" : "#789b4a",
+        borderColor: item.category === "base" ? "parchment.danger" : "parchment.success",
         borderRadius: "12px",
         width: "180px",
         height: "180px",
@@ -213,9 +217,10 @@ function InventoryCard({ item }: { item: OwnedMaterial }) {
           position: "absolute",
           bottom: "10px",
           right: "10px",
-          backgroundColor: "#1a0e06",
-          color: "#c8a84b",
-          border: "1px solid #8B6914",
+          backgroundColor: "parchment.surface",
+          color: "parchment.accent",
+          border: "1px solid",
+          borderColor: "parchment.border",
           fontSize: "26px",
           fontWeight: "bold",
           px: "12px",
@@ -230,7 +235,7 @@ function InventoryCard({ item }: { item: OwnedMaterial }) {
       <div className={css({
         fontSize: "26px",
         fontWeight: "bold",
-        color: "#e8d8b8",
+        color: "parchment.text",
         mt: "10px",
         whiteSpace: "nowrap",
         textAlign: "center",

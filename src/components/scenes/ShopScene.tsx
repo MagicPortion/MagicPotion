@@ -93,6 +93,7 @@ export default function ShopScene() {
         name: item.name,
         price: item.price,
         category: item.category,
+        spawnWeight: item.spawnWeight,
       });
     }
 
