@@ -3,6 +3,8 @@ import ShopCard from './ShopCard';
 import ShopActionBar from './ShopActionBar';
 import type { MaterialDefWithUrl, ReceiptItem } from '../../../data/types';
 import { GOAL_MONEY, formatDayLabel } from '../../../data/constants';
+import { SEMANTIC } from '../dialogue/dialogueThemes';
+import { useUITheme } from '../../../hooks/useUITheme';
 import { css } from "#styled-system/css";
 
 interface ShopMaterialItem extends MaterialDefWithUrl {
@@ -60,6 +62,7 @@ export default function ShopUI({
   onRefresh,
   onExit,
 }: ShopUIProps) {
+  const t = useUITheme();
   const firstRowItems = shopItems.slice(0, 3);
   const secondRowItems = shopItems.slice(3, 5);
   const hasSelectedItems = shopItems.some((item) => (quantities[item.instanceId] ?? 0) > 0);
@@ -94,19 +97,17 @@ export default function ShopUI({
     zIndex: 100,
   });
 
-  // 品揃え更新モーダル（ショップ本体と同じ暗い羊皮紙×金テーマ）
-  const modalContentStyle = css({
-    bg: "parchment.bg",
+  // 品揃え更新モーダル（ショップ本体と同じ、設定中の背景テーマに追従）
+  const modalContentClass = css({
     borderRadius: "12px",
     p: "32px",
     w: "520px",
     textAlign: "center",
     boxShadow: "0 20px 96px rgba(0,0,0,0.78)",
     border: "4px solid",
-    borderColor: "parchment.border",
   });
 
-  // 退店確認（購入レシート）モーダルはクリーム系の「レシート」テーマに統一
+  // 退店確認（購入レシート）モーダルはクリーム系の「レシート」テーマに固定
   const receiptModalStyle = css({
     bg: "receipt.bg",
     borderRadius: "12px",
@@ -120,16 +121,22 @@ export default function ShopUI({
 
   return (
     <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "absolute", inset: 0, pb: "35px" })}>
-      <div className={css({ position: "relative", bg: "parchment.bgSoft", color: "parchment.accent", border: "2px solid", borderColor: "parchment.border", fontSize: "42px", fontWeight: "bold", pl: "160px", pr: "160px", pt: "14px", pb: "14px", borderRadius: "10px", mb: "20px", letterSpacing: "0.2em", boxShadow: "0 12px 36px rgba(0,0,0,0.55)" })}>
+      <div
+        style={{ background: t.bgSoft, color: t.nameText, borderColor: t.border }}
+        className={css({ position: "relative", border: "2px solid", fontSize: "42px", fontWeight: "bold", pl: "160px", pr: "160px", pt: "14px", pb: "14px", borderRadius: "10px", mb: "20px", letterSpacing: "0.2em", boxShadow: "0 12px 36px rgba(0,0,0,0.55)" })}
+      >
         素材ショップ
       </div>
 
-      <div className={css({ position: "relative", bg: "parchment.bg", border: "6px solid", borderColor: "parchment.border", borderRadius: "12px", w: "95%", maxW: "1020px", h: "700px", p: "45px 35px 30px 35px", boxShadow: "0 20px 96px rgba(0,0,0,0.78)", display: "flex", flexDirection: "column", justifyContent: "space-between" })}>
+      <div
+        style={{ background: t.bg, borderColor: t.border }}
+        className={css({ position: "relative", border: "6px solid", borderRadius: "12px", w: "95%", maxW: "1020px", h: "700px", p: "45px 35px 30px 35px", boxShadow: "0 20px 96px rgba(0,0,0,0.78)", display: "flex", flexDirection: "column", justifyContent: "space-between" })}
+      >
         <button
           onClick={handleRefreshTap}
           disabled={hasSelectedItems}
-          className={css({ position: "absolute", top: "28px", left: "28px", background: "none", border: "none", color: "parchment.accent", zIndex: 5, transition: "transform 0.2s, opacity 0.2s", cursor: "pointer", _hover: { transform: "rotate(45deg)", color: "parchment.text" } })}
-          style={{ opacity: hasSelectedItems ? 0.25 : 1, cursor: hasSelectedItems ? "not-allowed" : "pointer" }}
+          className={css({ position: "absolute", top: "28px", left: "28px", background: "none", border: "none", zIndex: 5, transition: "transform 0.2s, opacity 0.2s", _hover: { transform: "rotate(45deg)" } })}
+          style={{ color: t.nameText, opacity: hasSelectedItems ? 0.25 : 1, cursor: hasSelectedItems ? "not-allowed" : "pointer" }}
         >
           <IconRefresh size={52} />
         </button>
@@ -172,25 +179,25 @@ export default function ShopUI({
 
       {showRefreshModal && (
         <div className={modalOverlayStyle}>
-          <div className={modalContentStyle}>
+          <div className={modalContentClass} style={{ background: t.bg, borderColor: t.border }}>
             {money < currentRefreshCost ? (
               <>
-                <p className={css({ fontSize: "24px", fontWeight: "bold", mb: "24px", color: "parchment.dangerBorder", lineHeight: "1.6" })}>
+                <p className={css({ fontSize: "24px", fontWeight: "bold", mb: "24px", lineHeight: "1.6" })} style={{ color: SEMANTIC.dangerBorder }}>
                   所持金が不足しています<br />
-                  <span className={css({ fontSize: "22px", color: "parchment.text" })}>{refreshCount}回目の入れ替えには {currentRefreshCost}G 必要です</span>
+                  <span className={css({ fontSize: "22px" })} style={{ color: t.text }}>{refreshCount}回目の入れ替えには {currentRefreshCost}G 必要です</span>
                 </p>
                 <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
-                  <button onClick={() => setShowRefreshModal(false)} className={css({ bg: "parchment.surface", color: "parchment.accent", border: "1px solid", borderColor: "parchment.border", px: "32px", py: "12px", borderRadius: "12px", fontSize: "24px", fontWeight: "bold", cursor: "pointer" })}>戻る</button>
+                  <button onClick={() => setShowRefreshModal(false)} className={css({ border: "1px solid", px: "32px", py: "12px", borderRadius: "12px", fontSize: "24px", fontWeight: "bold", cursor: "pointer" })} style={{ background: t.surface, color: t.nameText, borderColor: t.border }}>戻る</button>
                 </div>
               </>
             ) : (
               <>
-                <p className={css({ fontSize: "24px", fontWeight: "bold", mb: "24px", color: "parchment.text", lineHeight: "1.6" })}>
+                <p className={css({ fontSize: "24px", fontWeight: "bold", mb: "24px", lineHeight: "1.6" })} style={{ color: t.text }}>
                   {refreshCount}回目、{currentRefreshCost}G減りますが<br />素材アイテムを入れ替えますか？
                 </p>
                 <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
-                  <button onClick={() => setShowRefreshModal(false)} className={css({ bg: "parchment.surface", color: "parchment.accent", border: "1px solid", borderColor: "parchment.border", px: "32px", py: "12px", borderRadius: "12px", fontSize: "24px", fontWeight: "bold", cursor: "pointer" })}>戻る</button>
-                  <button onClick={onRefresh} className={css({ bg: "parchment.danger", color: "parchment.dangerText", border: "1px solid", borderColor: "parchment.dangerBorder", px: "32px", py: "12px", borderRadius: "12px", fontSize: "24px", fontWeight: "bold", cursor: "pointer" })}>入れ替える {currentRefreshCost}G</button>
+                  <button onClick={() => setShowRefreshModal(false)} className={css({ border: "1px solid", px: "32px", py: "12px", borderRadius: "12px", fontSize: "24px", fontWeight: "bold", cursor: "pointer" })} style={{ background: t.surface, color: t.nameText, borderColor: t.border }}>戻る</button>
+                  <button onClick={onRefresh} className={css({ border: "1px solid", px: "32px", py: "12px", borderRadius: "12px", fontSize: "24px", fontWeight: "bold", cursor: "pointer" })} style={{ background: SEMANTIC.danger, color: SEMANTIC.dangerText, borderColor: SEMANTIC.dangerBorder }}>入れ替える {currentRefreshCost}G</button>
                 </div>
               </>
             )}

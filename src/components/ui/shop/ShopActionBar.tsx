@@ -1,4 +1,6 @@
 import { css } from "#styled-system/css";
+import { SEMANTIC } from "../dialogue/dialogueThemes";
+import { useUITheme } from "../../../hooks/useUITheme";
 
 interface ShopActionBarProps {
   totalCost: number;
@@ -19,6 +21,8 @@ export default function ShopActionBar({
   allSelected,
   canSelectAll,
 }: ShopActionBarProps) {
+  const t = useUITheme();
+
   return (
     <div
       className={css({
@@ -33,21 +37,20 @@ export default function ShopActionBar({
     >
       <div className={css({ display: "flex", alignItems: "center", gap: "24px" })}>
         <div
+          style={{ background: t.surface, borderColor: t.border }}
           className={css({
-            bg: "parchment.surfaceSoft",
             px: "20px",
             py: "10px",
             border: "1px solid",
-            borderColor: "parchment.border",
             borderRadius: "8px",
             minW: "140px",
             textAlign: "center",
           })}
         >
           <span
+            style={{ color: t.text }}
             className={css({
               fontSize: "12px",
-              color: "parchment.text",
               display: "block",
               fontWeight: "bold",
               mb: "2px",
@@ -55,7 +58,7 @@ export default function ShopActionBar({
           >
             合計金額
           </span>
-          <span className={css({ fontSize: "24px", fontWeight: "bold", color: "parchment.accent" })}>
+          <span style={{ color: t.nameText }} className={css({ fontSize: "24px", fontWeight: "bold" })}>
             {totalCost === 0 ? "- -" : totalCost} G
           </span>
         </div>
@@ -64,19 +67,20 @@ export default function ShopActionBar({
           disabled={!canSelectAll}
           className={css({
             order: 2,
-            color: canSelectAll ? "parchment.surface" : "parchment.disabledText",
-            bg: canSelectAll ? "parchment.accent" : "parchment.disabled",
-            border: "1px solid",
-            borderColor: "parchment.accentBright",
             px: "56px",
             py: "16px",
             fontSize: "24px",
             fontWeight: "bold",
-            cursor: canSelectAll ? "pointer" : "not-allowed",
             clipPath: "polygon(18% 0%, 100% 0%, 82% 100%, 0% 100%)",
             transition: "filter 0.2s",
             _hover: { filter: "brightness(1.15)" },
           })}
+          style={{
+            color: canSelectAll ? t.surface : SEMANTIC.disabledText,
+            background: canSelectAll ? t.nameText : SEMANTIC.disabled,
+            border: `1px solid ${SEMANTIC.accentBright}`,
+            cursor: canSelectAll ? "pointer" : "not-allowed",
+          }}
         >
           {allSelected ? "全解除" : "全選択"}
         </button>
@@ -85,19 +89,20 @@ export default function ShopActionBar({
           disabled={!canBuy}
           className={css({
             order: 1,
-            color: canBuy ? "parchment.surface" : "parchment.disabledText",
-            bg: canBuy ? "parchment.accent" : "parchment.disabled",
-            border: "1px solid",
-            borderColor: "parchment.accentBright",
             px: "56px",
             py: "16px",
             fontSize: "24px",
             fontWeight: "bold",
-            cursor: canBuy ? "pointer" : "not-allowed",
             clipPath: "polygon(18% 0%, 100% 0%, 82% 100%, 0% 100%)",
             transition: "filter 0.2s",
             _hover: { filter: "brightness(1.15)" },
           })}
+          style={{
+            color: canBuy ? t.surface : SEMANTIC.disabledText,
+            background: canBuy ? t.nameText : SEMANTIC.disabled,
+            border: `1px solid ${SEMANTIC.accentBright}`,
+            cursor: canBuy ? "pointer" : "not-allowed",
+          }}
         >
           購入
         </button>
@@ -106,18 +111,16 @@ export default function ShopActionBar({
       <button
         onClick={() => setShowExitModal(true)}
         className={css({
-          bg: "parchment.surface",
-          color: "parchment.accent",
-          border: "1px solid",
-          borderColor: "parchment.accent",
           px: "52px",
           py: "16px",
           fontSize: "22px",
           fontWeight: "bold",
           cursor: "pointer",
           clipPath: "polygon(0% 0%, 82% 0%, 100% 100%, 18% 100%)",
-          _hover: { bg: "parchment.surfaceHover", color: "parchment.text" },
+          transition: "filter 0.2s",
+          _hover: { filter: "brightness(1.3)" },
         })}
+        style={{ background: t.surface, color: t.nameText, border: `1px solid ${t.nameText}` }}
       >
         退店する
       </button>
