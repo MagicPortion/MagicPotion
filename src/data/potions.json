@@ -5,7 +5,7 @@
   { "id": "sweet_potion",    "name": "甘いポーション",     "colorHex": "ffb6c1", "basePrice": 250,  "image": "pot4.png" },
   { "id": "bitter_potion",   "name": "苦いポーション",     "colorHex": "8b4513", "basePrice": 250,  "image": "pot5.png" },
   { "id": "hot_potion",      "name": "熱いポーション",     "colorHex": "ff6347", "basePrice": 250,  "image": "pot6.png" },
-  { "id": "meh_potion",      "name": "ただのジュース",     "colorHex": "a9a9a9", "basePrice": 130,  "image": "pot7.png" },
+  { "id": "meh_potion",      "name": "微妙なポーション",     "colorHex": "a9a9a9", "basePrice": 130,  "image": "pot7.png" },
   { "id": "lucky_potion",    "name": "幸運ポーション",     "colorHex": "ffd700", "basePrice": 500,  "image": "pot8.png" },
   { "id": "heal_potion",     "name": "回復の薬",          "colorHex": "ff69b4", "basePrice": 330,  "image": "pot9.png" },
   { "id": "strength_potion", "name": "力ポーション",        "colorHex": "ff4500", "basePrice": 450,  "image": "pot10.png" },

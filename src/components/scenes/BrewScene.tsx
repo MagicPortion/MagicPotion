@@ -15,6 +15,15 @@ import witchBackground from "#assets/Back/WitchBack.png";
 // 大釜の平常時の色（調合終了後はこの色に戻す）
 const DEFAULT_CAULDRON_COLOR = "3d3d5c";
 
+// 色を白側に混ぜて明るくする（大釜のハイライト・グロー用）。amountは0〜1。
+function lighten(color: number, amount: number): number {
+  const r = (color >> 16) & 0xff;
+  const g = (color >> 8) & 0xff;
+  const b = color & 0xff;
+  const mix = (c: number) => Math.round(c + (255 - c) * amount);
+  return (mix(r) << 16) | (mix(g) << 8) | mix(b);
+}
+
 export default function BrewScene() {
   const { materials, brew, advanceScene, recipeLevel, setIsInventoryOpen } = useGameStore();
   const [selectedBase, setSelectedBase] = useState<string | null>(null);
@@ -264,16 +273,24 @@ export default function BrewScene() {
     // 液体を表す「丸い円 (circle)」は完全に削除し、釜自体が明滅・色変化するようにしている。
     const potColor = colorNum(cauldronColorHex);
     list.push(
+      // 胴体の外側にふんわりした光の輪を置き、暗い背景に沈んで「黒い穴」に見えないようにする
+      { type: "ellipse", x: potCenterX, y: potCenterY, radiusX: 210, radiusY: 168, color: lighten(potColor, 0.35), alpha: 0.22 },
       // 丸くふくらんだ胴体
       { type: "ellipse", x: potCenterX, y: potCenterY, radiusX: 165, radiusY: 130, color: potColor },
+      // 胴体の縁を淡く光らせるリムライト（輪郭を暗闇から浮き上がらせる）
+      { type: "ellipse", x: potCenterX, y: potCenterY, radiusX: 165, radiusY: 130, color: lighten(potColor, 0.6), alpha: 0.5, filled: false, lineWidth: 4 },
       // 上部の縁（フチ）：胴体より少し張り出させ、鉄製の魔法の釜らしい厚みを出す
       { type: "ellipse", x: potCenterX, y: potCenterY - 108, radiusX: 138, radiusY: 34, color: 0x2b2b40 },
       // 口元のすぼまり（内側の暗がり）
       { type: "ellipse", x: potCenterX, y: potCenterY - 108, radiusX: 108, radiusY: 26, color: 0x14101c },
       // 口の中の液面
       { type: "ellipse", x: potCenterX, y: potCenterY - 108, radiusX: 97, radiusY: 19, color: potColor },
-      // 左上のハイライトで丸みを強調
-      { type: "ellipse", x: potCenterX - 75, y: potCenterY - 50, radiusX: 46, radiusY: 34, color: 0xffffff, alpha: 0.1 },
+      // 液面のハイライト（灯りを反射しているように見せる）
+      { type: "ellipse", x: potCenterX - 30, y: potCenterY - 112, radiusX: 34, radiusY: 8, color: 0xffffff, alpha: 0.28 },
+      // 左上の大きめハイライトで丸みを強調（球体らしい艶を出すため明るさ・大きさを強化）
+      { type: "ellipse", x: potCenterX - 78, y: potCenterY - 40, radiusX: 58, radiusY: 44, color: lighten(potColor, 0.85), alpha: 0.4 },
+      // その中にさらに小さく明るい艶ハイライトを重ねる
+      { type: "ellipse", x: potCenterX - 88, y: potCenterY - 48, radiusX: 22, radiusY: 16, color: 0xffffff, alpha: 0.45 },
       // 持ち手（フチの少し上、細く短い輪っか）
       { type: "ellipse", x: potCenterX - 118, y: potCenterY - 122, radiusX: 16, radiusY: 13, color: 0x2b2b40, filled: false, lineWidth: 5 },
       { type: "ellipse", x: potCenterX + 118, y: potCenterY - 122, radiusX: 16, radiusY: 13, color: 0x2b2b40, filled: false, lineWidth: 5 },

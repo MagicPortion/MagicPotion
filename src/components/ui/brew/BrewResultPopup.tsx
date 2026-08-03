@@ -110,18 +110,22 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
               </div>
             )}
 
-            {/* ポーションを際立たせる発光。画像未登録時は従来どおりオーブとして表示する。 */}
+            {/* ポーションを際立たせる発光オーブ。画像未登録時は従来どおり単色オーブとして表示する。
+                画像ありの場合も、透明+box-shadowだけだと縁が暗い背景色のまま残り「黒い穴」に見えてしまうため、
+                グラデーションで艶と色を最後まで塗り切り、外側にだけ淡いグローを漏らす。 */}
             <div
               style={{
-                backgroundColor: potionImageUrl ? "transparent" : `#${potion.colorHex}`,
+                background: potionImageUrl
+                  ? `radial-gradient(circle at 32% 26%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.35) 9%, #${potion.colorHex}ee 24%, #${potion.colorHex}aa 58%, #${potion.colorHex}55 100%)`
+                  : `#${potion.colorHex}`,
                 boxShadow: potionImageUrl
-                  ? `0 0 60px #${potion.colorHex}bb, 0 0 130px #${potion.colorHex}44`
+                  ? `0 0 70px #${potion.colorHex}aa, 0 0 140px #${potion.colorHex}55`
                   : `0 0 60px #${potion.colorHex}bb, 0 0 130px #${potion.colorHex}44, inset 0 12px 36px rgba(255,255,255,0.22)`,
                 animation: "orbPulseGlow 2s ease-in-out infinite",
               }}
               className={css({
-                width: potionImageUrl ? "190px" : "280px", height: potionImageUrl ? "190px" : "280px", borderRadius: "full",
-                position: "absolute", top: potionImageUrl ? "45px" : "0", left: potionImageUrl ? "45px" : "0", zIndex: 2,
+                width: potionImageUrl ? "230px" : "280px", height: potionImageUrl ? "230px" : "280px", borderRadius: "full",
+                position: "absolute", top: potionImageUrl ? "25px" : "0", left: potionImageUrl ? "25px" : "0", zIndex: 2,
               })}
             />
 
