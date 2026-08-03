@@ -5,15 +5,20 @@ import titleBackImage from "#assets/images/TitleBack.png";
 import { CHARACTER_PORTRAITS, ITEM_IMAGES } from "#assets/preload";
 import { preloadImages } from "../../utils/preloadImages";
 import { ActionButton } from "../ui/common/ActionButton";
+import { playBgm } from "../../audio/bgm";
 
 export default function TitleScene() {
   const { startNewGame } = useGameStore();
 
   const handleStart = () => {
-    // 立ち絵は会話シーンですぐ表示されるため先に、アイテム画像は店シーンに着くまで時間があるため後で読み込む
-    preloadImages(CHARACTER_PORTRAITS).then(() => preloadImages(ITEM_IMAGES));
-    startNewGame();
-  };
+  // スタートボタンを押したタイミングでBGMを再生する
+  void playBgm();
+
+  // 立ち絵は会話シーンですぐ表示されるため先に、アイテム画像は店シーンに着くまで時間があるため後で読み込む
+  preloadImages(CHARACTER_PORTRAITS).then(() => preloadImages(ITEM_IMAGES));
+
+  startNewGame();
+};
 
   return (
     <div
