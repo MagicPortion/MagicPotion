@@ -222,7 +222,7 @@ export default function ShopUI({
             </div>
 
             <div className={css({ textAlign: "left", mb: "20px", bg: "receipt.bg", border: "1px dashed", borderColor: "receipt.border", borderRadius: "12px", p: "20px" })}>
-              <p className={css({ fontSize: "24px", fontWeight: "bold", color: "receipt.border", mb: "14px" })}>今回の購入レシート（レア度順）</p>
+              <p className={css({ fontSize: "24px", fontWeight: "bold", color: "receipt.border", mb: "14px" })}>今回の購入レシート</p>
 
               {receiptItems.length > 0 ? (
                 <div className={css({ display: "flex", gap: "16px", alignItems: "stretch" })}>
