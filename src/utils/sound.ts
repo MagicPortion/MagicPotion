@@ -1,5 +1,7 @@
 type UiSound = "select" | "cancel" | "voice" | "merging" | "mergeResult" | "potionSold";
 
+export const DEFAULT_SE_VOLUME = 1;
+
 const SOUND_FILES: Record<UiSound, string> = {
   select: "select.mp3",
   cancel: "cancel.mp3",
@@ -17,6 +19,19 @@ const VOLUMES: Record<UiSound, number> = {
   mergeResult: 0.45,
   potionSold: 0.45,
 };
+
+let seVolumeMultiplier = DEFAULT_SE_VOLUME;
+
+function resolveVolume(base: number) {
+  return Math.max(0, Math.min(1, base * seVolumeMultiplier));
+}
+
+// 設定画面のスライダーから呼ぶ。再生中のループ音（merging/voice）にも即時反映する。
+export function setSeVolume(volume: number) {
+  seVolumeMultiplier = Math.max(0, Math.min(1, volume));
+  if (loopingVoiceAudio) loopingVoiceAudio.volume = resolveVolume(VOLUMES.voice);
+  if (mergingAudio) mergingAudio.volume = resolveVolume(VOLUMES.merging);
+}
 
 const audioCache = new Map<UiSound, HTMLAudioElement>();
 let loopingVoiceAudio: HTMLAudioElement | null = null;
@@ -40,7 +55,7 @@ export function playSound(sound: UiSound) {
   if (typeof window === "undefined") return;
 
   const audio = getTemplate(sound).cloneNode(true) as HTMLAudioElement;
-  audio.volume = VOLUMES[sound];
+  audio.volume = resolveVolume(VOLUMES[sound]);
   audio.currentTime = 0;
   void audio.play().catch(() => {
     // Browser audio may be blocked until the first user gesture.
@@ -65,7 +80,7 @@ export function playMergingSound() {
   if (typeof window === "undefined") return;
 
   mergingAudio = getTemplate("merging").cloneNode(true) as HTMLAudioElement;
-  mergingAudio.volume = VOLUMES.merging;
+  mergingAudio.volume = resolveVolume(VOLUMES.merging);
   mergingAudio.currentTime = 0;
   void mergingAudio.play().catch(() => {
     // Browser audio may be blocked until the first user gesture.
@@ -94,7 +109,7 @@ export function startVoiceLoop() {
     loopingVoiceAudio = new Audio(soundPath("voice"));
     loopingVoiceAudio.preload = "auto";
     loopingVoiceAudio.loop = true;
-    loopingVoiceAudio.volume = VOLUMES.voice;
+    loopingVoiceAudio.volume = resolveVolume(VOLUMES.voice);
   }
 
   if (!loopingVoiceAudio.paused) return;

@@ -10,6 +10,8 @@ import {
 import type { BrewedPotion, RecipeDef, SaleRecord } from "../data/types";
 import { TOTAL_DAYS } from "../data/constants";
 import { parseResultParams } from "../utils/share";
+import { applyBgmVolume, DEFAULT_BGM_VOLUME } from "../audio/bgm";
+import { setSeVolume as applySeVolume, DEFAULT_SE_VOLUME } from "../utils/sound";
 
 export type DialogueTheme = "dark" | "parchment" | "semi";
 export interface DialogueAppearance { theme: DialogueTheme; }
@@ -124,6 +126,11 @@ export interface GameState {
   dialogueAppearance: DialogueAppearance;
   setDialogueAppearance: (a: DialogueAppearance) => void;
 
+  bgmVolume: number;
+  setBgmVolume: (volume: number) => void;
+  seVolume: number;
+  setSeVolume: (volume: number) => void;
+
   pendingPostPurchaseScene: Scene | null;
   setPendingPostPurchaseScene: (scene: Scene | null) => void;
 
@@ -186,6 +193,20 @@ export const useGameStore = create<GameState>()(
       setIsInventoryOpen: (open) => set({ isInventoryOpen: open }),
       dialogueAppearance: DEFAULT_APPEARANCE,
       setDialogueAppearance: (a) => set({ dialogueAppearance: a }),
+
+      bgmVolume: DEFAULT_BGM_VOLUME,
+      setBgmVolume: (volume) => {
+        const clamped = Math.max(0, Math.min(1, volume));
+        applyBgmVolume(clamped);
+        set({ bgmVolume: clamped });
+      },
+      seVolume: DEFAULT_SE_VOLUME,
+      setSeVolume: (volume) => {
+        const clamped = Math.max(0, Math.min(1, volume));
+        applySeVolume(clamped);
+        set({ seVolume: clamped });
+      },
+
       setPendingPostPurchaseScene: (scene) => set({ pendingPostPurchaseScene: scene }),
 
       setScene: (scene) => set({ scene }),

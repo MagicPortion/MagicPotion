@@ -1,4 +1,6 @@
 import { css } from "#styled-system/css";
+import { token } from "#styled-system/tokens";
+import { useGameStore } from "../../store/useGameStore";
 import type { DialogueAppearance, DialogueTheme } from "../../store/useGameStore";
 import { IconSettings, IconClose } from "../ui/icons";
 
@@ -16,6 +18,8 @@ const THEME_OPTIONS: { key: DialogueTheme; label: string; bg: string; textColor:
 ];
 
 export default function SettingsPopup({ isOpen, onClose, appearance, onChange }: SettingsPopupProps) {
+  const { bgmVolume, setBgmVolume, seVolume, setSeVolume } = useGameStore();
+
   if (!isOpen) return null;
 
   return (
@@ -76,10 +80,39 @@ export default function SettingsPopup({ isOpen, onClose, appearance, onChange }:
           </div>
         </section>
 
+        <section className={css({ mt: "36px" })}>
+          <p className={css({ fontSize: "24px", color: "parchment.textMuted", letterSpacing: "0.15em", margin: "0 0 16px" })}>
+            ─ 音量
+          </p>
+          <VolumeSlider label="BGM" value={bgmVolume} onChange={setBgmVolume} />
+          <VolumeSlider label="SE" value={seVolume} onChange={setSeVolume} />
+        </section>
+
         <p className={css({ fontSize: "24px", color: "parchment.borderMuted", letterSpacing: "0.08em", margin: "28px 0 0", textAlign: "center" })}>
           ─ 変更は即時反映されます ─
         </p>
       </div>
     </>
+  );
+}
+
+function VolumeSlider({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
+  return (
+    <div className={css({ display: "flex", alignItems: "center", gap: "20px", mb: "16px" })}>
+      <span className={css({ fontSize: "26px", color: "parchment.text", width: "100px", flexShrink: 0 })}>{label}</span>
+      <input
+        type="range"
+        min={0}
+        max={1}
+        step={0.05}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        style={{ accentColor: token("colors.parchment.accent") }}
+        className={css({ flex: 1, height: "16px", cursor: "pointer" })}
+      />
+      <span className={css({ fontSize: "26px", color: "parchment.accent", width: "90px", textAlign: "right", flexShrink: 0 })}>
+        {Math.round(value * 100)}%
+      </span>
+    </div>
   );
 }
