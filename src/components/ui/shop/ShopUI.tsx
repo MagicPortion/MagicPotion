@@ -108,15 +108,25 @@ export default function ShopUI({
   });
 
   // 退店確認（購入レシート）モーダルはクリーム系の「レシート」テーマに固定
+  // クレジット画面の羊皮紙表現（二重線・斜めグラデーション・内枠）を、
+  // レシートらしいクリーム系の紙質感として流用している
   const receiptModalStyle = css({
-    bg: "receipt.bg",
-    borderRadius: "12px",
+    position: "relative",
+    background: "linear-gradient(100deg, #fdf2d9 0%, #fffaf0 20%, #fff8e6 55%, #fbeecb 85%, #f3e2ba 100%)",
+    borderRadius: "10px",
     p: "40px 44px",
     w: "900px",
     textAlign: "center",
-    boxShadow: "0 20px 96px rgba(0,0,0,0.5)",
-    border: "4px solid",
+    boxShadow: "0 20px 96px rgba(0,0,0,0.5), inset 0 0 44px rgba(122,74,16,0.14)",
+    border: "5px double",
     borderColor: "receipt.border",
+    _before: {
+      content: "''",
+      position: "absolute",
+      inset: "14px",
+      border: "1px solid rgba(122,74,16,0.35)",
+      pointerEvents: "none",
+    },
   });
 
   return (
