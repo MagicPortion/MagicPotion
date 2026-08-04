@@ -4,6 +4,8 @@ import { getMaterial, getPotion, getRecipe, calcSellPrice } from "../../data/gam
 import { IconRecipe, IconClose } from "../ui/icons";
 import Image from "../ui/common/Image";
 import ColorOrb from "../ui/common/ColorOrb";
+import ItemCard from "../ui/common/ItemCard";
+import { token } from "#styled-system/tokens";
 
 interface RecipeBookPopupProps {
   isOpen: boolean;
@@ -77,22 +79,26 @@ export default function RecipeBookPopup({ isOpen, onClose, onSelectRecipe }: Rec
                     borderRadius: "12px", overflow: "hidden",
                   })}
                 >
-                  {/* 左：ポーション情報 */}
+                  {/* 左：ポーション情報（持ち物一覧と同じカードサイズ感に統一） */}
                   <div className={css({
-                    display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                    gap: "10px", w: "170px", flexShrink: 0, p: "20px 16px",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    flexShrink: 0, p: "16px",
                     borderRight: "1px solid", borderColor: "parchment.borderMuted", alignSelf: "stretch",
                   })}>
-                    <ColorOrb colorHex={potion?.colorHex ?? "808080"} image={potion?.image} size={64} />
-
-                    <span className={css({ fontSize: "26px", fontWeight: "bold", color: "parchment.accent", textAlign: "center", lineHeight: 1.3 })}>
-                      {potion?.name}
-                    </span>
-                    {recipes.length > 1 && (
-                      <span className={css({ fontSize: "24px", color: "parchment.subtleText", letterSpacing: "0.04em" })}>
-                        {recipes.length}通り
-                      </span>
-                    )}
+                    <ItemCard
+                      visual={<ColorOrb colorHex={potion?.colorHex ?? "808080"} image={potion?.image} size={150} />}
+                      label={potion?.name ?? ""}
+                      labelLines={2}
+                      borderColor={token("colors.parchment.borderMuted")}
+                      labelColor={token("colors.parchment.accent")}
+                      footer={
+                        recipes.length > 1 ? (
+                          <span className={css({ fontSize: "22px", color: "parchment.subtleText", letterSpacing: "0.04em", mt: "4px" })}>
+                            {recipes.length}通り
+                          </span>
+                        ) : undefined
+                      }
+                    />
                   </div>
 
                   {/* 右：レシピ一覧 */}

@@ -1,6 +1,8 @@
 import { css } from "#styled-system/css";
+import { token } from "#styled-system/tokens";
 import { MATERIALS } from "../../../data/gameData";
 import Image from "../common/Image";
+import ItemCard from "../common/ItemCard";
 import type { MaterialDefWithUrl } from "../../../data/types";
 
 interface OwnedMaterial extends MaterialDefWithUrl {
@@ -194,54 +196,14 @@ export default function InventoryModal({ materials, onClose }: InventoryModalPro
   );
 }
 
-// 素材画像とテキストのみ（カード枠なし。ShopCardと同じ考え方）
+// 素材画像とテキストのみのカード。持ち物一覧のサイズ感を共通コンポーネント(ItemCard)に集約している。
 function InventoryCard({ item }: { item: OwnedMaterial }) {
   return (
-    <div className={css({ display: "flex", flexDirection: "column", alignItems: "center", width: "180px" })}>
-      <div className={css({
-        position: "relative",
-        background: "parchment.bgSoft",
-        border: "2px solid",
-        borderColor: item.category === "base" ? "parchment.danger" : "parchment.success",
-        borderRadius: "12px",
-        width: "180px",
-        height: "180px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      })}>
-        <Image src={item.imageUrl} alt={item.name} width={160} height={160} />
-
-        {/* 個数バッジ。素材画像に重ねて表示 */}
-        <span className={css({
-          position: "absolute",
-          bottom: "10px",
-          right: "10px",
-          backgroundColor: "parchment.surface",
-          color: "parchment.accent",
-          border: "1px solid",
-          borderColor: "parchment.border",
-          fontSize: "26px",
-          fontWeight: "bold",
-          px: "12px",
-          py: "2px",
-          borderRadius: "6px",
-        })}>
-          {`×${item.count}`}
-        </span>
-      </div>
-
-      {/* 素材名（カード外）。1行で表示し、見切れさせない */}
-      <div className={css({
-        fontSize: "26px",
-        fontWeight: "bold",
-        color: "parchment.text",
-        mt: "10px",
-        whiteSpace: "nowrap",
-        textAlign: "center",
-      })}>
-        {item.name}
-      </div>
-    </div>
+    <ItemCard
+      visual={<Image src={item.imageUrl} alt={item.name} width={160} height={160} />}
+      label={item.name}
+      borderColor={token(item.category === "base" ? "colors.parchment.danger" : "colors.parchment.success")}
+      badge={`×${item.count}`}
+    />
   );
 }
