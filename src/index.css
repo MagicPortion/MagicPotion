@@ -32,6 +32,26 @@ body, html {
   animation: sceneFadeIn 0.22s ease forwards;
 }
 
+/* 羊皮紙の雰囲気に合わせたクレジット欄のスクロールバー */
+.credits-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #8b6914 rgba(118, 80, 15, 0.15);
+}
+
+.credits-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.credits-scroll::-webkit-scrollbar-track {
+  background: rgba(118, 80, 15, 0.15);
+  border-radius: 4px;
+}
+
+.credits-scroll::-webkit-scrollbar-thumb {
+  background: #8b6914;
+  border-radius: 4px;
+}
+
 /* 場所移動用のデジタル・キューブワイプ */
 .pixel-scene-transition {
   position: absolute;
