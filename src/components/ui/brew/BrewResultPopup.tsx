@@ -112,11 +112,11 @@ export default function BrewResultPopup({ results, onClose }: BrewResultPopupPro
 
             {/* ポーションを際立たせる発光オーブ。画像未登録時は従来どおり単色オーブとして表示する。
                 画像ありの場合も、透明+box-shadowだけだと縁が暗い背景色のまま残り「黒い穴」に見えてしまうため、
-                グラデーションで艶と色を最後まで塗り切り、外側にだけ淡いグローを漏らす。 */}
+                グラデーションで色を最後まで塗り切り、外側にだけ淡いグローを漏らす（上30%が少し暗く、下70%が明るい）。 */}
             <div
               style={{
                 background: potionImageUrl
-                  ? `radial-gradient(circle at 32% 26%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.35) 9%, #${potion.colorHex}ee 24%, #${potion.colorHex}aa 58%, #${potion.colorHex}55 100%)`
+                  ? `linear-gradient(to bottom, #${potion.colorHex}77 0%, #${potion.colorHex}ff 70%, #${potion.colorHex}ff 100%)`
                   : `#${potion.colorHex}`,
                 boxShadow: potionImageUrl
                   ? `0 0 70px #${potion.colorHex}aa, 0 0 140px #${potion.colorHex}55`
