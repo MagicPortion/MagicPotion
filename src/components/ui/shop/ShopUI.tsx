@@ -118,12 +118,14 @@ export default function ShopUI({
     w: "900px",
     textAlign: "center",
     boxShadow: "0 20px 96px rgba(0,0,0,0.5), inset 0 0 44px rgba(122,74,16,0.14)",
-    border: "5px double",
+    // ゲーム全体をtransform: scale()で縮小表示する都合上、border-style: doubleは
+    // 線と線の間がサブピクセルでガタつき上端などが欠けて見えることがあるため、solid+内枠で代用する
+    border: "3px solid",
     borderColor: "receipt.border",
     _before: {
       content: "''",
       position: "absolute",
-      inset: "14px",
+      inset: "10px",
       border: "1px solid rgba(122,74,16,0.35)",
       pointerEvents: "none",
     },
