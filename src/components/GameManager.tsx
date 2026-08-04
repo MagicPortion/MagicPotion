@@ -9,6 +9,7 @@ import { isCancelSoundTarget, isSelectSoundTarget, playCancelSound, playSelectSo
 import { PixiAppProvider } from "../contexts/PixiAppContext";
 import Header from "./Header";
 import TitleScene from "./scenes/TitleScene";
+import CreditsScene from "./scenes/CreditsScene";
 import SharedResultScene from "./scenes/SharedResultScene";
 import Introduction from "./scenes/Introduction";
 import ConversationScene from "./scenes/ConversationScene";
@@ -27,6 +28,7 @@ import WhiteSceneTransition from "./ui/common/WhiteSceneTransition";
 
 const SCENE_LABEL: Record<Scene, string> = {
   title:                    "",
+  credits:                  "",
   shared_result:            "",
   introduction:            "物語",
   conversation:             "朝",
@@ -47,6 +49,7 @@ const SCENE_LABEL: Record<Scene, string> = {
 const renderScene = (scene: Scene) => {
   switch (scene) {
     case "title":                   return <TitleScene />;
+    case "credits":                 return <CreditsScene />;
     case "shared_result":           return <SharedResultScene />;
     case "introduction":            return <Introduction />;
     case "conversation":            return <ConversationScene sceneOverride={scene} />;
@@ -170,7 +173,7 @@ export default function GameManager() {
           </PixiAppProvider>
 
           {/* ヘッダー：タイトル画面・エンド画面では非表示 */}
-          {displayedScene !== "title" && displayedScene !== "game_end" && displayedScene !== "ending_transition" && displayedScene !== "financial_report" && displayedScene !== "conversation_end" && (
+          {displayedScene !== "title" && displayedScene !== "credits" && displayedScene !== "game_end" && displayedScene !== "ending_transition" && displayedScene !== "financial_report" && displayedScene !== "conversation_end" && (
             <Header
               label={SCENE_LABEL[displayedScene]}
               day={day}

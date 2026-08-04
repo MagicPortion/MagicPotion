@@ -19,6 +19,7 @@ export const DEFAULT_APPEARANCE: DialogueAppearance = { theme: "dark" };
 
 export type Scene =
   | "title"
+  | "credits"
   | "shared_result"
   | "introduction"
   | "conversation"
